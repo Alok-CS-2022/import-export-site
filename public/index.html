@@ -3,174 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Import Export Hub - Global Trade Solutions</title>
+    <title>Import Export Hub - Connect Global Markets</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="bg-gray-50 text-gray-900">
-    <!-- Header -->
-    <header class="bg-white shadow-sm sticky top-0 z-50">
-        <nav class="container mx-auto px-6 py-4">
-            <div class="flex items-center justify-between">
-                <div class="text-2xl font-bold text-gray-800">Import Export Hub</div>
+<body class="bg-white">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md sticky top-0 z-40">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="text-2xl font-bold text-blue-600">Import Export Hub</div>
                 <div class="hidden md:flex space-x-8">
-                    <a href="#home" class="text-gray-700 hover:text-gray-900 transition">Home</a>
-                    <a href="#products" class="text-gray-700 hover:text-gray-900 transition">Products</a>
-                    <a href="#about" class="text-gray-700 hover:text-gray-900 transition">About</a>
-                    <a href="#contact" class="text-gray-700 hover:text-gray-900 transition">Contact</a>
+                    <a href="#home" class="text-gray-700 hover:text-blue-600 transition">Home</a>
+                    <a href="#products" class="text-gray-700 hover:text-blue-600 transition">Products</a>
+                    <a href="#about" class="text-gray-700 hover:text-blue-600 transition">About</a>
+                    <a href="#contact" class="text-gray-700 hover:text-blue-600 transition">Contact</a>
                 </div>
-                <button id="mobile-menu-button" class="md:hidden text-gray-700 focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
+                <button class="md:hidden text-gray-700">☰</button>
             </div>
-            <div id="mobile-menu" class="hidden md:hidden mt-4 space-y-2">
-                <a href="#home" class="block text-gray-700 hover:text-gray-900 py-2 transition">Home</a>
-                <a href="#products" class="block text-gray-700 hover:text-gray-900 py-2 transition">Products</a>
-                <a href="#about" class="block text-gray-700 hover:text-gray-900 py-2 transition">About</a>
-                <a href="#contact" class="block text-gray-700 hover:text-gray-900 py-2 transition">Contact</a>
-            </div>
-        </nav>
-    </header>
+        </div>
+    </nav>
 
     <!-- Hero Section -->
-    <section id="home" class="bg-gradient-to-br from-blue-50 to-indigo-100 py-20 md:py-32">
+    <section id="home" class="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-20">
         <div class="container mx-auto px-6 text-center">
-            <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-6">Global Import & Export Solutions</h1>
-            <p class="text-lg md:text-xl text-gray-700 mb-8 max-w-2xl mx-auto">Connecting businesses worldwide with quality products and reliable supply chains</p>
-            <a href="#products" class="inline-block bg-gray-900 text-white px-8 py-4 rounded-lg font-semibold hover:bg-gray-800 transition shadow-lg">Browse Products</a>
+            <h1 class="text-5xl font-bold mb-6">Connect Global Markets</h1>
+            <p class="text-xl mb-8 max-w-2xl mx-auto">Your trusted partner in international trade. Quality products, reliable service, worldwide delivery.</p>
+            <div class="flex gap-4 justify-center">
+                <a href="#products" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
+                    Browse Products
+                </a>
+                <a href="#contact" class="border-2 border-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition">
+                    Contact Us
+                </a>
+            </div>
         </div>
     </section>
 
     <!-- Products Section -->
-    <section id="products" class="py-16 md:py-24">
+    <section id="products" class="py-20 bg-gray-50">
         <div class="container mx-auto px-6">
-            <h2 class="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-12">Our Products</h2>
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Our Products</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Discover our wide range of quality products available for international export</p>
+            </div>
+
             <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="text-center py-12 col-span-full">
-                    <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
-                    <p class="text-gray-500 mt-4">Loading products...</p>
+                <div class="text-center py-12 col-span-full text-gray-500">
+                    Loading products...
                 </div>
             </div>
         </div>
     </section>
 
     <!-- About Section -->
-    <section id="about" class="bg-white py-16 md:py-24">
+    <section id="about" class="py-20">
         <div class="container mx-auto px-6">
             <div class="max-w-3xl mx-auto text-center">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">About Our Business</h2>
-                <p class="text-lg text-gray-700 leading-relaxed mb-6">We are a leading import-export company specializing in connecting global markets with high-quality products. Our expertise spans multiple industries including agriculture, textiles, electronics, and more.</p>
-                <p class="text-lg text-gray-700 leading-relaxed">With years of experience in international trade, we ensure smooth transactions, reliable logistics, and competitive pricing for businesses worldwide.</p>
+                <h2 class="text-4xl font-bold text-gray-900 mb-6">About Us</h2>
+                <p class="text-gray-600 text-lg mb-6">
+                    We are a leading import-export company specializing in connecting businesses across borders. 
+                    With years of experience in international trade, we ensure quality products and seamless transactions.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+                    <div class="p-6">
+                        <div class="text-4xl mb-4">🌍</div>
+                        <h3 class="text-xl font-bold mb-2">Global Reach</h3>
+                        <p class="text-gray-600">Serving clients worldwide</p>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-4xl mb-4">✓</div>
+                        <h3 class="text-xl font-bold mb-2">Quality Assured</h3>
+                        <p class="text-gray-600">Premium products only</p>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-4xl mb-4">🚚</div>
+                        <h3 class="text-xl font-bold mb-2">Fast Delivery</h3>
+                        <p class="text-gray-600">Reliable shipping partners</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="py-16 md:py-24 bg-gray-100">
+    <section id="contact" class="py-20 bg-gray-50">
         <div class="container mx-auto px-6">
-            <div class="max-w-2xl mx-auto">
-                <h2 class="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-8">Get In Touch</h2>
+            <div class="max-w-2xl mx-auto text-center">
+                <h2 class="text-4xl font-bold text-gray-900 mb-6">Get In Touch</h2>
+                <p class="text-gray-600 mb-8">Have questions? We'd love to hear from you.</p>
                 
-                <div class="bg-white rounded-lg shadow-md p-8 mb-8">
+                <div class="bg-white rounded-lg shadow-lg p-8">
                     <div class="space-y-4">
-                        <div class="flex items-center gap-3">
-                            <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                            </svg>
-                            <span class="text-gray-700">contact@importexport.com</span>
+                        <div class="flex items-center gap-4">
+                            <div class="bg-blue-100 p-3 rounded-full">📧</div>
+                            <div class="text-left">
+                                <p class="font-semibold">Email</p>
+                                <p class="text-gray-600">contact@importexporthub.com</p>
+                            </div>
                         </div>
-                        <div class="flex items-center gap-3">
-                            <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
-                            </svg>
-                            <span class="text-gray-700">+977 123-456-7890</span>
+                        <div class="flex items-center gap-4">
+                            <div class="bg-blue-100 p-3 rounded-full">📱</div>
+                            <div class="text-left">
+                                <p class="font-semibold">Phone</p>
+                                <p class="text-gray-600">+977 1234567890</p>
+                            </div>
                         </div>
-                        <div class="flex items-center gap-3">
-                            <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            </svg>
-                            <span class="text-gray-700">Kathmandu, Nepal</span>
+                        <div class="flex items-center gap-4">
+                            <div class="bg-blue-100 p-3 rounded-full">📍</div>
+                            <div class="text-left">
+                                <p class="font-semibold">Location</p>
+                                <p class="text-gray-600">Kathmandu, Nepal</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-                
-                <form id="contact-form" class="bg-white rounded-lg shadow-md p-8">
-                    <div class="mb-6">
-                        <label for="name" class="block text-gray-700 font-semibold mb-2">Full Name</label>
-                        <input type="text" id="name" name="name" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent">
-                    </div>
-                    <div class="mb-6">
-                        <label for="email" class="block text-gray-700 font-semibold mb-2">Email Address</label>
-                        <input type="email" id="email" name="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent">
-                    </div>
-                    <div class="mb-6">
-                        <label for="message" class="block text-gray-700 font-semibold mb-2">Message</label>
-                        <textarea id="message" name="message" rows="5" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"></textarea>
-                    </div>
-                    <button type="submit" class="w-full bg-gray-900 text-white py-4 rounded-lg font-semibold hover:bg-gray-800 transition shadow-lg">Send Message</button>
-                </form>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-gray-300 py-12">
-        <div class="container mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-4 md:mb-0">
-                    <p class="text-sm">© 2024 Import Export Hub. All rights reserved.</p>
-                </div>
-                <div class="flex space-x-6">
-                    <a href="#home" class="text-gray-400 hover:text-white transition">Home</a>
-                    <a href="#products" class="text-gray-400 hover:text-white transition">Products</a>
-                    <a href="#about" class="text-gray-400 hover:text-white transition">About</a>
-                    <a href="#contact" class="text-gray-400 hover:text-white transition">Contact</a>
-                </div>
-            </div>
+    <footer class="bg-gray-900 text-white py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; 2024 Import Export Hub. All rights reserved.</p>
         </div>
     </footer>
 
-    <!-- Scripts -->
-    <script>
-        // API endpoint
-        const API_URL = '/api';
+    <!-- Inquiry Modal -->
+    <div id="inquiry-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900">Product Inquiry</h2>
+                    <button onclick="closeInquiryModal()" class="text-gray-500 hover:text-gray-700 text-2xl">×</button>
+                </div>
 
-        // Load products from Supabase
+                <form id="inquiry-form" class="space-y-4">
+                    <input type="hidden" id="inquiry-product-name">
+                    
+                    <div>
+                        <p class="text-sm text-gray-600 mb-4">Inquiring about: <span id="display-product-name" class="font-semibold text-blue-600"></span></p>
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Your Name *</label>
+                        <input type="text" id="customer-name" required 
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Email *</label>
+                        <input type="email" id="customer-email" required 
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Phone (Optional)</label>
+                        <input type="tel" id="customer-phone"
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Message *</label>
+                        <textarea id="inquiry-message" rows="4" required placeholder="Tell us about your requirements..."
+                                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    </div>
+
+                    <div class="flex gap-3 pt-4">
+                        <button type="submit" class="flex-1 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+                            Send Inquiry
+                        </button>
+                        <button type="button" onclick="closeInquiryModal()" class="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Supabase
+        const supabase = window.supabase.createClient(
+            'https://tpvqolkzcbbzlqlzchwc.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwdnFvbGt6Y2JiemxxbHpjaHdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzNjA0MjgsImV4cCI6MjA4MTkzNjQyOH0.AU6ieHN1TSUHgSu7qfvkekvmMySDPJb2zOId4Oy7CeY'
+        );
+
+        // Load products
         async function loadProducts() {
             try {
-                const response = await fetch(`${API_URL}/products`);
-                const products = await response.json();
-                
-                if (products && products.length > 0) {
-                    displayProducts(products);
-                } else {
-                    document.getElementById('products-grid').innerHTML = 
-                        '<div class="text-center py-12 col-span-full text-gray-500">No products available yet. Check back soon!</div>';
-                }
+                const { data, error } = await supabase
+                    .from('products')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                displayProducts(data);
             } catch (error) {
                 console.error('Error loading products:', error);
                 document.getElementById('products-grid').innerHTML = 
-                    '<div class="text-center py-12 col-span-full text-red-500">Failed to load products. Please refresh the page.</div>';
+                    '<div class="col-span-full text-center py-12 text-red-500">Error loading products</div>';
             }
         }
 
-        // Display products with beautiful cards
+        // Display products
         function displayProducts(products) {
             const grid = document.getElementById('products-grid');
+            
+            if (products.length === 0) {
+                grid.innerHTML = '<div class="col-span-full text-center py-12 text-gray-500">No products available yet</div>';
+                return;
+            }
+
             grid.innerHTML = products.map(product => `
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition transform hover:-translate-y-1 duration-300">
-                    <img src="${product.image_url || 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=400'}" 
-                         alt="${product.name}" 
-                         class="w-full h-64 object-cover"
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition">
+                    <img src="${product.image_url}" alt="${product.name}" 
+                         class="w-full h-56 object-cover"
                          onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
                     <div class="p-6">
-                        <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full mb-3">${product.category || 'General'}</span>
+                        <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full mb-3">
+                            ${product.category}
+                        </span>
                         <h3 class="text-xl font-bold text-gray-900 mb-2">${product.name}</h3>
-                        <p class="text-gray-600 mb-4 line-clamp-3">${product.description}</p>
-                        <button onclick="inquireProduct('${product.name.replace(/'/g, "\\'")}')" 
-                                class="w-full bg-gray-900 text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition shadow">
+                        <p class="text-gray-600 mb-4">${product.description}</p>
+                        <button onclick="openInquiryModal('${product.name.replace(/'/g, "\\'")}')" 
+                                class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
                             Inquire Now
                         </button>
                     </div>
@@ -178,22 +236,52 @@
             `).join('');
         }
 
-        // Inquire about product
-        function inquireProduct(productName) {
-            alert(`Thank you for your interest in: ${productName}\n\nPlease use the contact form below to get in touch with us!`);
-            document.querySelector('#contact').scrollIntoView({ behavior: 'smooth' });
+        // Open inquiry modal
+        function openInquiryModal(productName) {
+            document.getElementById('inquiry-product-name').value = productName;
+            document.getElementById('display-product-name').textContent = productName;
+            document.getElementById('inquiry-modal').classList.remove('hidden');
         }
 
-        // Contact form submission
-        document.getElementById('contact-form').addEventListener('submit', async (e) => {
+        // Close inquiry modal
+        function closeInquiryModal() {
+            document.getElementById('inquiry-modal').classList.add('hidden');
+            document.getElementById('inquiry-form').reset();
+        }
+
+        // Handle inquiry form submission
+        document.getElementById('inquiry-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            alert('Thank you for your message! We will get back to you within 24 hours.');
-            e.target.reset();
+
+            const inquiryData = {
+                product_name: document.getElementById('inquiry-product-name').value,
+                customer_name: document.getElementById('customer-name').value,
+                customer_email: document.getElementById('customer-email').value,
+                customer_phone: document.getElementById('customer-phone').value || null,
+                message: document.getElementById('inquiry-message').value,
+                status: 'new'
+            };
+
+            try {
+                const { error } = await supabase
+                    .from('inquiries')
+                    .insert([inquiryData]);
+
+                if (error) throw error;
+
+                alert('Thank you! Your inquiry has been submitted successfully. We will contact you soon.');
+                closeInquiryModal();
+            } catch (error) {
+                console.error('Error submitting inquiry:', error);
+                alert('Error submitting inquiry: ' + error.message);
+            }
         });
 
-        // Mobile menu toggle
-        document.getElementById('mobile-menu-button').addEventListener('click', () => {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
+        // Close modal when clicking outside
+        document.getElementById('inquiry-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeInquiryModal();
+            }
         });
 
         // Load products on page load

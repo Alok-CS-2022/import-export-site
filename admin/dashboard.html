@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Import Export Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <nav class="bg-gray-900 text-white p-4 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Admin Dashboard</h1>
+            <a href="../public/index.html" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded transition">
+                View Website
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto p-6">
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-gray-600 text-sm font-semibold mb-2">Total Products</h3>
+                <p id="total-products" class="text-3xl font-bold text-gray-900">-</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-gray-600 text-sm font-semibold mb-2">Categories</h3>
+                <p id="total-categories" class="text-3xl font-bold text-gray-900">-</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-gray-600 text-sm font-semibold mb-2">Last Updated</h3>
+                <p id="last-updated" class="text-lg font-semibold text-gray-900">-</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-gray-600 text-sm font-semibold mb-2">Status</h3>
+                <p class="text-lg font-semibold text-green-600">✓ Online</p>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="bg-white rounded-lg shadow-md p-8 mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Quick Actions</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <a href="https://tpvqolkzcbbzlqlzchwc.supabase.co" target="_blank" 
+                   class="flex items-center gap-4 p-6 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:shadow-lg transition">
+                    <div class="bg-blue-100 p-4 rounded-lg">
+                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900">Manage Products</h3>
+                        <p class="text-gray-600">Add, edit, or delete products</p>
+                    </div>
+                </a>
+
+                <a href="https://tpvqolkzcbbzlqlzchwc.supabase.co" target="_blank" 
+                   class="flex items-center gap-4 p-6 border-2 border-gray-200 rounded-lg hover:border-green-500 hover:shadow-lg transition">
+                    <div class="bg-green-100 p-4 rounded-lg">
+                        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900">Website Settings</h3>
+                        <p class="text-gray-600">Update site colors and content</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Products List -->
+        <div class="bg-white rounded-lg shadow-md p-8">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-900">Recent Products</h2>
+                <a href="https://tpvqolkzcbbzlqlzchwc.supabase.co" target="_blank"
+                   class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                    Add New Product
+                </a>
+            </div>
+            
+            <div id="products-list" class="space-y-4">
+                <div class="text-center py-8 text-gray-500">Loading products...</div>
+            </div>
+        </div>
+
+        <!-- Instructions -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mt-8">
+            <h3 class="text-lg font-bold text-blue-900 mb-3">📚 How to Use Admin Panel</h3>
+            <ul class="space-y-2 text-blue-800">
+                <li>✓ Click "Manage Products" to add/edit products in Supabase</li>
+                <li>✓ Use the Table Editor → products table</li>
+                <li>✓ Changes appear instantly on your website</li>
+                <li>✓ No coding required - just fill in the form</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Load products from API
+        async function loadProducts() {
+            try {
+                const response = await fetch('/api/products');
+                const products = await response.json();
+                
+                // Update stats
+                document.getElementById('total-products').textContent = products.length;
+                
+                const categories = [...new Set(products.map(p => p.category))];
+                document.getElementById('total-categories').textContent = categories.length;
+                
+                if (products.length > 0) {
+                    const lastProduct = products[0];
+                    const date = new Date(lastProduct.created_at);
+                    document.getElementById('last-updated').textContent = date.toLocaleDateString();
+                }
+                
+                // Display products
+                if (products.length > 0) {
+                    displayProducts(products);
+                } else {
+                    document.getElementById('products-list').innerHTML = 
+                        '<div class="text-center py-8 text-gray-500">No products yet. Add your first product in Supabase!</div>';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('products-list').innerHTML = 
+                    '<div class="text-center py-8 text-red-500">Failed to load products</div>';
+            }
+        }
+
+        function displayProducts(products) {
+            const list = document.getElementById('products-list');
+            list.innerHTML = products.slice(0, 5).map(product => `
+                <div class="flex items-center gap-4 p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
+                    <img src="${product.image_url || 'https://via.placeholder.com/80'}" 
+                         alt="${product.name}" 
+                         class="w-20 h-20 object-cover rounded"
+                         onerror="this.src='https://via.placeholder.com/80'">
+                    <div class="flex-1">
+                        <h3 class="font-bold text-gray-900">${product.name}</h3>
+                        <p class="text-sm text-gray-600">${product.category}</p>
+                    </div>
+                    <span class="text-sm text-gray-500">${new Date(product.created_at).toLocaleDateString()}</span>
+                </div>
+            `).join('');
+        }
+
+        loadProducts();
+    </script>
+</body>
+</html>

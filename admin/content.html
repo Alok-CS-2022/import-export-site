@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Management - Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <nav class="bg-gray-900 text-white p-4 mb-6">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold">Content Management</h1>
+            <div class="flex items-center gap-4">
+                <a href="dashboard.html" class="text-gray-300 hover:text-white">Dashboard</a>
+                <a href="products.html" class="text-gray-300 hover:text-white">Products</a>
+                <a href="order.html" class="text-gray-300 hover:text-white">Orders</a>
+                <span id="admin-email" class="text-gray-300"></span>
+                <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-6 max-w-4xl">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-3xl font-bold">Website Content</h2>
+            <a href="../index.html" target="_blank" class="text-blue-600 hover:text-blue-800">
+                Preview Website →
+            </a>
+        </div>
+
+        <div id="success-message" class="hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6"></div>
+        <div id="error-message" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6"></div>
+
+        <form id="content-form" class="space-y-8">
+            <!-- Hero Section -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-2xl font-bold mb-4 text-gray-900">Hero Section</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Title</label>
+                        <input type="text" id="hero-title" required maxlength="100" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900">
+                        <p class="text-sm text-gray-500 mt-1">5-100 characters</p>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Subtitle</label>
+                        <textarea id="hero-subtitle" required rows="3" maxlength="300" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900"></textarea>
+                        <p class="text-sm text-gray-500 mt-1">10-300 characters</p>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Button Text</label>
+                        <input type="text" id="hero-button" required maxlength="30" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900">
+                        <p class="text-sm text-gray-500 mt-1">2-30 characters</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Section -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-2xl font-bold mb-4 text-gray-900">About Section</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Title</label>
+                        <input type="text" id="about-title" required maxlength="100" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900">
+                        <p class="text-sm text-gray-500 mt-1">5-100 characters</p>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Description</label>
+                        <textarea id="about-description" required rows="5" maxlength="1000" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900"></textarea>
+                        <p class="text-sm text-gray-500 mt-1">20-1000 characters</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Section -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-2xl font-bold mb-4 text-gray-900">Contact Information</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Email</label>
+                        <input type="email" id="contact-email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Phone</label>
+                        <input type="text" id="contact-phone" required maxlength="20" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900">
+                        <p class="text-sm text-gray-500 mt-1">10-20 characters</p>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Address</label>
+                        <input type="text" id="contact-address" required maxlength="200" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900">
+                        <p class="text-sm text-gray-500 mt-1">10-200 characters</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Section -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-2xl font-bold mb-4 text-gray-900">Footer</h3>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">Copyright Text</label>
+                    <input type="text" id="footer-copyright" required maxlength="100" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900">
+                    <p class="text-sm text-gray-500 mt-1">5-100 characters</p>
+                </div>
+            </div>
+
+            <div class="flex gap-4">
+                <button type="submit" id="save-btn" class="flex-1 bg-gray-900 text-white py-4 rounded-lg font-semibold hover:bg-gray-800 text-lg">
+                    Save Changes
+                </button>
+                <button type="button" onclick="loadContent()" class="px-8 bg-gray-300 text-gray-700 py-4 rounded-lg font-semibold hover:bg-gray-400">
+                    Reset
+                </button>
+            </div>
+        </form>
+
+        <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <p class="text-sm text-blue-800">
+                <strong>💡 Tip:</strong> Changes will be reflected immediately on your website. Click "Preview Website" to see your updates.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:5000/api/content';
+
+        async function verifyAuth() {
+            const token = localStorage.getItem('adminToken');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:5000/api/admin/auth/verify', {
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    credentials: 'include',
+                });
+                const data = await response.json();
+                
+                if (!data.success) {
+                    localStorage.removeItem('adminToken');
+                    window.location.href = 'login.html';
+                } else {
+                    document.getElementById('admin-email').textContent = data.admin.email;
+                    loadContent();
+                }
+            } catch (error) {
+                window.location.href = 'login.html';
+            }
+        }
+
+        async function loadContent() {
+            try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const content = data.content;
+                    
+                    document.getElementById('hero-title').value = content.hero.title;
+                    document.getElementById('hero-subtitle').value = content.hero.subtitle;
+                    document.getElementById('hero-button').value = content.hero.buttonText;
+                    
+                    document.getElementById('about-title').value = content.about.title;
+                    document.getElementById('about-description').value = content.about.description;
+                    
+                    document.getElementById('contact-email').value = content.contact.email;
+                    document.getElementById('contact-phone').value = content.contact.phone;
+                    document.getElementById('contact-address').value = content.contact.address;
+                    
+                    document.getElementById('footer-copyright').value = content.footer.copyright;
+                }
+            } catch (error) {
+                console.error('Error loading content:', error);
+                showError('Failed to load content');
+            }
+        }
+
+        document.getElementById('content-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const token = localStorage.getItem('adminToken');
+            const saveBtn = document.getElementById('save-btn');
+            
+            saveBtn.textContent = 'Saving...';
+            saveBtn.disabled = true;
+            hideMessages();
+
+            const contentData = {
+                hero: {
+                    title: document.getElementById('hero-title').value,
+                    subtitle: document.getElementById('hero-subtitle').value,
+                    buttonText: document.getElementById('hero-button').value,
+                },
+                about: {
+                    title: document.getElementById('about-title').value,
+                    description: document.getElementById('about-description').value,
+                },
+                contact: {
+                    email: document.getElementById('contact-email').value,
+                    phone: document.getElementById('contact-phone').value,
+                    address: document.getElementById('contact-address').value,
+                },
+                footer: {
+                    copyright: document.getElementById('footer-copyright').value,
+                }
+            };
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify(contentData),
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showSuccess('Content updated successfully! Changes are now live on your website.');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    showError(data.message || 'Failed to update content');
+                }
+            } catch (error) {
+                showError('Server error. Please try again.');
+            } finally {
+                saveBtn.textContent = 'Save Changes';
+                saveBtn.disabled = false;
+            }
+        });
+
+        function showSuccess(message) {
+            const successMsg = document.getElementById('success-message');
+            successMsg.textContent = message;
+            successMsg.classList.remove('hidden');
+            setTimeout(() => successMsg.classList.add('hidden'), 5000);
+        }
+
+        function showError(message) {
+            const errorMsg = document.getElementById('error-message');
+            errorMsg.textContent = message;
+            errorMsg.classList.remove('hidden');
+        }
+
+        function hideMessages() {
+            document.getElementById('success-message').classList.add('hidden');
+            document.getElementById('error-message').classList.add('hidden');
+        }
+
+        async function logout() {
+            const token = localStorage.getItem('adminToken');
+            try {
+                await fetch('http://localhost:5000/api/admin/auth/logout', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    credentials: 'include',
+                });
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('adminEmail');
+            window.location.href = 'login.html';
+        }
+
+        verifyAuth();
+    </script>
+</body>
+</html>

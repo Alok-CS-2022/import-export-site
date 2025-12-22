@@ -22,7 +22,7 @@
         <!-- Add Product Button -->
         <div class="mb-6 flex justify-between items-center">
             <h2 class="text-3xl font-bold">Manage Products</h2>
-            <button onclick="openAddModal()" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition font-semibold">
+            <button id="add-product-btn" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition font-semibold">
                 + Add New Product
             </button>
         </div>
@@ -41,7 +41,7 @@
             <div class="p-6">
                 <div class="flex justify-between items-center mb-6">
                     <h2 id="modal-title" class="text-2xl font-bold">Add New Product</h2>
-                    <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700 text-2xl">×</button>
+                    <button id="close-modal-btn" class="text-gray-500 hover:text-gray-700 text-2xl">×</button>
                 </div>
 
                 <form id="product-form" class="space-y-4">
@@ -61,9 +61,9 @@
 
                     <div>
                         <label class="block text-gray-700 font-semibold mb-2">Image URL *</label>
-                        <input type="url" id="product-image" required placeholder="https://example.com/image.jpg"
+                        <input type="url" id="product-image" required placeholder="https://images.unsplash.com/photo-..."
                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <p class="text-sm text-gray-500 mt-1">Use Unsplash or any image URL</p>
+                        <p class="text-sm text-gray-500 mt-1">Tip: Search unsplash.com, right-click image → Copy image address</p>
                     </div>
 
                     <div>
@@ -85,7 +85,7 @@
                         <button type="submit" class="flex-1 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
                             Save Product
                         </button>
-                        <button type="button" onclick="closeModal()" class="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                        <button type="button" id="cancel-btn" class="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
                             Cancel
                         </button>
                     </div>
@@ -95,156 +95,210 @@
     </div>
 
     <script>
-        // Initialize Supabase
-        const supabase = window.supabase.createClient(
-            'https://tpvqolkzcbbzlqlzchwc.supabase.co',
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwdnFvbGt6Y2JiemxxbHpjaHdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzNjA0MjgsImV4cCI6MjA4MTkzNjQyOH0.AU6ieHN1TSUHgSu7qfvkekvmMySDPJb2zOId4Oy7CeY'
-        );
-
-        let editingProductId = null;
-
-        // Load products
-        async function loadProducts() {
-            try {
-                const { data, error } = await supabase
-                    .from('products')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-
-                if (error) throw error;
-
-                displayProducts(data);
-            } catch (error) {
-                console.error('Error loading products:', error);
-                document.getElementById('products-container').innerHTML = 
-                    '<div class="col-span-full text-center py-12 text-red-500">Error loading products</div>';
-            }
-        }
-
-        // Display products
-        function displayProducts(products) {
-            const container = document.getElementById('products-container');
+        console.log('Admin dashboard loaded');
+        
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing...');
             
-            if (products.length === 0) {
-                container.innerHTML = '<div class="col-span-full text-center py-12 text-gray-500">No products yet. Add your first product!</div>';
+            // Check if Supabase is available
+            if (typeof window.supabase === 'undefined') {
+                console.error('Supabase not loaded!');
+                alert('Error: Supabase library failed to load. Please refresh the page.');
                 return;
             }
 
-            container.innerHTML = products.map(product => `
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
-                    <img src="${product.image_url}" alt="${product.name}" 
-                         class="w-full h-48 object-cover"
-                         onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
-                    <div class="p-6">
-                        <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full mb-3">
-                            ${product.category}
-                        </span>
-                        <h3 class="text-xl font-bold text-gray-900 mb-2">${product.name}</h3>
-                        <p class="text-gray-600 mb-4 line-clamp-2">${product.description}</p>
-                        <div class="flex gap-2">
-                            <button onclick='editProduct(${JSON.stringify(product).replace(/'/g, "&#39;")})' 
-                                    class="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">
-                                Edit
-                            </button>
-                            <button onclick="deleteProduct('${product.id}')" 
-                                    class="flex-1 bg-red-600 text-white py-2 rounded hover:bg-red-700 transition">
-                                Delete
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
+            // Initialize Supabase
+            const supabase = window.supabase.createClient(
+                'https://tpvqolkzcbbzlqlzchwc.supabase.co',
+                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwdnFvbGt6Y2JiemxxbHpjaHdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzNjA0MjgsImV4cCI6MjA4MTkzNjQyOH0.AU6ieHN1TSUHgSu7qfvkekvmMySDPJb2zOId4Oy7CeY'
+            );
 
-        // Open add modal
-        function openAddModal() {
-            editingProductId = null;
-            document.getElementById('modal-title').textContent = 'Add New Product';
-            document.getElementById('product-form').reset();
-            document.getElementById('product-id').value = '';
-            document.getElementById('product-modal').classList.remove('hidden');
-        }
+            console.log('Supabase initialized');
 
-        // Edit product
-        function editProduct(product) {
-            editingProductId = product.id;
-            document.getElementById('modal-title').textContent = 'Edit Product';
-            document.getElementById('product-id').value = product.id;
-            document.getElementById('product-name').value = product.name;
-            document.getElementById('product-description').value = product.description;
-            document.getElementById('product-image').value = product.image_url;
-            document.getElementById('product-category').value = product.category;
-            document.getElementById('product-modal').classList.remove('hidden');
-        }
+            let editingProductId = null;
 
-        // Close modal
-        function closeModal() {
-            document.getElementById('product-modal').classList.add('hidden');
-            document.getElementById('product-form').reset();
-            editingProductId = null;
-        }
-
-        // Save product
-        document.getElementById('product-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const productData = {
-                name: document.getElementById('product-name').value,
-                description: document.getElementById('product-description').value,
-                image_url: document.getElementById('product-image').value,
-                category: document.getElementById('product-category').value
-            };
-
-            try {
-                if (editingProductId) {
-                    // Update existing product
-                    const { error } = await supabase
+            // Load products
+            async function loadProducts() {
+                console.log('Loading products...');
+                try {
+                    const { data, error } = await supabase
                         .from('products')
-                        .update(productData)
-                        .eq('id', editingProductId);
+                        .select('*')
+                        .order('created_at', { ascending: false });
 
                     if (error) throw error;
-                    alert('Product updated successfully!');
-                } else {
-                    // Add new product
-                    const { error } = await supabase
-                        .from('products')
-                        .insert([productData]);
 
-                    if (error) throw error;
-                    alert('Product added successfully!');
+                    console.log('Products loaded:', data);
+                    displayProducts(data);
+                } catch (error) {
+                    console.error('Error loading products:', error);
+                    document.getElementById('products-container').innerHTML = 
+                        '<div class="col-span-full text-center py-12 text-red-500">Error loading products: ' + error.message + '</div>';
+                }
+            }
+
+            // Display products
+            function displayProducts(products) {
+                const container = document.getElementById('products-container');
+                
+                if (products.length === 0) {
+                    container.innerHTML = '<div class="col-span-full text-center py-12 text-gray-500">No products yet. Add your first product!</div>';
+                    return;
                 }
 
-                closeModal();
-                loadProducts();
-            } catch (error) {
-                console.error('Error saving product:', error);
-                alert('Error saving product: ' + error.message);
+                container.innerHTML = products.map(product => `
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+                        <img src="${product.image_url}" alt="${product.name}" 
+                             class="w-full h-48 object-cover"
+                             onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
+                        <div class="p-6">
+                            <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full mb-3">
+                                ${product.category}
+                            </span>
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">${product.name}</h3>
+                            <p class="text-gray-600 mb-4">${product.description}</p>
+                            <div class="flex gap-2">
+                                <button onclick="window.editProduct('${product.id}')" 
+                                        class="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">
+                                    Edit
+                                </button>
+                                <button onclick="window.deleteProduct('${product.id}')" 
+                                        class="flex-1 bg-red-600 text-white py-2 rounded hover:bg-red-700 transition">
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
             }
+
+            // Open add modal
+            function openAddModal() {
+                console.log('Opening add modal...');
+                editingProductId = null;
+                document.getElementById('modal-title').textContent = 'Add New Product';
+                document.getElementById('product-form').reset();
+                document.getElementById('product-id').value = '';
+                document.getElementById('product-modal').classList.remove('hidden');
+            }
+
+            // Edit product
+            window.editProduct = async function(productId) {
+                console.log('Editing product:', productId);
+                try {
+                    const { data, error } = await supabase
+                        .from('products')
+                        .select('*')
+                        .eq('id', productId)
+                        .single();
+
+                    if (error) throw error;
+
+                    editingProductId = data.id;
+                    document.getElementById('modal-title').textContent = 'Edit Product';
+                    document.getElementById('product-id').value = data.id;
+                    document.getElementById('product-name').value = data.name;
+                    document.getElementById('product-description').value = data.description;
+                    document.getElementById('product-image').value = data.image_url;
+                    document.getElementById('product-category').value = data.category;
+                    document.getElementById('product-modal').classList.remove('hidden');
+                } catch (error) {
+                    console.error('Error loading product:', error);
+                    alert('Error loading product: ' + error.message);
+                }
+            }
+
+            // Close modal
+            function closeModal() {
+                console.log('Closing modal...');
+                document.getElementById('product-modal').classList.add('hidden');
+                document.getElementById('product-form').reset();
+                editingProductId = null;
+            }
+
+            // Delete product
+            window.deleteProduct = async function(id) {
+                if (!confirm('Are you sure you want to delete this product?')) return;
+
+                console.log('Deleting product:', id);
+                try {
+                    const { error } = await supabase
+                        .from('products')
+                        .delete()
+                        .eq('id', id);
+
+                    if (error) throw error;
+
+                    alert('Product deleted successfully!');
+                    loadProducts();
+                } catch (error) {
+                    console.error('Error deleting product:', error);
+                    alert('Error deleting product: ' + error.message);
+                }
+            }
+
+            // Event Listeners
+            document.getElementById('add-product-btn').addEventListener('click', function() {
+                console.log('Add button clicked');
+                openAddModal();
+            });
+
+            document.getElementById('close-modal-btn').addEventListener('click', closeModal);
+            document.getElementById('cancel-btn').addEventListener('click', closeModal);
+
+            // Save product
+            document.getElementById('product-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                console.log('Form submitted');
+
+                const productData = {
+                    name: document.getElementById('product-name').value,
+                    description: document.getElementById('product-description').value,
+                    image_url: document.getElementById('product-image').value,
+                    category: document.getElementById('product-category').value
+                };
+
+                console.log('Saving product:', productData);
+
+                try {
+                    if (editingProductId) {
+                        // Update existing product
+                        const { error } = await supabase
+                            .from('products')
+                            .update(productData)
+                            .eq('id', editingProductId);
+
+                        if (error) throw error;
+                        alert('Product updated successfully!');
+                    } else {
+                        // Add new product
+                        const { error } = await supabase
+                            .from('products')
+                            .insert([productData]);
+
+                        if (error) throw error;
+                        alert('Product added successfully!');
+                    }
+
+                    closeModal();
+                    loadProducts();
+                } catch (error) {
+                    console.error('Error saving product:', error);
+                    alert('Error saving product: ' + error.message);
+                }
+            });
+
+            // Close modal when clicking outside
+            document.getElementById('product-modal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeModal();
+                }
+            });
+
+            // Load products on page load
+            loadProducts();
         });
-
-        // Delete product
-        async function deleteProduct(id) {
-            if (!confirm('Are you sure you want to delete this product?')) return;
-
-            try {
-                const { error } = await supabase
-                    .from('products')
-                    .delete()
-                    .eq('id', id);
-
-                if (error) throw error;
-
-                alert('Product deleted successfully!');
-                loadProducts();
-            } catch (error) {
-                console.error('Error deleting product:', error);
-                alert('Error deleting product: ' + error.message);
-            }
-        }
-
-        // Load products on page load
-        loadProducts();
     </script>
 </body>
 </html>

@@ -3,297 +3,257 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Import Export Hub - Connect Global Markets</title>
+    <title>Nepal Import Export - Global Trade Solutions</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="bg-white">
+<body class="bg-gray-50">
     <!-- Navigation -->
-    <nav class="bg-white shadow-md sticky top-0 z-40">
-        <div class="container mx-auto px-6 py-4">
-            <div class="flex justify-between items-center">
-                <div class="text-2xl font-bold text-blue-600">Import Export Hub</div>
-                <div class="hidden md:flex space-x-8">
-                    <a href="#home" class="text-gray-700 hover:text-blue-600 transition">Home</a>
-                    <a href="#products" class="text-gray-700 hover:text-blue-600 transition">Products</a>
-                    <a href="#about" class="text-gray-700 hover:text-blue-600 transition">About</a>
-                    <a href="#contact" class="text-gray-700 hover:text-blue-600 transition">Contact</a>
+    <nav class="bg-white shadow-lg fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-blue-600">Nepal Import Export</span>
                 </div>
-                <button class="md:hidden text-gray-700">☰</button>
+                <div class="flex items-center space-x-8">
+                    <a href="#home" class="text-gray-700 hover:text-blue-600">Home</a>
+                    <a href="#products" class="text-gray-700 hover:text-blue-600">Products</a>
+                    <a href="#about" class="text-gray-700 hover:text-blue-600">About</a>
+                    <a href="#contact" class="text-gray-700 hover:text-blue-600">Contact</a>
+                </div>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section id="home" class="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-20">
-        <div class="container mx-auto px-6 text-center">
-            <h1 class="text-5xl font-bold mb-6">Connect Global Markets</h1>
-            <p class="text-xl mb-8 max-w-2xl mx-auto">Your trusted partner in international trade. Quality products, reliable service, worldwide delivery.</p>
-            <div class="flex gap-4 justify-center">
-                <a href="#products" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
-                    Browse Products
-                </a>
-                <a href="#contact" class="border-2 border-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition">
-                    Contact Us
-                </a>
-            </div>
+    <section id="home" class="pt-20 bg-gradient-to-r from-blue-600 to-blue-800 text-white">
+        <div class="max-w-7xl mx-auto px-4 py-24 text-center">
+            <h1 class="text-5xl font-bold mb-6">Global Trade Solutions</h1>
+            <p class="text-xl mb-8">Connecting Nepal to the World</p>
+            <a href="#products" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100">
+                Explore Products
+            </a>
         </div>
     </section>
 
     <!-- Products Section -->
-    <section id="products" class="py-20 bg-gray-50">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-12">
-                <h2 class="text-4xl font-bold text-gray-900 mb-4">Our Products</h2>
-                <p class="text-gray-600 max-w-2xl mx-auto">Discover our wide range of quality products available for international export</p>
-            </div>
-
-            <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="text-center py-12 col-span-full text-gray-500">
-                    Loading products...
-                </div>
+    <section id="products" class="py-16">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">Our Products</h2>
+            <div id="products-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <p class="col-span-full text-center text-gray-500">Loading products...</p>
             </div>
         </div>
     </section>
 
     <!-- About Section -->
-    <section id="about" class="py-20">
-        <div class="container mx-auto px-6">
-            <div class="max-w-3xl mx-auto text-center">
-                <h2 class="text-4xl font-bold text-gray-900 mb-6">About Us</h2>
-                <p class="text-gray-600 text-lg mb-6">
-                    We are a leading import-export company specializing in connecting businesses across borders. 
-                    With years of experience in international trade, we ensure quality products and seamless transactions.
-                </p>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-                    <div class="p-6">
-                        <div class="text-4xl mb-4">🌍</div>
-                        <h3 class="text-xl font-bold mb-2">Global Reach</h3>
-                        <p class="text-gray-600">Serving clients worldwide</p>
-                    </div>
-                    <div class="p-6">
-                        <div class="text-4xl mb-4">✓</div>
-                        <h3 class="text-xl font-bold mb-2">Quality Assured</h3>
-                        <p class="text-gray-600">Premium products only</p>
-                    </div>
-                    <div class="p-6">
-                        <div class="text-4xl mb-4">🚚</div>
-                        <h3 class="text-xl font-bold mb-2">Fast Delivery</h3>
-                        <p class="text-gray-600">Reliable shipping partners</p>
-                    </div>
-                </div>
-            </div>
+    <section id="about" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-8">About Us</h2>
+            <p class="text-center text-gray-600 max-w-2xl mx-auto">
+                We are a leading import-export company in Nepal, connecting local businesses 
+                with global markets. Our expertise spans various industries including agriculture, 
+                textiles, and handicrafts.
+            </p>
         </div>
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="py-20 bg-gray-50">
-        <div class="container mx-auto px-6">
-            <div class="max-w-2xl mx-auto text-center">
-                <h2 class="text-4xl font-bold text-gray-900 mb-6">Get In Touch</h2>
-                <p class="text-gray-600 mb-8">Have questions? We'd love to hear from you.</p>
-                
-                <div class="bg-white rounded-lg shadow-lg p-8">
-                    <div class="space-y-4">
-                        <div class="flex items-center gap-4">
-                            <div class="bg-blue-100 p-3 rounded-full">📧</div>
-                            <div class="text-left">
-                                <p class="font-semibold">Email</p>
-                                <p class="text-gray-600">contact@importexporthub.com</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <div class="bg-blue-100 p-3 rounded-full">📱</div>
-                            <div class="text-left">
-                                <p class="font-semibold">Phone</p>
-                                <p class="text-gray-600">+977 1234567890</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <div class="bg-blue-100 p-3 rounded-full">📍</div>
-                            <div class="text-left">
-                                <p class="font-semibold">Location</p>
-                                <p class="text-gray-600">Kathmandu, Nepal</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <section id="contact" class="py-16 bg-gray-100">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold mb-8">Get In Touch</h2>
+            <p class="text-gray-600 mb-4">Email: info@nepalimportexport.com</p>
+            <p class="text-gray-600 mb-4">Phone: +977-1-XXXXXXX</p>
+            <p class="text-gray-600">Location: Kathmandu, Nepal</p>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-8">
-        <div class="container mx-auto px-6 text-center">
-            <p>&copy; 2024 Import Export Hub. All rights reserved.</p>
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p>&copy; 2025 Nepal Import Export. All rights reserved.</p>
         </div>
     </footer>
 
     <!-- Inquiry Modal -->
-    <div id="inquiry-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
-            <div class="p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold text-gray-900">Product Inquiry</h2>
-                    <button onclick="closeInquiryModal()" class="text-gray-500 hover:text-gray-700 text-2xl">×</button>
-                </div>
-
-                <form id="inquiry-form" class="space-y-4">
-                    <input type="hidden" id="inquiry-product-name">
-                    
-                    <div>
-                        <p class="text-sm text-gray-600 mb-4">Inquiring about: <span id="display-product-name" class="font-semibold text-blue-600"></span></p>
-                    </div>
-
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Your Name *</label>
-                        <input type="text" id="customer-name" required 
-                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Email *</label>
-                        <input type="email" id="customer-email" required 
-                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Phone (Optional)</label>
-                        <input type="tel" id="customer-phone"
-                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Message *</label>
-                        <textarea id="inquiry-message" rows="4" required placeholder="Tell us about your requirements..."
-                                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-                    </div>
-
-                    <div class="flex gap-3 pt-4">
-                        <button type="submit" class="flex-1 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
-                            Send Inquiry
-                        </button>
-                        <button type="button" onclick="closeInquiryModal()" class="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
-                            Cancel
-                        </button>
-                    </div>
-                </form>
+    <div id="inquiry-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold">Product Inquiry</h3>
+                <button onclick="closeInquiryModal()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
             </div>
+            <form id="inquiry-form" class="space-y-4">
+                <input type="hidden" id="inquiry-product-name" name="product_name">
+                
+                <div>
+                    <label class="block text-sm font-medium mb-2">Product</label>
+                    <input type="text" id="inquiry-product-display" readonly 
+                           class="w-full px-4 py-2 border rounded-lg bg-gray-50">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium mb-2">Your Name *</label>
+                    <input type="text" name="customer_name" required 
+                           class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium mb-2">Email *</label>
+                    <input type="email" name="customer_email" required 
+                           class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium mb-2">Phone</label>
+                    <input type="tel" name="customer_phone" 
+                           class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium mb-2">Message *</label>
+                    <textarea name="message" required rows="4" 
+                              class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"></textarea>
+                </div>
+                
+                <div class="flex gap-4">
+                    <button type="button" onclick="closeInquiryModal()" 
+                            class="flex-1 px-6 py-2 border rounded-lg hover:bg-gray-50">
+                        Cancel
+                    </button>
+                    <button type="submit" 
+                            class="flex-1 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        Submit Inquiry
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
     <script>
         console.log('Script started');
-        
-        // Check if Supabase loaded
-        if (typeof window.supabase === 'undefined') {
-            console.error('Supabase not loaded!');
-            document.getElementById('products-grid').innerHTML = 
-                '<div class="col-span-full text-center py-12 text-red-500">Error: Supabase library failed to load. Please refresh.</div>';
+
+        // Initialize Supabase
+        const SUPABASE_URL = 'https://tpvqolkzcbbzlqlzchwc.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwdnFvbGt6Y2JiemxxbHpjaHdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ4NDY1NzAsImV4cCI6MjA1MDQyMjU3MH0.5tv9xqjKLCLyMxIRlpL_Omc6sTHxM4Z86yKaCHdJCVM';
+
+        if (typeof supabase === 'undefined') {
+            console.error('Supabase library not loaded');
         } else {
             console.log('Supabase loaded successfully');
         }
 
-        // Initialize Supabase
-        const supabase = window.supabase.createClient(
-            'https://tpvqolkzcbbzlqlzchwc.supabase.co',
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwdnFvbGt6Y2JiemxxbHpjaHdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzNjA0MjgsImV4cCI6MjA4MTkzNjQyOH0.AU6ieHN1TSUHgSu7qfvkekvmMySDPJb2zOId4Oy7CeY'
-        );
-
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         console.log('Supabase client created');
 
-        // Load products
+        // Load products function
         async function loadProducts() {
             console.log('loadProducts() called');
+            const grid = document.getElementById('products-grid');
+            
             try {
                 console.log('Fetching from Supabase...');
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('products')
                     .select('*')
                     .order('created_at', { ascending: false });
 
                 if (error) {
                     console.error('Supabase error:', error);
-                    throw error;
+                    grid.innerHTML = '<p class="col-span-full text-center text-red-500">Error loading products</p>';
+                    return;
                 }
 
                 console.log('Products fetched:', data);
-                displayProducts(data);
-            } catch (error) {
-                console.error('Error loading products:', error);
-                document.getElementById('products-grid').innerHTML = 
-                    '<div class="col-span-full text-center py-12 text-red-500">Error loading products: ' + error.message + '</div>';
-            }
-        }
 
-        // Display products
-        function displayProducts(products) {
-            const grid = document.getElementById('products-grid');
-            
-            if (products.length === 0) {
-                grid.innerHTML = '<div class="col-span-full text-center py-12 text-gray-500">No products available yet</div>';
-                return;
-            }
+                if (!data || data.length === 0) {
+                    grid.innerHTML = '<p class="col-span-full text-center text-gray-500">No products available</p>';
+                    return;
+                }
 
-            grid.innerHTML = products.map(product => `
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition">
-                    <img src="${product.image_url}" alt="${product.name}" 
-                         class="w-full h-56 object-cover"
-                         onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
-                    <div class="p-6">
-                        <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full mb-3">
-                            ${product.category}
-                        </span>
-                        <h3 class="text-xl font-bold text-gray-900 mb-2">${product.name}</h3>
-                        <p class="text-gray-600 mb-4">${product.description}</p>
-                        <button onclick="openInquiryModal('${product.name.replace(/'/g, "\\'")}')" 
-                                class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
-                            Inquire Now
-                        </button>
+                grid.innerHTML = data.map(product => `
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition">
+                        <img src="${product.image_url}" alt="${product.name}" 
+                             class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2">${product.name}</h3>
+                            <p class="text-gray-600 mb-2">${product.description}</p>
+                            <span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mb-4">
+                                ${product.category}
+                            </span>
+                            <button onclick="openInquiryModal('${product.name.replace(/'/g, "\\'")}')" 
+                                    class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                                Inquire Now
+                            </button>
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `).join('');
+
+                console.log('Products rendered successfully');
+            } catch (err) {
+                console.error('Error in loadProducts:', err);
+                grid.innerHTML = '<p class="col-span-full text-center text-red-500">Error loading products</p>';
+            }
         }
 
         // Open inquiry modal
         function openInquiryModal(productName) {
+            console.log('Opening inquiry modal for:', productName);
             document.getElementById('inquiry-product-name').value = productName;
-            document.getElementById('display-product-name').textContent = productName;
+            document.getElementById('inquiry-product-display').value = productName;
             document.getElementById('inquiry-modal').classList.remove('hidden');
+            document.getElementById('inquiry-form').reset();
+            document.getElementById('inquiry-product-name').value = productName;
+            document.getElementById('inquiry-product-display').value = productName;
         }
 
         // Close inquiry modal
         function closeInquiryModal() {
             document.getElementById('inquiry-modal').classList.add('hidden');
-            document.getElementById('inquiry-form').reset();
         }
 
         // Handle inquiry form submission
-        document.getElementById('inquiry-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, setting up form handler');
+            
+            const form = document.getElementById('inquiry-form');
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                console.log('Form submitted');
 
-            const inquiryData = {
-                product_name: document.getElementById('inquiry-product-name').value,
-                customer_name: document.getElementById('customer-name').value,
-                customer_email: document.getElementById('customer-email').value,
-                customer_phone: document.getElementById('customer-phone').value || null,
-                message: document.getElementById('inquiry-message').value,
-                status: 'new'
-            };
+                const formData = new FormData(e.target);
+                const inquiry = {
+                    product_name: document.getElementById('inquiry-product-name').value,
+                    customer_name: formData.get('customer_name'),
+                    customer_email: formData.get('customer_email'),
+                    customer_phone: formData.get('customer_phone') || null,
+                    message: formData.get('message'),
+                    status: 'new'
+                };
 
-            try {
-                const { error } = await supabase
-                    .from('inquiries')
-                    .insert([inquiryData]);
+                console.log('Submitting inquiry:', inquiry);
 
-                if (error) throw error;
+                try {
+                    const { data, error } = await supabaseClient
+                        .from('inquiries')
+                        .insert([inquiry]);
 
-                alert('Thank you! Your inquiry has been submitted successfully. We will contact you soon.');
-                closeInquiryModal();
-            } catch (error) {
-                console.error('Error submitting inquiry:', error);
-                alert('Error submitting inquiry: ' + error.message);
-            }
+                    if (error) {
+                        console.error('Error saving inquiry:', error);
+                        alert('Error submitting inquiry: ' + error.message);
+                        return;
+                    }
+
+                    console.log('Inquiry saved successfully');
+                    alert('Thank you! Your inquiry has been submitted successfully.');
+                    closeInquiryModal();
+                } catch (err) {
+                    console.error('Error in form submission:', err);
+                    alert('Error submitting inquiry. Please try again.');
+                }
+            });
+
+            // Load products on page load
+            loadProducts();
         });
 
         // Close modal when clicking outside
@@ -302,18 +262,6 @@
                 closeInquiryModal();
             }
         });
-
-        // Load products on page load
-        console.log('Setting up page load listener');
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', function() {
-                console.log('DOM loaded, calling loadProducts');
-                loadProducts();
-            });
-        } else {
-            console.log('DOM already loaded, calling loadProducts immediately');
-            loadProducts();
-        }
     </script>
 </body>
 </html>

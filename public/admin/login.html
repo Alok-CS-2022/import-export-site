@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - Luxe Interiors</title>
+    <title>Admin Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center">
@@ -11,62 +11,111 @@
         <h1 class="text-3xl font-bold text-gray-900 mb-6 text-center">Admin Login</h1>
         
         <div id="error-message" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"></div>
+        <div id="loading" class="hidden text-center text-gray-600 mb-4">Logging in...</div>
         
         <form id="login-form">
             <div class="mb-4">
                 <label class="block text-gray-700 font-semibold mb-2">Email</label>
-                <input type="email" id="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900">
+                <input type="email" id="email" value="alok.kharel.nepal@gmail.com" required 
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900">
             </div>
             
             <div class="mb-6">
                 <label class="block text-gray-700 font-semibold mb-2">Password</label>
-                <input type="password" id="password" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900">
+                <input type="password" id="password" value="Password123!" required 
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900">
             </div>
             
-            <button type="submit" id="login-btn" class="w-full bg-gray-900 text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition">
+            <button type="submit" id="login-btn" 
+                    class="w-full bg-gray-900 text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition">
                 Login
             </button>
         </form>
+        
+        <!-- Debug info -->
+        <div id="debug-info" class="mt-4 p-4 bg-gray-100 rounded text-xs font-mono">
+            <div>Status: <span id="status">Ready</span></div>
+            <div>Error: <span id="debug-error">None</span></div>
+        </div>
     </div>
 
     <script type="module">
-        // Inline Supabase client (works directly on Vercel)
-        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/+esm'
 
         const supabase = createClient(
-            'https://tpvqolkzcbbzlqlzchwc.supabase.co', // your Supabase project URL
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwdnFvbGt6Y2JiemxxbHpjaHdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzNjA0MjgsImV4cCI6MjA4MTkzNjQyOH0.AU6ieHN1TSUHgSu7qfvkekvmMySDPJb2zOId4Oy7CeY' // your anon key
+            'https://tpvqolkzcbbzlqlzchwc.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwdnFvbGt6Y2JiemxxbHpjaHdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzUxODA3ODAsImV4cCI6MjA1MDc1Njc4MH0.gvC7QczGqBqXD6-wc0tNHMSDY7QcXjYOPGqWC2LJKYU'
         )
 
-        const loginForm = document.getElementById('login-form')
-        const errorMessage = document.getElementById('error-message')
+        const form = document.getElementById('login-form')
+        const errorDiv = document.getElementById('error-message')
+        const loadingDiv = document.getElementById('loading')
         const loginBtn = document.getElementById('login-btn')
+        const statusSpan = document.getElementById('status')
+        const debugError = document.getElementById('debug-error')
 
-        loginForm.addEventListener('submit', async (e) => {
+        form.addEventListener('submit', async (e) => {
             e.preventDefault()
-
-            const email = document.getElementById('email').value
+            
+            const email = document.getElementById('email').value.trim()
             const password = document.getElementById('password').value
-
-            loginBtn.textContent = 'Logging in...'
+            
+            console.log('Login attempt:', email)
+            statusSpan.textContent = 'Attempting login...'
+            
+            errorDiv.classList.add('hidden')
+            loadingDiv.classList.remove('hidden')
             loginBtn.disabled = true
-            errorMessage.classList.add('hidden')
-
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email,
-                password
-            })
-
-            if (error) {
-                errorMessage.textContent = error.message
-                errorMessage.classList.remove('hidden')
-                loginBtn.textContent = 'Login'
+            
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email,
+                    password
+                })
+                
+                console.log('Supabase response:', { data, error })
+                
+                if (error) {
+                    console.error('Login error:', error)
+                    errorDiv.textContent = `Login failed: ${error.message}`
+                    errorDiv.classList.remove('hidden')
+                    debugError.textContent = error.message
+                    statusSpan.textContent = 'Failed'
+                    loginBtn.disabled = false
+                    loadingDiv.classList.add('hidden')
+                    return
+                }
+                
+                if (data?.session) {
+                    statusSpan.textContent = 'Success! Redirecting...'
+                    console.log('Login successful, redirecting...')
+                    // Redirect to order page
+                    window.location.href = '/admin/order.html'
+                } else {
+                    errorDiv.textContent = 'Login failed: No session returned'
+                    errorDiv.classList.remove('hidden')
+                    statusSpan.textContent = 'No session'
+                    loginBtn.disabled = false
+                    loadingDiv.classList.add('hidden')
+                }
+                
+            } catch (err) {
+                console.error('Unexpected error:', err)
+                errorDiv.textContent = `Unexpected error: ${err.message}`
+                errorDiv.classList.remove('hidden')
+                debugError.textContent = err.message
+                statusSpan.textContent = 'Error'
                 loginBtn.disabled = false
-                return
+                loadingDiv.classList.add('hidden')
             }
-
-            // Login successful → redirect to dashboard
-            window.location.href = 'dashboard.html'
+        })
+        
+        // Check if already logged in
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            if (session) {
+                console.log('Already logged in, redirecting...')
+                window.location.href = '/admin/order.html'
+            }
         })
     </script>
 </body>

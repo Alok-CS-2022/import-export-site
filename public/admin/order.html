@@ -21,369 +21,321 @@
 
     <div class="container mx-auto px-6">
         <div class="flex justify-between items-center mb-6">
-            <h2 class="text-3xl font-bold">Orders</h2>
+            <h2 class="text-3xl font-bold">Customer Inquiries</h2>
             <div class="flex gap-2">
                 <button onclick="filterOrders('all')" id="filter-all" class="px-4 py-2 rounded bg-gray-900 text-white">All</button>
+                <button onclick="filterOrders('new')" id="filter-new" class="px-4 py-2 rounded bg-gray-300 text-gray-700">New</button>
                 <button onclick="filterOrders('pending')" id="filter-pending" class="px-4 py-2 rounded bg-gray-300 text-gray-700">Pending</button>
-                <button onclick="filterOrders('confirmed')" id="filter-confirmed" class="px-4 py-2 rounded bg-gray-300 text-gray-700">Confirmed</button>
                 <button onclick="filterOrders('completed')" id="filter-completed" class="px-4 py-2 rounded bg-gray-300 text-gray-700">Completed</button>
-                <button onclick="filterOrders('cancelled')" id="filter-cancelled" class="px-4 py-2 rounded bg-gray-300 text-gray-700">Cancelled</button>
             </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="w-full">
-                    <thead class="bg-gray-100 border-b">
-                        <tr>
-                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Order ID</th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Customer</th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Product</th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Quantity</th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Total</th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Status</th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Date</th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="orders-tbody" class="divide-y divide-gray-200">
-                        <!-- Orders will load here -->
-                    </tbody>
-                </table>
-            </div>
+        <div id="loading" class="text-center py-12 text-gray-600">
+            Loading inquiries...
+        </div>
+
+        <div id="orders-container" class="hidden space-y-4">
+            <!-- Orders will be loaded here -->
         </div>
 
         <div id="empty-state" class="hidden text-center py-12 text-gray-500">
-            <p class="text-lg">No orders found.</p>
+            <p class="text-lg">No inquiries found.</p>
         </div>
     </div>
 
-    <!-- Order Details Modal -->
+    <!-- View Order Modal -->
     <div id="order-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-lg max-w-2xl w-full p-8">
             <div class="flex justify-between items-start mb-6">
-                <h3 class="text-2xl font-bold">Order Details</h3>
+                <h3 class="text-2xl font-bold">Inquiry Details</h3>
                 <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
                 </button>
             </div>
-            
-            <div id="order-details" class="space-y-4">
-                <!-- Order details will load here -->
-            </div>
-
+            <div id="order-details" class="space-y-4"></div>
             <div class="mt-6 flex gap-4">
-                <button onclick="closeModal()" class="flex-1 bg-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-400">
-                    Close
-                </button>
+                <button onclick="closeModal()" class="flex-1 bg-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-400">Close</button>
             </div>
         </div>
     </div>
 
-    <!-- Update Status Modal -->
+    <!-- Status Update Modal -->
     <div id="status-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-lg max-w-md w-full p-8">
-            <h3 class="text-2xl font-bold mb-6">Update Order Status</h3>
-            
+            <h3 class="text-2xl font-bold mb-6">Update Status</h3>
             <div class="mb-6">
                 <label class="block text-gray-700 font-semibold mb-2">Select New Status</label>
                 <select id="new-status" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900">
+                    <option value="new">New</option>
                     <option value="pending">Pending</option>
-                    <option value="confirmed">Confirmed</option>
                     <option value="completed">Completed</option>
-                    <option value="cancelled">Cancelled</option>
                 </select>
             </div>
-
             <div class="flex gap-4">
-                <button onclick="updateStatus()" class="flex-1 bg-gray-900 text-white py-3 rounded-lg font-semibold hover:bg-gray-800">
-                    Update
-                </button>
-                <button onclick="closeStatusModal()" class="flex-1 bg-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-400">
-                    Cancel
-                </button>
+                <button onclick="updateStatus()" class="flex-1 bg-gray-900 text-white py-3 rounded-lg font-semibold hover:bg-gray-800">Update</button>
+                <button onclick="closeStatusModal()" class="flex-1 bg-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-400">Cancel</button>
             </div>
         </div>
     </div>
 
-    <script>
-        const API_URL = 'http://localhost:5000/api/orders';
-        let allOrders = [];
-        let currentFilter = 'all';
-        let selectedOrderId = null;
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/+esm'
 
+        const supabase = createClient(
+            'https://tpvqolkzcbbzlqlzchwc.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwdnFvbGt6Y2JiemxxbHpjaHdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzUxODA3ODAsImV4cCI6MjA1MDc1Njc4MH0.gvC7QczGqBqXD6-wc0tNHMSDY7QcXjYOPGqWC2LJKYU'
+        )
+
+        let allOrders = []
+        let currentFilter = 'all'
+        let selectedOrderId = null
+
+        // Auth Guard
         async function verifyAuth() {
-            const token = localStorage.getItem('adminToken');
-            if (!token) {
-                window.location.href = 'login.html';
-                return;
+            const { data: { session } } = await supabase.auth.getSession()
+            if (!session) {
+                window.location.href = 'login.html'
+                return false
             }
-
-            try {
-                const response = await fetch('http://localhost:5000/api/admin/auth/verify', {
-                    headers: { 'Authorization': `Bearer ${token}` },
-                    credentials: 'include',
-                });
-                const data = await response.json();
-                
-                if (!data.success) {
-                    localStorage.removeItem('adminToken');
-                    window.location.href = 'login.html';
-                } else {
-                    document.getElementById('admin-email').textContent = data.admin.email;
-                    loadOrders();
-                }
-            } catch (error) {
-                window.location.href = 'login.html';
-            }
+            const { user } = session
+            document.getElementById('admin-email').textContent = user.email
+            return true
         }
 
         async function loadOrders() {
-            const token = localStorage.getItem('adminToken');
+            const loading = document.getElementById('loading')
+            const container = document.getElementById('orders-container')
+            const emptyState = document.getElementById('empty-state')
+
+            loading.classList.remove('hidden')
+            container.classList.add('hidden')
+            emptyState.classList.add('hidden')
+
             try {
-                const response = await fetch(API_URL, {
-                    headers: { 'Authorization': `Bearer ${token}` },
-                    credentials: 'include',
-                });
-                const data = await response.json();
-                
-                if (data.success) {
-                    allOrders = data.orders;
-                    displayOrders(allOrders);
+                const { data, error } = await supabase
+                    .from('orders')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+
+                loading.classList.add('hidden')
+
+                if (error) {
+                    console.error('Error loading orders:', error)
+                    alert('Error loading inquiries: ' + error.message)
+                    return
                 }
-            } catch (error) {
-                console.error('Error loading orders:', error);
+
+                allOrders = data || []
+                displayOrders(allOrders)
+
+            } catch (err) {
+                console.error('Unexpected error:', err)
+                loading.classList.add('hidden')
+                alert('Unexpected error: ' + err.message)
             }
         }
 
         function displayOrders(orders) {
-            const tbody = document.getElementById('orders-tbody');
-            const emptyState = document.getElementById('empty-state');
-            
-            if (orders.length === 0) {
-                tbody.innerHTML = '';
-                emptyState.classList.remove('hidden');
-                return;
+            const container = document.getElementById('orders-container')
+            const emptyState = document.getElementById('empty-state')
+
+            if (!orders || orders.length === 0) {
+                container.classList.add('hidden')
+                emptyState.classList.remove('hidden')
+                return
             }
 
-            emptyState.classList.add('hidden');
-            
-            tbody.innerHTML = orders.map(order => {
-                const statusColors = {
-                    pending: 'bg-yellow-100 text-yellow-800',
-                    confirmed: 'bg-blue-100 text-blue-800',
-                    completed: 'bg-green-100 text-green-800',
-                    cancelled: 'bg-red-100 text-red-800'
-                };
-
-                const date = new Date(order.createdAt).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric'
-                });
-
-                return `
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 text-sm text-gray-900">#${order._id.slice(-6)}</td>
-                        <td class="px-6 py-4">
-                            <div class="text-sm font-semibold text-gray-900">${order.customerName}</div>
-                            <div class="text-sm text-gray-500">${order.customerEmail}</div>
-                        </td>
-                        <td class="px-6 py-4 text-sm text-gray-900">${order.productName}</td>
-                        <td class="px-6 py-4 text-sm text-gray-900">${order.quantity}</td>
-                        <td class="px-6 py-4 text-sm font-semibold text-gray-900">$${order.totalPrice.toFixed(2)}</td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 text-sm rounded-full ${statusColors[order.status]}">
-                                ${order.status.charAt(0).toUpperCase() + order.status.slice(1)}
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 text-sm text-gray-500">${date}</td>
-                        <td class="px-6 py-4">
-                            <div class="flex gap-2">
-                                <button onclick="viewOrder('${order._id}')" class="text-blue-600 hover:text-blue-800 text-sm font-semibold">
-                                    View
-                                </button>
-                                <button onclick="showStatusModal('${order._id}', '${order.status}')" class="text-green-600 hover:text-green-800 text-sm font-semibold">
-                                    Update
-                                </button>
-                                <button onclick="deleteOrder('${order._id}', '${order.customerName}')" class="text-red-600 hover:text-red-800 text-sm font-semibold">
-                                    Delete
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        function filterOrders(status) {
-            currentFilter = status;
-            
-            // Update filter buttons
-            document.querySelectorAll('[id^="filter-"]').forEach(btn => {
-                btn.className = 'px-4 py-2 rounded bg-gray-300 text-gray-700';
-            });
-            document.getElementById(`filter-${status}`).className = 'px-4 py-2 rounded bg-gray-900 text-white';
-            
-            // Filter orders
-            const filtered = status === 'all' 
-                ? allOrders 
-                : allOrders.filter(o => o.status === status);
-            
-            displayOrders(filtered);
-        }
-
-        async function viewOrder(id) {
-            const order = allOrders.find(o => o._id === id);
-            if (!order) return;
+            emptyState.classList.add('hidden')
 
             const statusColors = {
+                new: 'bg-blue-100 text-blue-800',
                 pending: 'bg-yellow-100 text-yellow-800',
-                confirmed: 'bg-blue-100 text-blue-800',
-                completed: 'bg-green-100 text-green-800',
-                cancelled: 'bg-red-100 text-red-800'
-            };
+                completed: 'bg-green-100 text-green-800'
+            }
 
+            container.innerHTML = orders.map(order => {
+                const date = new Date(order.created_at).toLocaleDateString('en-US', { 
+                    year:'numeric', 
+                    month:'short', 
+                    day:'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })
+                
+                return `
+                    <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-lg font-bold mb-1">${escapeHtml(order.customer_name || 'No name')}</h3>
+                                <p class="text-sm text-gray-600">${escapeHtml(order.customer_email || 'No email')}</p>
+                                ${order.customer_phone ? `<p class="text-sm text-gray-600">${escapeHtml(order.customer_phone)}</p>` : ''}
+                            </div>
+                            <span class="px-3 py-1 text-sm rounded-full ${statusColors[order.status] || statusColors.new}">
+                                ${(order.status || 'new').charAt(0).toUpperCase() + (order.status || 'new').slice(1)}
+                            </span>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <p class="text-sm font-semibold text-gray-700 mb-1">Product:</p>
+                            <p class="text-sm text-gray-900">${escapeHtml(order.product_name || 'N/A')}</p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <p class="text-sm font-semibold text-gray-700 mb-1">Message:</p>
+                            <p class="text-sm text-gray-900 whitespace-pre-wrap">${escapeHtml(order.message || 'No message')}</p>
+                        </div>
+                        
+                        <div class="flex justify-between items-center pt-4 border-t">
+                            <p class="text-xs text-gray-500">${date}</p>
+                            <div class="flex gap-2">
+                                <button onclick="viewOrder('${order.id}')" class="text-blue-600 hover:text-blue-800 text-sm font-semibold">View</button>
+                                <button onclick="showStatusModal('${order.id}', '${order.status || 'new'}')" class="text-green-600 hover:text-green-800 text-sm font-semibold">Update</button>
+                                <button onclick="deleteOrder('${order.id}')" class="text-red-600 hover:text-red-800 text-sm font-semibold">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                `
+            }).join('')
+
+            container.classList.remove('hidden')
+        }
+
+        window.filterOrders = function(status) {
+            currentFilter = status
+            document.querySelectorAll('[id^="filter-"]').forEach(btn => {
+                btn.className = 'px-4 py-2 rounded bg-gray-300 text-gray-700'
+            })
+            document.getElementById(`filter-${status}`).className = 'px-4 py-2 rounded bg-gray-900 text-white'
+            const filtered = status === 'all' ? allOrders : allOrders.filter(o => (o.status || 'new') === status)
+            displayOrders(filtered)
+        }
+
+        window.viewOrder = function(id) {
+            const order = allOrders.find(o => o.id === id)
+            if (!order) return
+            
+            const statusColors = {
+                new: 'bg-blue-100 text-blue-800',
+                pending: 'bg-yellow-100 text-yellow-800',
+                completed: 'bg-green-100 text-green-800'
+            }
+            
             document.getElementById('order-details').innerHTML = `
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <p class="text-sm text-gray-500">Order ID</p>
-                        <p class="font-semibold">#${order._id}</p>
-                    </div>
-                    <div>
                         <p class="text-sm text-gray-500">Status</p>
-                        <span class="inline-block px-3 py-1 text-sm rounded-full ${statusColors[order.status]}">
-                            ${order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                        <span class="inline-block px-3 py-1 text-sm rounded-full ${statusColors[order.status || 'new']}">
+                            ${(order.status || 'new').charAt(0).toUpperCase() + (order.status || 'new').slice(1)}
                         </span>
                     </div>
                     <div>
+                        <p class="text-sm text-gray-500">Date</p>
+                        <p class="font-semibold">${new Date(order.created_at).toLocaleString()}</p>
+                    </div>
+                    <div>
                         <p class="text-sm text-gray-500">Customer Name</p>
-                        <p class="font-semibold">${order.customerName}</p>
+                        <p class="font-semibold">${escapeHtml(order.customer_name || 'N/A')}</p>
                     </div>
                     <div>
                         <p class="text-sm text-gray-500">Email</p>
-                        <p class="font-semibold">${order.customerEmail}</p>
+                        <p class="font-semibold">${escapeHtml(order.customer_email || 'N/A')}</p>
                     </div>
-                    ${order.customerPhone ? `
-                    <div>
-                        <p class="text-sm text-gray-500">Phone</p>
-                        <p class="font-semibold">${order.customerPhone}</p>
-                    </div>` : ''}
-                    ${order.customerAddress ? `
+                    ${order.customer_phone ? `
+                        <div>
+                            <p class="text-sm text-gray-500">Phone</p>
+                            <p class="font-semibold">${escapeHtml(order.customer_phone)}</p>
+                        </div>
+                    ` : ''}
                     <div class="col-span-2">
-                        <p class="text-sm text-gray-500">Address</p>
-                        <p class="font-semibold">${order.customerAddress}</p>
-                    </div>` : ''}
-                    <div>
                         <p class="text-sm text-gray-500">Product</p>
-                        <p class="font-semibold">${order.productName}</p>
+                        <p class="font-semibold">${escapeHtml(order.product_name || 'N/A')}</p>
                     </div>
-                    <div>
-                        <p class="text-sm text-gray-500">Quantity</p>
-                        <p class="font-semibold">${order.quantity}</p>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-500">Total Price</p>
-                        <p class="font-semibold text-lg">$${order.totalPrice.toFixed(2)}</p>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-500">Order Date</p>
-                        <p class="font-semibold">${new Date(order.createdAt).toLocaleString()}</p>
+                    <div class="col-span-2">
+                        <p class="text-sm text-gray-500">Message</p>
+                        <p class="font-semibold whitespace-pre-wrap">${escapeHtml(order.message || 'No message')}</p>
                     </div>
                 </div>
-            `;
-
-            document.getElementById('order-modal').classList.remove('hidden');
+            `
+            document.getElementById('order-modal').classList.remove('hidden')
         }
 
-        function showStatusModal(id, currentStatus) {
-            selectedOrderId = id;
-            document.getElementById('new-status').value = currentStatus;
-            document.getElementById('status-modal').classList.remove('hidden');
+        window.showStatusModal = function(id, currentStatus) {
+            selectedOrderId = id
+            document.getElementById('new-status').value = currentStatus || 'new'
+            document.getElementById('status-modal').classList.remove('hidden')
         }
 
-        async function updateStatus() {
-            if (!selectedOrderId) return;
-
-            const token = localStorage.getItem('adminToken');
-            const newStatus = document.getElementById('new-status').value;
-
-            try {
-                const response = await fetch(`${API_URL}/${selectedOrderId}/status`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify({ status: newStatus }),
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    alert('Order status updated successfully!');
-                    closeStatusModal();
-                    loadOrders();
-                } else {
-                    alert(data.message);
-                }
-            } catch (error) {
-                alert('Error updating order status');
-            }
-        }
-
-        async function deleteOrder(id, customerName) {
-            if (!confirm(`Are you sure you want to delete the order from ${customerName}?`)) return;
+        window.updateStatus = async function() {
+            if (!selectedOrderId) return
+            const newStatus = document.getElementById('new-status').value
             
-            const token = localStorage.getItem('adminToken');
             try {
-                const response = await fetch(`${API_URL}/${id}`, {
-                    method: 'DELETE',
-                    headers: { 'Authorization': `Bearer ${token}` },
-                    credentials: 'include',
-                });
-                const data = await response.json();
-                
-                if (data.success) {
-                    alert('Order deleted successfully!');
-                    loadOrders();
+                const { error } = await supabase
+                    .from('orders')
+                    .update({ 
+                        status: newStatus,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', selectedOrderId)
+
+                if (error) {
+                    alert('Error updating status: ' + error.message)
                 } else {
-                    alert(data.message);
+                    closeStatusModal()
+                    await loadOrders()
                 }
-            } catch (error) {
-                alert('Error deleting order');
+            } catch (err) {
+                alert('Unexpected error: ' + err.message)
             }
         }
 
-        function closeModal() {
-            document.getElementById('order-modal').classList.add('hidden');
-        }
-
-        function closeStatusModal() {
-            document.getElementById('status-modal').classList.add('hidden');
-            selectedOrderId = null;
-        }
-
-        async function logout() {
-            const token = localStorage.getItem('adminToken');
+        window.deleteOrder = async function(id) {
+            if (!confirm('Are you sure you want to delete this inquiry?')) return
+            
             try {
-                await fetch('http://localhost:5000/api/admin/auth/logout', {
-                    method: 'POST',
-                    headers: { 'Authorization': `Bearer ${token}` },
-                    credentials: 'include',
-                });
-            } catch (error) {
-                console.error('Logout error:', error);
+                const { error } = await supabase
+                    .from('orders')
+                    .delete()
+                    .eq('id', id)
+                    
+                if (error) {
+                    alert('Error deleting: ' + error.message)
+                } else {
+                    await loadOrders()
+                }
+            } catch (err) {
+                alert('Unexpected error: ' + err.message)
             }
-            localStorage.removeItem('adminToken');
-            localStorage.removeItem('adminEmail');
-            window.location.href = 'login.html';
         }
 
-        verifyAuth();
+        window.closeModal = function() { 
+            document.getElementById('order-modal').classList.add('hidden') 
+        }
+        
+        window.closeStatusModal = function() { 
+            document.getElementById('status-modal').classList.add('hidden')
+            selectedOrderId = null 
+        }
+
+        window.logout = async function() {
+            await supabase.auth.signOut()
+            window.location.href = 'login.html'
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div')
+            div.textContent = text
+            return div.innerHTML
+        }
+
+        // Initialize
+        verifyAuth().then(isAuth => {
+            if (isAuth) {
+                loadOrders()
+            }
+        })
     </script>
 </body>
 </html>

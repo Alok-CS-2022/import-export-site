@@ -12,7 +12,6 @@
             <h1 class="text-xl font-bold">Content Management</h1>
             <div class="flex items-center gap-4">
                 <a href="dashboard.html" class="text-gray-300 hover:text-white">Dashboard</a>
-                <a href="products.html" class="text-gray-300 hover:text-white">Products</a>
                 <a href="order.html" class="text-gray-300 hover:text-white">Orders</a>
                 <span id="admin-email" class="text-gray-300"></span>
                 <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded">Logout</button>
@@ -119,71 +118,95 @@
         </div>
     </div>
 
-    <script>
-        const API_URL = 'http://localhost:5000/api/content';
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/+esm'
 
+        const supabase = createClient(
+            'https://tpvqolkzcbbzlqlzchwc.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwdnFvbGt6Y2JiemxxbHpjaHdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzUxODA3ODAsImV4cCI6MjA1MDc1Njc4MH0.gvC7QczGqBqXD6-wc0tNHMSDY7QcXjYOPGqWC2LJKYU'
+        )
+
+        // Check authentication
         async function verifyAuth() {
-            const token = localStorage.getItem('adminToken');
-            if (!token) {
-                window.location.href = 'login.html';
-                return;
+            const { data: { session }, error } = await supabase.auth.getSession()
+            
+            if (error || !session) {
+                console.log('Not authenticated, redirecting to login...')
+                window.location.href = 'login.html'
+                return false
             }
-
-            try {
-                const response = await fetch('http://localhost:5000/api/admin/auth/verify', {
-                    headers: { 'Authorization': `Bearer ${token}` },
-                    credentials: 'include',
-                });
-                const data = await response.json();
-                
-                if (!data.success) {
-                    localStorage.removeItem('adminToken');
-                    window.location.href = 'login.html';
-                } else {
-                    document.getElementById('admin-email').textContent = data.admin.email;
-                    loadContent();
-                }
-            } catch (error) {
-                window.location.href = 'login.html';
-            }
+            
+            document.getElementById('admin-email').textContent = session.user.email
+            console.log('Authenticated as:', session.user.email)
+            loadContent()
+            return true
         }
 
+        // Load content from Supabase
         async function loadContent() {
             try {
-                const response = await fetch(API_URL);
-                const data = await response.json();
-                
-                if (data.success) {
-                    const content = data.content;
+                const { data, error } = await supabase
+                    .from('site_content')
+                    .select('*')
+                    .single()
+
+                if (error) {
+                    // If no content exists yet, use defaults
+                    if (error.code === 'PGRST116') {
+                        console.log('No content found, using defaults')
+                        setDefaultContent()
+                        return
+                    }
+                    throw error
+                }
+
+                if (data && data.content) {
+                    const content = data.content
                     
-                    document.getElementById('hero-title').value = content.hero.title;
-                    document.getElementById('hero-subtitle').value = content.hero.subtitle;
-                    document.getElementById('hero-button').value = content.hero.buttonText;
+                    document.getElementById('hero-title').value = content.hero?.title || ''
+                    document.getElementById('hero-subtitle').value = content.hero?.subtitle || ''
+                    document.getElementById('hero-button').value = content.hero?.buttonText || ''
                     
-                    document.getElementById('about-title').value = content.about.title;
-                    document.getElementById('about-description').value = content.about.description;
+                    document.getElementById('about-title').value = content.about?.title || ''
+                    document.getElementById('about-description').value = content.about?.description || ''
                     
-                    document.getElementById('contact-email').value = content.contact.email;
-                    document.getElementById('contact-phone').value = content.contact.phone;
-                    document.getElementById('contact-address').value = content.contact.address;
+                    document.getElementById('contact-email').value = content.contact?.email || ''
+                    document.getElementById('contact-phone').value = content.contact?.phone || ''
+                    document.getElementById('contact-address').value = content.contact?.address || ''
                     
-                    document.getElementById('footer-copyright').value = content.footer.copyright;
+                    document.getElementById('footer-copyright').value = content.footer?.copyright || ''
                 }
             } catch (error) {
-                console.error('Error loading content:', error);
-                showError('Failed to load content');
+                console.error('Error loading content:', error)
+                showError('Failed to load content: ' + error.message)
             }
         }
 
+        // Set default content
+        function setDefaultContent() {
+            document.getElementById('hero-title').value = 'Global Trade Solutions'
+            document.getElementById('hero-subtitle').value = 'Your trusted partner in international import and export'
+            document.getElementById('hero-button').value = 'Get Started'
+            
+            document.getElementById('about-title').value = 'About Us'
+            document.getElementById('about-description').value = 'We are a leading import-export company...'
+            
+            document.getElementById('contact-email').value = 'info@example.com'
+            document.getElementById('contact-phone').value = '+1234567890'
+            document.getElementById('contact-address').value = '123 Business Street, City'
+            
+            document.getElementById('footer-copyright').value = '© 2024 Your Company. All rights reserved.'
+        }
+
+        // Save content
         document.getElementById('content-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
+            e.preventDefault()
             
-            const token = localStorage.getItem('adminToken');
-            const saveBtn = document.getElementById('save-btn');
+            const saveBtn = document.getElementById('save-btn')
             
-            saveBtn.textContent = 'Saving...';
-            saveBtn.disabled = true;
-            hideMessages();
+            saveBtn.textContent = 'Saving...'
+            saveBtn.disabled = true
+            hideMessages()
 
             const contentData = {
                 hero: {
@@ -203,70 +226,71 @@
                 footer: {
                     copyright: document.getElementById('footer-copyright').value,
                 }
-            };
+            }
 
             try {
-                const response = await fetch(API_URL, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify(contentData),
-                });
+                // Check if content exists
+                const { data: existing } = await supabase
+                    .from('site_content')
+                    .select('id')
+                    .single()
 
-                const data = await response.json();
-
-                if (data.success) {
-                    showSuccess('Content updated successfully! Changes are now live on your website.');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                let result
+                if (existing) {
+                    // Update existing content
+                    result = await supabase
+                        .from('site_content')
+                        .update({ content: contentData, updated_at: new Date().toISOString() })
+                        .eq('id', existing.id)
                 } else {
-                    showError(data.message || 'Failed to update content');
+                    // Insert new content
+                    result = await supabase
+                        .from('site_content')
+                        .insert([{ content: contentData }])
                 }
-            } catch (error) {
-                showError('Server error. Please try again.');
-            } finally {
-                saveBtn.textContent = 'Save Changes';
-                saveBtn.disabled = false;
-            }
-        });
 
+                if (result.error) throw result.error
+
+                showSuccess('Content updated successfully! Changes are now live on your website.')
+                window.scrollTo({ top: 0, behavior: 'smooth' })
+            } catch (error) {
+                console.error('Error saving content:', error)
+                showError('Failed to save content: ' + error.message)
+            } finally {
+                saveBtn.textContent = 'Save Changes'
+                saveBtn.disabled = false
+            }
+        })
+
+        // Helper functions
         function showSuccess(message) {
-            const successMsg = document.getElementById('success-message');
-            successMsg.textContent = message;
-            successMsg.classList.remove('hidden');
-            setTimeout(() => successMsg.classList.add('hidden'), 5000);
+            const successMsg = document.getElementById('success-message')
+            successMsg.textContent = message
+            successMsg.classList.remove('hidden')
+            setTimeout(() => successMsg.classList.add('hidden'), 5000)
         }
 
         function showError(message) {
-            const errorMsg = document.getElementById('error-message');
-            errorMsg.textContent = message;
-            errorMsg.classList.remove('hidden');
+            const errorMsg = document.getElementById('error-message')
+            errorMsg.textContent = message
+            errorMsg.classList.remove('hidden')
         }
 
         function hideMessages() {
-            document.getElementById('success-message').classList.add('hidden');
-            document.getElementById('error-message').classList.add('hidden');
+            document.getElementById('success-message').classList.add('hidden')
+            document.getElementById('error-message').classList.add('hidden')
         }
 
-        async function logout() {
-            const token = localStorage.getItem('adminToken');
-            try {
-                await fetch('http://localhost:5000/api/admin/auth/logout', {
-                    method: 'POST',
-                    headers: { 'Authorization': `Bearer ${token}` },
-                    credentials: 'include',
-                });
-            } catch (error) {
-                console.error('Logout error:', error);
-            }
-            localStorage.removeItem('adminToken');
-            localStorage.removeItem('adminEmail');
-            window.location.href = 'login.html';
+        window.logout = async function() {
+            await supabase.auth.signOut()
+            window.location.href = 'login.html'
         }
 
-        verifyAuth();
+        // Make loadContent available globally for the Reset button
+        window.loadContent = loadContent
+
+        // Initialize
+        verifyAuth()
     </script>
 </body>
 </html>

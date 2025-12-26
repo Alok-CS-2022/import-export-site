@@ -29,50 +29,40 @@
         </form>
     </div>
 
-    <script>
-        const loginForm = document.getElementById('login-form');
-        const errorMessage = document.getElementById('error-message');
-        const loginBtn = document.getElementById('login-btn');
+    <script type="module">
+import { supabase } from '../../lib/supabase.js'
 
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            
-            loginBtn.textContent = 'Logging in...';
-            loginBtn.disabled = true;
-            errorMessage.classList.add('hidden');
+const loginForm = document.getElementById('login-form')
+const errorMessage = document.getElementById('error-message')
+const loginBtn = document.getElementById('login-btn')
 
-            try {
-                const response = await fetch('http://localhost:5000/api/admin/auth/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify({ email, password }),
-                });
+loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault()
 
-                const data = await response.json();
+    const email = document.getElementById('email').value
+    const password = document.getElementById('password').value
 
-                if (data.success) {
-                    localStorage.setItem('adminToken', data.token);
-                    localStorage.setItem('adminEmail', data.admin.email);
-                    window.location.href = 'dashboard.html';
-                } else {
-                    errorMessage.textContent = data.message;
-                    errorMessage.classList.remove('hidden');
-                    loginBtn.textContent = 'Login';
-                    loginBtn.disabled = false;
-                }
-            } catch (error) {
-                errorMessage.textContent = 'Connection error. Make sure server is running.';
-                errorMessage.classList.remove('hidden');
-                loginBtn.textContent = 'Login';
-                loginBtn.disabled = false;
-            }
-        });
-    </script>
+    loginBtn.textContent = 'Logging in...'
+    loginBtn.disabled = true
+    errorMessage.classList.add('hidden')
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+    })
+
+    if (error) {
+        errorMessage.textContent = error.message
+        errorMessage.classList.remove('hidden')
+        loginBtn.textContent = 'Login'
+        loginBtn.disabled = false
+        return
+    }
+
+    // Login successful → redirect to dashboard
+    window.location.href = 'dashboard.html'
+})
+</script>
+
 </body>
 </html>

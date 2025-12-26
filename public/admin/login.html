@@ -30,39 +30,44 @@
     </div>
 
     <script type="module">
-import { supabase } from '../../lib/supabase.js'
+        // Inline Supabase client (works directly on Vercel)
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
-const loginForm = document.getElementById('login-form')
-const errorMessage = document.getElementById('error-message')
-const loginBtn = document.getElementById('login-btn')
+        const supabase = createClient(
+            'https://tpvqolkzcbbzlqlzchwc.supabase.co', // your Supabase project URL
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwdnFvbGt6Y2JiemxxbHpjaHdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzNjA0MjgsImV4cCI6MjA4MTkzNjQyOH0.AU6ieHN1TSUHgSu7qfvkekvmMySDPJb2zOId4Oy7CeY' // your anon key
+        )
 
-loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault()
+        const loginForm = document.getElementById('login-form')
+        const errorMessage = document.getElementById('error-message')
+        const loginBtn = document.getElementById('login-btn')
 
-    const email = document.getElementById('email').value
-    const password = document.getElementById('password').value
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault()
 
-    loginBtn.textContent = 'Logging in...'
-    loginBtn.disabled = true
-    errorMessage.classList.add('hidden')
+            const email = document.getElementById('email').value
+            const password = document.getElementById('password').value
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password
-    })
+            loginBtn.textContent = 'Logging in...'
+            loginBtn.disabled = true
+            errorMessage.classList.add('hidden')
 
-    if (error) {
-        errorMessage.textContent = error.message
-        errorMessage.classList.remove('hidden')
-        loginBtn.textContent = 'Login'
-        loginBtn.disabled = false
-        return
-    }
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email,
+                password
+            })
 
-    // Login successful → redirect to dashboard
-    window.location.href = 'dashboard.html'
-})
-</script>
+            if (error) {
+                errorMessage.textContent = error.message
+                errorMessage.classList.remove('hidden')
+                loginBtn.textContent = 'Login'
+                loginBtn.disabled = false
+                return
+            }
 
+            // Login successful → redirect to dashboard
+            window.location.href = 'dashboard.html'
+        })
+    </script>
 </body>
 </html>

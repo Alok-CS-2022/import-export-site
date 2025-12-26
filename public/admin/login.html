@@ -44,7 +44,7 @@
 
         const supabase = createClient(
             'https://tpvqolkzcbbzlqlzchwc.supabase.co',
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwdnFvbGt6Y2JiemxxbHpjaHdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzUxODA3ODAsImV4cCI6MjA1MDc1Njc4MH0.gvC7QczGqBqXD6-wc0tNHMSDY7QcXjYOPGqWC2LJKYU'
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwdnFvbGt6Y2JiemxxbHpjaHdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzNjA0MjgsImV4cCI6MjA4MTkzNjQyOH0.AU6ieHN1TSUHgSu7qfvkekvmMySDPJb2zOId4Oy7CeY'
         )
 
         const form = document.getElementById('login-form')
@@ -89,7 +89,6 @@
                 if (data?.session) {
                     statusSpan.textContent = 'Success! Redirecting...'
                     console.log('Login successful, redirecting...')
-                    // Redirect to order page
                     window.location.href = '/admin/order.html'
                 } else {
                     errorDiv.textContent = 'Login failed: No session returned'

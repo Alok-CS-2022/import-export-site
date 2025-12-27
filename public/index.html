@@ -104,8 +104,23 @@
                 
                 <div>
                     <label class="block text-sm font-medium mb-2">Phone</label>
-                    <input type="tel" name="customer_phone" 
-                           class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <div class="flex gap-2">
+                        <select name="country_code" 
+                                class="w-32 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                            <option value="+977">🇳🇵 +977</option>
+                            <option value="+1">🇺🇸 +1</option>
+                            <option value="+44">🇬🇧 +44</option>
+                            <option value="+91">🇮🇳 +91</option>
+                            <option value="+86">🇨🇳 +86</option>
+                            <option value="+81">🇯🇵 +81</option>
+                            <option value="+82">🇰🇷 +82</option>
+                            <option value="+971">🇦🇪 +971</option>
+                            <option value="+61">🇦🇺 +61</option>
+                            <option value="+49">🇩🇪 +49</option>
+                        </select>
+                        <input type="tel" name="customer_phone" placeholder="1234567890"
+                               class="flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                    </div>
                 </div>
                 
                 <div>
@@ -230,10 +245,16 @@
             messageDiv.classList.add('hidden')
 
             const formData = new FormData(e.target)
+            
+            // ✅ Combine country code + phone number
+            const countryCode = formData.get('country_code')
+            const phoneNumber = formData.get('customer_phone')
+            const fullPhone = phoneNumber ? `${countryCode} ${phoneNumber}` : null
+            
             const inquiry = {
                 customer_name: formData.get('customer_name'),
                 customer_email: formData.get('customer_email'),
-                customer_phone: formData.get('customer_phone') || null,
+                customer_phone: fullPhone,
                 items: JSON.stringify([{
                     name: document.getElementById('inquiry-product-name').value,
                     message: formData.get('message')

@@ -274,9 +274,12 @@
         }
 
         window.openInquiryFromDetail = function() {
+            console.log('Opening inquiry from detail, current product:', currentProduct)
             if (currentProduct) {
-                closeProductDetail()
-                window.openInquiryModal(currentProduct.name, currentProduct.id)
+                window.closeProductDetail()
+                setTimeout(() => {
+                    window.openInquiryModal(currentProduct.name, currentProduct.id)
+                }, 100)
             }
         }
 

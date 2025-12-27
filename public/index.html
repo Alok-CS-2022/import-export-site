@@ -232,18 +232,16 @@
 
         // ✅ Send Email Notification via Web3Forms
         async function sendEmailNotification(inquiryData) {
+            console.log('🔔 Attempting to send email notification...')
+            
             try {
-                const response = await fetch('https://api.web3forms.com/submit', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        access_key: '73d9e375-263c-4e70-b07e-9245f6a0feed',
-                        subject: `New Product Inquiry - ${inquiryData.product_name}`,
-                        from_name: 'Nepal Import Export Website',
-                        message: `
+                const emailPayload = {
+                    access_key: '73d9e375-263c-4e70-b07e-9245f6a0feed',
+                    subject: `New Product Inquiry - ${inquiryData.product_name}`,
+                    from_name: 'Nepal Import Export Website',
+                    email: inquiryData.customer_email,
+                    name: inquiryData.customer_name,
+                    message: `
 New inquiry received!
 
 Customer Name: ${inquiryData.customer_name}
@@ -256,19 +254,32 @@ ${inquiryData.message}
 
 ---
 Received at: ${new Date().toLocaleString()}
-                        `.trim()
-                    })
+                    `.trim()
+                }
+
+                console.log('📧 Email payload:', emailPayload)
+
+                const response = await fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(emailPayload)
                 })
 
+                console.log('📬 Email API response status:', response.status)
+
                 const result = await response.json()
+                console.log('📬 Email API response data:', result)
                 
                 if (result.success) {
-                    console.log('Email notification sent successfully')
+                    console.log('✅ Email notification sent successfully!')
                 } else {
-                    console.error('Email notification failed:', result)
+                    console.error('❌ Email notification failed:', result)
                 }
             } catch (err) {
-                console.error('Error sending email notification:', err)
+                console.error('❌ Error sending email notification:', err)
             }
         }
 

@@ -230,6 +230,48 @@
             document.getElementById('inquiry-modal').classList.add('hidden')
         }
 
+        // ✅ Send Email Notification via Web3Forms
+        async function sendEmailNotification(inquiryData) {
+            try {
+                const response = await fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        access_key: '73d9e375-263c-4e70-b07e-9245f6a0feed',
+                        subject: `New Product Inquiry - ${inquiryData.product_name}`,
+                        from_name: 'Nepal Import Export Website',
+                        message: `
+New inquiry received!
+
+Customer Name: ${inquiryData.customer_name}
+Email: ${inquiryData.customer_email}
+Phone: ${inquiryData.customer_phone || 'Not provided'}
+Product: ${inquiryData.product_name}
+
+Message:
+${inquiryData.message}
+
+---
+Received at: ${new Date().toLocaleString()}
+                        `.trim()
+                    })
+                })
+
+                const result = await response.json()
+                
+                if (result.success) {
+                    console.log('Email notification sent successfully')
+                } else {
+                    console.error('Email notification failed:', result)
+                }
+            } catch (err) {
+                console.error('Error sending email notification:', err)
+            }
+        }
+
         // Handle inquiry form submission
         const form = document.getElementById('inquiry-form')
         form.addEventListener('submit', async (e) => {
@@ -256,8 +298,8 @@
                 customer_name: formData.get('customer_name'),
                 customer_email: formData.get('customer_email'),
                 customer_phone: fullPhone,
-                product_name: document.getElementById('inquiry-product-name').value, // ✅ Proper column
-                message: formData.get('message'), // ✅ Proper column
+                product_name: document.getElementById('inquiry-product-name').value,
+                message: formData.get('message'),
                 items: JSON.stringify([{
                     name: document.getElementById('inquiry-product-name').value,
                     message: formData.get('message')
@@ -269,6 +311,7 @@
             console.log('Submitting inquiry:', inquiry)
 
             try {
+                // Save to Supabase
                 const { data, error } = await supabase
                     .from('orders')
                     .insert([inquiry])
@@ -282,6 +325,12 @@
                 }
 
                 console.log('Inquiry saved successfully')
+
+                // ✅ Send email notification (don't wait for it)
+                sendEmailNotification(inquiry).catch(err => {
+                    console.error('Email notification error (non-blocking):', err)
+                })
+
                 messageDiv.textContent = 'Thank you! Your inquiry has been submitted successfully. We will contact you soon.'
                 messageDiv.className = 'mt-4 p-3 rounded-lg bg-green-100 text-green-700'
                 messageDiv.classList.remove('hidden')

@@ -132,9 +132,10 @@
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/+esm'
 
+        // ✅ CORRECT KEY - Updated
         const supabase = createClient(
             'https://tpvqolkzcbbzlqlzchwc.supabase.co',
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwdnFvbGt6Y2JiemxxbHpjaHdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzUxODA3ODAsImV4cCI6MjA1MDc1Njc4MH0.gvC7QczGqBqXD6-wc0tNHMSDY7QcXjYOPGqWC2LJKYU'
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwdnFvbGt6Y2JiemxxbHpjaHdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzNjA0MjgsImV4cCI6MjA4MTkzNjQyOH0.AU6ieHN1TSUHgSu7qfvkekvmMySDPJb2zOId4Oy7CeY'
         )
 
         console.log('Homepage loaded with Supabase')
@@ -233,7 +234,11 @@
                 customer_name: formData.get('customer_name'),
                 customer_email: formData.get('customer_email'),
                 customer_phone: formData.get('customer_phone') || null,
-                message: `Product: ${document.getElementById('inquiry-product-name').value}\n\n${formData.get('message')}`,
+                items: JSON.stringify([{
+                    name: document.getElementById('inquiry-product-name').value,
+                    message: formData.get('message')
+                }]),
+                total_amount: 0,
                 status: 'pending'
             }
 

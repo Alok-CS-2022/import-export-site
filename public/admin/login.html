@@ -89,7 +89,7 @@
                 if (data?.session) {
                     statusSpan.textContent = 'Success! Redirecting...'
                     console.log('Login successful, redirecting...')
-                    window.location.href = '/admin/order.html'
+                    window.location.href = '/admin/dashboard.html'
                 } else {
                     errorDiv.textContent = 'Login failed: No session returned'
                     errorDiv.classList.remove('hidden')
@@ -113,7 +113,7 @@
         supabase.auth.getSession().then(({ data: { session } }) => {
             if (session) {
                 console.log('Already logged in, redirecting...')
-                window.location.href = '/admin/order.html'
+                window.location.href = '/admin/dashboard.html'
             }
         })
     </script>

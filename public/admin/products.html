@@ -3,298 +3,353 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Products - Admin</title>
+    <title>Product Management - Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50">
-    <nav class="bg-gray-900 text-white p-4">
+    <!-- Header -->
+    <nav class="bg-gray-900 text-white p-4 shadow-lg">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold">Manage Products</h1>
-            <div class="space-x-4">
+            <h1 class="text-2xl font-bold">Product Management</h1>
+            <div class="flex items-center gap-4">
                 <a href="dashboard.html" class="text-gray-300 hover:text-white">Dashboard</a>
                 <a href="order.html" class="text-gray-300 hover:text-white">Orders</a>
-                <button onclick="logout()" class="bg-red-600 px-4 py-2 rounded hover:bg-red-700">Logout</button>
+                <a href="../index.html" target="_blank" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded transition">
+                    View Website
+                </a>
+                <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded">Logout</button>
             </div>
         </div>
     </nav>
 
     <div class="container mx-auto p-6">
-        <div class="bg-blue-100 border border-blue-400 rounded-lg p-6 mb-6">
-            <div class="flex justify-between items-center">
-                <div>
-                    <h3 class="font-bold text-blue-900 mb-2">🔧 Product Management</h3>
-                    <p class="text-blue-800">Manage your products below or open Supabase Dashboard for advanced editing.</p>
-                </div>
-                <div class="space-x-2">
-                    <button onclick="showAddForm()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-                        + Add Product
-                    </button>
-                    <a href="https://tpvqolkzcbbzlqlzchwc.supabase.co" target="_blank" 
-                       class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                        Open Supabase
-                    </a>
-                </div>
+        <div id="error-banner" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"></div>
+        <div id="success-banner" class="hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4"></div>
+
+        <!-- Add Product Button -->
+        <div class="mb-6 flex justify-between items-center">
+            <h2 class="text-3xl font-bold">Manage Products</h2>
+            <button id="add-product-btn" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition font-semibold">
+                + Add New Product
+            </button>
+        </div>
+
+        <!-- Products Grid -->
+        <div id="products-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="col-span-full text-center py-12 text-gray-500">
+                Loading products...
             </div>
         </div>
+    </div>
 
-        <!-- Add/Edit Product Form -->
-        <div id="product-form" class="hidden bg-white rounded-lg shadow-lg p-6 mb-6">
-            <h3 class="text-xl font-bold mb-4" id="form-title">Add New Product</h3>
-            <form id="form" onsubmit="saveProduct(event)">
-                <input type="hidden" id="product-id">
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Product Name</label>
-                        <input type="text" id="name" required 
-                               class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
+    <!-- Add/Edit Modal -->
+    <div id="product-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 id="modal-title" class="text-2xl font-bold">Add New Product</h2>
+                    <button id="close-modal-btn" class="text-gray-500 hover:text-gray-700 text-2xl">×</button>
+                </div>
+
+                <form id="product-form" class="space-y-4">
+                    <input type="hidden" id="product-id">
                     
                     <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Category</label>
-                        <input type="text" id="category" required 
-                               class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <label class="block text-gray-700 font-semibold mb-2">Product Name *</label>
+                        <input type="text" id="product-name" required 
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
-                </div>
-                
-                <div class="mb-4">
-                    <label class="block text-gray-700 font-semibold mb-2">Description</label>
-                    <textarea id="description" required rows="3"
-                              class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-                </div>
-                
-                <div class="mb-4">
-                    <label class="block text-gray-700 font-semibold mb-2">Image URL</label>
-                    <input type="url" id="image_url" required 
-                           placeholder="https://example.com/image.jpg"
-                           class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                
-                <div class="flex gap-2">
-                    <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
-                        Save Product
-                    </button>
-                    <button type="button" onclick="hideForm()" class="bg-gray-300 text-gray-700 px-6 py-2 rounded hover:bg-gray-400">
-                        Cancel
-                    </button>
-                </div>
-            </form>
-        </div>
 
-        <div id="loading" class="text-center py-12 text-gray-600">Loading products...</div>
-        
-        <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
-            <!-- Products will be loaded here -->
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Description *</label>
+                        <textarea id="product-description" rows="3" required
+                                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Image URL *</label>
+                        <input type="url" id="product-image" required placeholder="https://images.unsplash.com/photo-..."
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <p class="text-sm text-gray-500 mt-1">Tip: Search unsplash.com, right-click image → Copy image address</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Category *</label>
+                        <select id="product-category" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Select category...</option>
+                            <option value="Agriculture">Agriculture</option>
+                            <option value="Textiles">Textiles</option>
+                            <option value="Electronics">Electronics</option>
+                            <option value="Food">Food</option>
+                            <option value="Beverages">Beverages</option>
+                            <option value="Handicrafts">Handicrafts</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="flex gap-3 pt-4">
+                        <button type="submit" class="flex-1 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+                            Save Product
+                        </button>
+                        <button type="button" id="cancel-btn" class="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
     <script type="module">
+        // Import Supabase from CDN using ES modules
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/+esm'
 
-        const supabase = createClient(
-            'https://tpvqolkzcbbzlqlzchwc.supabase.co',
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwdnFvbGt6Y2JiemxxbHpjaHdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzUxODA3ODAsImV4cCI6MjA1MDc1Njc4MH0.gvC7QczGqBqXD6-wc0tNHMSDY7QcXjYOPGqWC2LJKYU'
-        )
+        console.log('🔧 Initializing Supabase...')
+
+        // ⚠️ CRITICAL: Use the SAME key as login.html
+        const SUPABASE_URL = 'https://tpvqolkzcbbzlqlzchwc.supabase.co'
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwdnFvbGt6Y2JiemxxbHpjaHdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzNjA0MjgsImV4cCI6MjA4MTkzNjQyOH0.AU6ieHN1TSUHgSu7qfvkekvmMySDPJb2zOId4Oy7CeY'
+
+        console.log('✅ URL:', SUPABASE_URL)
+        console.log('✅ Key (first 30):', SUPABASE_KEY.substring(0, 30) + '...')
+
+        const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
+
+        console.log('✅ Supabase client created')
+
+        // Show error banner
+        function showError(msg) {
+            const banner = document.getElementById('error-banner')
+            banner.textContent = msg
+            banner.classList.remove('hidden')
+            setTimeout(() => banner.classList.add('hidden'), 5000)
+        }
+
+        // Show success banner
+        function showSuccess(msg) {
+            const banner = document.getElementById('success-banner')
+            banner.textContent = msg
+            banner.classList.remove('hidden')
+            setTimeout(() => banner.classList.add('hidden'), 3000)
+        }
 
         // Check authentication
         async function checkAuth() {
+            console.log('🔐 Checking authentication...')
             const { data: { session }, error } = await supabase.auth.getSession()
             
-            if (error || !session) {
-                console.log('Not authenticated, redirecting to login...')
+            if (error) {
+                console.error('❌ Auth check error:', error)
+            }
+            
+            if (!session) {
+                console.log('❌ No session, redirecting to login...')
                 window.location.href = '/admin/login.html'
                 return false
             }
             
+            console.log('✅ Authenticated as:', session.user.email)
             return true
         }
 
-        // Load products
-        async function loadProducts() {
-            const loadingDiv = document.getElementById('loading')
-            const grid = document.getElementById('products-grid')
-            
-            try {
-                const { data: products, error } = await supabase
-                    .from('products')
-                    .select('*')
-                    .order('created_at', { ascending: false })
-                
-                loadingDiv.classList.add('hidden')
-                
-                if (error) {
-                    grid.innerHTML = `<div class="col-span-full text-center py-12 text-red-500">Error: ${error.message}</div>`
-                    grid.classList.remove('hidden')
-                    return
-                }
-                
-                if (!products || products.length === 0) {
-                    grid.innerHTML = '<div class="col-span-full text-center py-12 text-gray-500">No products yet. Click "Add Product" to get started!</div>'
-                    grid.classList.remove('hidden')
-                    return
-                }
-                
-                grid.innerHTML = products.map(p => `
-                    <div class="bg-white rounded-lg shadow hover:shadow-lg transition">
-                        <img src="${escapeHtml(p.image_url)}" 
-                             class="w-full h-48 object-cover rounded-t" 
-                             onerror="this.src='https://via.placeholder.com/300?text=No+Image'"
-                             alt="${escapeHtml(p.name)}">
-                        <div class="p-4">
-                            <h3 class="font-bold text-lg mb-2">${escapeHtml(p.name)}</h3>
-                            <p class="text-gray-600 text-sm mb-3">${escapeHtml(p.description)}</p>
-                            <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded mb-3">
-                                ${escapeHtml(p.category)}
-                            </span>
-                            <div class="flex gap-2 mt-3">
-                                <button onclick="editProduct('${p.id}')" 
-                                        class="flex-1 bg-yellow-500 text-white px-3 py-2 rounded text-sm hover:bg-yellow-600">
-                                    Edit
-                                </button>
-                                <button onclick="deleteProduct('${p.id}')" 
-                                        class="flex-1 bg-red-500 text-white px-3 py-2 rounded text-sm hover:bg-red-600">
-                                    Delete
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `).join('')
-                
-                grid.classList.remove('hidden')
-                
-            } catch (err) {
-                console.error('Error:', err)
-                loadingDiv.classList.add('hidden')
-                grid.innerHTML = `<div class="col-span-full text-center py-12 text-red-500">Unexpected error: ${err.message}</div>`
-                grid.classList.remove('hidden')
-            }
-        }
-
-        // Show add form
-        window.showAddForm = function() {
-            document.getElementById('form-title').textContent = 'Add New Product'
-            document.getElementById('product-id').value = ''
-            document.getElementById('form').reset()
-            document.getElementById('product-form').classList.remove('hidden')
-            window.scrollTo({ top: 0, behavior: 'smooth' })
-        }
-
-        // Hide form
-        window.hideForm = function() {
-            document.getElementById('product-form').classList.add('hidden')
-        }
-
-        // Edit product
-        window.editProduct = async function(productId) {
-            try {
-                const { data: product, error } = await supabase
-                    .from('products')
-                    .select('*')
-                    .eq('id', productId)
-                    .single()
-                
-                if (error) {
-                    alert('Error loading product: ' + error.message)
-                    return
-                }
-                
-                document.getElementById('form-title').textContent = 'Edit Product'
-                document.getElementById('product-id').value = product.id
-                document.getElementById('name').value = product.name
-                document.getElementById('category').value = product.category
-                document.getElementById('description').value = product.description
-                document.getElementById('image_url').value = product.image_url
-                document.getElementById('product-form').classList.remove('hidden')
-                window.scrollTo({ top: 0, behavior: 'smooth' })
-                
-            } catch (err) {
-                alert('Unexpected error: ' + err.message)
-            }
-        }
-
-        // Save product
-        window.saveProduct = async function(event) {
-            event.preventDefault()
-            
-            const productId = document.getElementById('product-id').value
-            const productData = {
-                name: document.getElementById('name').value,
-                category: document.getElementById('category').value,
-                description: document.getElementById('description').value,
-                image_url: document.getElementById('image_url').value,
-                updated_at: new Date().toISOString()
-            }
-            
-            try {
-                let result
-                
-                if (productId) {
-                    // Update existing product
-                    result = await supabase
-                        .from('products')
-                        .update(productData)
-                        .eq('id', productId)
-                } else {
-                    // Insert new product
-                    result = await supabase
-                        .from('products')
-                        .insert([productData])
-                }
-                
-                if (result.error) {
-                    alert('Error saving product: ' + result.error.message)
-                    return
-                }
-                
-                hideForm()
-                loadProducts()
-                
-            } catch (err) {
-                alert('Unexpected error: ' + err.message)
-            }
-        }
-
-        // Delete product
-        window.deleteProduct = async function(productId) {
-            if (!confirm('Are you sure you want to delete this product?')) return
-            
-            try {
-                const { error } = await supabase
-                    .from('products')
-                    .delete()
-                    .eq('id', productId)
-                
-                if (error) {
-                    alert('Error deleting product: ' + error.message)
-                    return
-                }
-                
-                loadProducts()
-                
-            } catch (err) {
-                alert('Unexpected error: ' + err.message)
-            }
-        }
-
-        // Logout
+        // Logout function (make it global)
         window.logout = async function() {
             await supabase.auth.signOut()
             window.location.href = '/admin/login.html'
         }
 
-        // Helper function
-        function escapeHtml(text) {
-            const div = document.createElement('div')
-            div.textContent = text
-            return div.innerHTML
+        let editingProductId = null
+
+        // Load products
+        async function loadProducts() {
+            console.log('📦 Loading products...')
+            try {
+                const { data, error } = await supabase
+                    .from('products')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+
+                if (error) {
+                    console.error('❌ Error loading products:', error)
+                    throw error
+                }
+
+                console.log('✅ Products loaded:', data?.length || 0, 'items')
+                displayProducts(data || [])
+            } catch (error) {
+                console.error('❌ Exception:', error)
+                showError('Error loading products: ' + error.message)
+                document.getElementById('products-container').innerHTML = 
+                    `<div class="col-span-full text-center py-12">
+                        <p class="text-red-500 mb-2">Error loading products</p>
+                        <p class="text-sm text-gray-600">${error.message}</p>
+                        <button onclick="location.reload()" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded">
+                            Retry
+                        </button>
+                    </div>`
+            }
         }
 
-        // Initialize
-        checkAuth().then(isAuthenticated => {
-            if (isAuthenticated) {
+        // Display products
+        function displayProducts(products) {
+            const container = document.getElementById('products-container')
+            
+            if (products.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <p class="text-gray-500 mb-4">No products yet. Add your first product!</p>
+                        <button onclick="document.getElementById('add-product-btn').click()" 
+                                class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">
+                            + Add Product
+                        </button>
+                    </div>`
+                return
+            }
+
+            container.innerHTML = products.map(product => `
+                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+                    <img src="${product.image_url}" alt="${product.name}" 
+                         class="w-full h-48 object-cover"
+                         onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
+                    <div class="p-6">
+                        <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full mb-3">
+                            ${product.category}
+                        </span>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">${product.name}</h3>
+                        <p class="text-gray-600 mb-4">${product.description}</p>
+                        <div class="flex gap-2">
+                            <button onclick="window.editProduct('${product.id}')" 
+                                    class="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">
+                                Edit
+                            </button>
+                            <button onclick="window.deleteProduct('${product.id}')" 
+                                    class="flex-1 bg-red-600 text-white py-2 rounded hover:bg-red-700 transition">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('')
+        }
+
+        // Open add modal
+        function openAddModal() {
+            editingProductId = null
+            document.getElementById('modal-title').textContent = 'Add New Product'
+            document.getElementById('product-form').reset()
+            document.getElementById('product-id').value = ''
+            document.getElementById('product-modal').classList.remove('hidden')
+        }
+
+        // Edit product (make it global)
+        window.editProduct = async function(productId) {
+            try {
+                const { data, error } = await supabase
+                    .from('products')
+                    .select('*')
+                    .eq('id', productId)
+                    .single()
+
+                if (error) throw error
+
+                editingProductId = data.id
+                document.getElementById('modal-title').textContent = 'Edit Product'
+                document.getElementById('product-id').value = data.id
+                document.getElementById('product-name').value = data.name
+                document.getElementById('product-description').value = data.description
+                document.getElementById('product-image').value = data.image_url
+                document.getElementById('product-category').value = data.category
+                document.getElementById('product-modal').classList.remove('hidden')
+            } catch (error) {
+                console.error('Error loading product:', error)
+                showError('Error loading product: ' + error.message)
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('product-modal').classList.add('hidden')
+            document.getElementById('product-form').reset()
+            editingProductId = null
+        }
+
+        // Delete product (make it global)
+        window.deleteProduct = async function(id) {
+            if (!confirm('Are you sure you want to delete this product?')) return
+
+            try {
+                const { error } = await supabase
+                    .from('products')
+                    .delete()
+                    .eq('id', id)
+
+                if (error) throw error
+
+                showSuccess('Product deleted successfully!')
                 loadProducts()
+            } catch (error) {
+                console.error('Error deleting product:', error)
+                showError('Error deleting product: ' + error.message)
+            }
+        }
+
+        // Event Listeners
+        document.getElementById('add-product-btn').addEventListener('click', openAddModal)
+        document.getElementById('close-modal-btn').addEventListener('click', closeModal)
+        document.getElementById('cancel-btn').addEventListener('click', closeModal)
+
+        // Save product
+        document.getElementById('product-form').addEventListener('submit', async (e) => {
+            e.preventDefault()
+
+            const productData = {
+                name: document.getElementById('product-name').value,
+                description: document.getElementById('product-description').value,
+                image_url: document.getElementById('product-image').value,
+                category: document.getElementById('product-category').value
+            }
+
+            try {
+                if (editingProductId) {
+                    const { error } = await supabase
+                        .from('products')
+                        .update(productData)
+                        .eq('id', editingProductId)
+
+                    if (error) throw error
+                    showSuccess('Product updated successfully!')
+                } else {
+                    const { error } = await supabase
+                        .from('products')
+                        .insert([productData])
+
+                    if (error) throw error
+                    showSuccess('Product added successfully!')
+                }
+
+                closeModal()
+                loadProducts()
+            } catch (error) {
+                console.error('Error saving product:', error)
+                showError('Error saving product: ' + error.message)
             }
         })
+
+        // Close modal when clicking outside
+        document.getElementById('product-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal()
+        })
+
+        // Initialize
+        async function init() {
+            const isAuth = await checkAuth()
+            if (isAuth) {
+                await loadProducts()
+            }
+        }
+
+        init()
     </script>
 </body>
 </html>

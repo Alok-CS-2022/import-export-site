@@ -251,10 +251,13 @@
             const phoneNumber = formData.get('customer_phone')
             const fullPhone = phoneNumber ? `${countryCode} ${phoneNumber}` : null
             
+            // ✅ FIXED: Store product_name and message in their proper columns
             const inquiry = {
                 customer_name: formData.get('customer_name'),
                 customer_email: formData.get('customer_email'),
                 customer_phone: fullPhone,
+                product_name: document.getElementById('inquiry-product-name').value, // ✅ Proper column
+                message: formData.get('message'), // ✅ Proper column
                 items: JSON.stringify([{
                     name: document.getElementById('inquiry-product-name').value,
                     message: formData.get('message')

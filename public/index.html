@@ -282,14 +282,18 @@
 
         window.openInquiryModal = function(productName, productId) {
             console.log('Opening inquiry modal for:', productName)
+            
+            // Reset form first
+            document.getElementById('inquiry-form').reset()
+            document.getElementById('form-message').classList.add('hidden')
+            
+            // Then set product info (after reset)
             document.getElementById('inquiry-product-name').value = productName
             document.getElementById('inquiry-product-display').value = productName
             document.getElementById('inquiry-form').dataset.productId = productId
+            
+            // Show modal
             document.getElementById('inquiry-modal').classList.remove('hidden')
-            document.getElementById('inquiry-form').reset()
-            document.getElementById('inquiry-product-name').value = productName
-            document.getElementById('inquiry-product-display').value = productName
-            document.getElementById('form-message').classList.add('hidden')
         }
 
         window.closeInquiryModal = function() {

@@ -18,18 +18,46 @@
     </style>
 </head>
 <body class="bg-gray-50">
-    <nav class="bg-white shadow-lg fixed w-full z-50 top-0">
-        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-14 sm:h-16">
-                <div class="flex items-center">
-                    <span class="text-base sm:text-xl md:text-2xl font-bold text-blue-600 leading-tight">Import From Nepal</span>
-                </div>
-                <div class="hidden md:flex items-center space-x-6 lg:space-x-8">
-                    <a href="#home" class="text-gray-700 hover:text-blue-600 transition">Home</a>
-                    <a href="#products" class="text-gray-700 hover:text-blue-600 transition">Products</a>
-                    <a href="#about" class="text-gray-700 hover:text-blue-600 transition">About</a>
-                    <a href="#contact" class="text-gray-700 hover:text-blue-600 transition">Contact</a>
-                </div>
+<nav class="bg-white shadow-lg fixed w-full z-50 top-0">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-14 sm:h-16">
+            <div class="flex items-center">
+                <span class="text-base sm:text-xl md:text-2xl font-bold text-blue-600 leading-tight">Import From Nepal</span>
+            </div>
+            
+            <div class="hidden md:flex items-center space-x-6 lg:space-x-8">
+                <a href="#home" class="text-gray-700 hover:text-blue-600 transition">Home</a>
+                <a href="#products" class="text-gray-700 hover:text-blue-600 transition">Products</a>
+                <a href="#about" class="text-gray-700 hover:text-blue-600 transition">About</a>
+                <a href="#contact" class="text-gray-700 hover:text-blue-600 transition">Contact</a>
+            </div>
+
+            <!-- Right side icons -->
+            <div class="flex items-center space-x-2 sm:space-x-4">
+                <!-- Search Icon -->
+                <button onclick="toggleSearch()" class="p-2 hover:bg-gray-100 rounded-full transition">
+                    <svg class="w-5 h-5 sm:w-6 sm:h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </button>
+
+                <!-- Wishlist Icon -->
+                <button onclick="openWishlist()" class="relative p-2 hover:bg-gray-100 rounded-full transition hidden sm:block">
+                    <svg class="w-5 h-5 sm:w-6 sm:h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                    </svg>
+                    <span id="wishlist-count" class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">0</span>
+                </button>
+
+                <!-- Cart Icon -->
+                <button onclick="openCart()" class="relative p-2 hover:bg-gray-100 rounded-full transition">
+                    <svg class="w-5 h-5 sm:w-6 sm:h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    <span id="cart-count" class="hidden absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">0</span>
+                </button>
+
+                <!-- Mobile Menu Button -->
                 <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-gray-100">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
@@ -37,25 +65,138 @@
                 </button>
             </div>
         </div>
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
-            <div class="px-4 py-3 space-y-3">
-                <a href="#home" class="block py-2 text-gray-700 hover:text-blue-600 transition">Home</a>
-                <a href="#products" class="block py-2 text-gray-700 hover:text-blue-600 transition">Products</a>
-                <a href="#about" class="block py-2 text-gray-700 hover:text-blue-600 transition">About</a>
-                <a href="#contact" class="block py-2 text-gray-700 hover:text-blue-600 transition">Contact</a>
+    </div>
+
+    <!-- Search Bar (Hidden by default) -->
+    <div id="search-bar" class="hidden border-t bg-gray-50 py-3 px-4">
+        <div class="max-w-3xl mx-auto">
+            <input type="text" id="search-input" placeholder="Search products..." 
+                   class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                   oninput="searchProducts(this.value)">
+        </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+        <div class="px-4 py-3 space-y-3">
+            <a href="#home" class="block py-2 text-gray-700 hover:text-blue-600 transition">Home</a>
+            <a href="#products" class="block py-2 text-gray-700 hover:text-blue-600 transition">Products</a>
+            <a href="#about" class="block py-2 text-gray-700 hover:text-blue-600 transition">About</a>
+            <a href="#contact" class="block py-2 text-gray-700 hover:text-blue-600 transition">Contact</a>
+            <button onclick="openWishlist()" class="w-full text-left py-2 text-gray-700 hover:text-blue-600 transition sm:hidden">
+                Wishlist (<span id="wishlist-count-mobile">0</span>)
+            </button>
+        </div>
+    </div>
+</nav>
+
+<section id="home" class="pt-14 sm:pt-20 bg-white">
+    <div class="max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-2 min-h-[600px] lg:min-h-[700px]">
+            <!-- Left: Content -->
+            <div class="flex flex-col justify-center px-6 sm:px-12 lg:px-16 py-16 lg:py-20 bg-gradient-to-br from-slate-50 via-gray-50 to-stone-50">
+                <div class="max-w-xl">
+                    <!-- Badge -->
+                    <div class="inline-flex items-center gap-2 bg-white px-5 py-2.5 rounded-full shadow-sm mb-8 border border-gray-200">
+                        <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+                        <span class="text-sm font-semibold text-gray-700 tracking-wide">HANDCRAFTED IN NEPAL</span>
+                    </div>
+
+                    <!-- Main Heading -->
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black text-gray-900 leading-tight mb-6">
+                        Himalayan Crafts
+                        <span class="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-amber-700 via-orange-600 to-red-600" id="rotating-word">
+                            For Every Home
+                        </span>
+                    </h1>
+
+                    <!-- Subtitle -->
+                    <p class="text-lg sm:text-xl text-gray-600 mb-10 leading-relaxed font-light">
+                        Authentic artisan pieces that bring the spirit of the Himalayas into your space. Each item tells a story of tradition and craftsmanship.
+                    </p>
+
+                    <!-- CTA Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-4 mb-12">
+                        <a href="#products" class="group inline-flex items-center justify-center bg-gray-900 text-white px-8 py-4 rounded-lg font-semibold text-base hover:bg-gray-800 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300">
+                            Explore Collection
+                            <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                            </svg>
+                        </a>
+                        <a href="#about" class="inline-flex items-center justify-center bg-white text-gray-900 px-8 py-4 rounded-lg font-semibold text-base shadow-md hover:shadow-lg border border-gray-300 hover:border-gray-400 transition-all duration-300">
+                            Our Story
+                        </a>
+                    </div>
+
+                    <!-- Trust Indicators (Clean) -->
+                    <div class="grid grid-cols-3 gap-6 pt-6 border-t border-gray-200">
+                        <div>
+                            <div class="text-2xl font-bold text-gray-900 mb-1">500+</div>
+                            <div class="text-xs text-gray-500 uppercase tracking-wide">Products</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold text-gray-900 mb-1">50+</div>
+                            <div class="text-xs text-gray-500 uppercase tracking-wide">Countries</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold text-gray-900 mb-1">4.9★</div>
+                            <div class="text-xs text-gray-500 uppercase tracking-wide">Rating</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Hero Image with Overlay Stats -->
+            <div class="relative overflow-hidden bg-gray-100">
+                <img src="https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=1200&h=1400&fit=crop&q=80" 
+                     alt="Nepalese Handicrafts Collection" 
+                     class="w-full h-full object-cover"
+                     onerror="this.src='https://images.unsplash.com/photo-1582719366955-bfb54a72b2fc?w=1200&h=1400&fit=crop&q=80'">
+                
+                <!-- Creative Floating Elements -->
+                <div class="absolute top-8 right-8 bg-white/95 backdrop-blur-sm rounded-2xl p-5 shadow-2xl max-w-[200px] transform hover:scale-105 transition-transform">
+                    <div class="text-sm text-gray-500 uppercase tracking-wide mb-2">Featured Collection</div>
+                    <div class="text-xl font-bold text-gray-900">Singing Bowls</div>
+                    <div class="mt-3 flex items-center gap-2">
+                        <div class="flex-1 h-1 bg-gray-200 rounded-full overflow-hidden">
+                            <div class="h-full w-3/4 bg-gradient-to-r from-amber-500 to-orange-500"></div>
+                        </div>
+                        <span class="text-xs text-gray-600 font-semibold">75%</span>
+                    </div>
+                </div>
+
+                <div class="absolute bottom-8 left-8 bg-white/95 backdrop-blur-sm rounded-2xl p-5 shadow-2xl max-w-[220px] transform hover:scale-105 transition-transform">
+                    <div class="flex items-start gap-4">
+                        <div class="flex-1">
+                            <div class="text-sm text-gray-500 mb-1">Customers Love</div>
+                            <div class="flex gap-0.5 mb-2">
+                                <span class="text-amber-500 text-lg">★</span>
+                                <span class="text-amber-500 text-lg">★</span>
+                                <span class="text-amber-500 text-lg">★</span>
+                                <span class="text-amber-500 text-lg">★</span>
+                                <span class="text-amber-500 text-lg">★</span>
+                            </div>
+                            <div class="text-xs text-gray-600">"Absolutely stunning craftsmanship"</div>
+                        </div>
+                    </div>
+                    <div class="mt-3 pt-3 border-t border-gray-200 text-xs text-gray-500">
+                        Sarah M. • Verified Buyer
+                    </div>
+                </div>
             </div>
         </div>
-    </nav>
+    </div>
 
-    <section id="home" class="pt-14 sm:pt-20 bg-gradient-to-r from-blue-600 to-blue-800 text-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-20 md:py-24 text-center">
-            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight animate-fade-in">
-                Authentic Nepalese Handicrafts<br class="sm:hidden"> From the Himalayas
-            </h1>
-            <p class="text-lg sm:text-xl md:text-2xl mb-6 sm:mb-8 animate-fade-in">Traditional Craftsmanship • Global Delivery • Direct from Artisans</p>
-            <a href="#products" class="inline-block bg-white text-blue-600 px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold hover:bg-gray-100 transition shadow-lg text-sm sm:text-base">Explore Handicrafts</a>
-        </div>
-    </section>
+    <!-- Bottom Trust Bar (Refined) -->
+    <div class="bg-gradient-to-r from-slate-50 to-stone-50 py-5 text-center border-t border-gray-200">
+        <p class="text-gray-700 font-medium text-sm sm:text-base">
+            Authentic handcrafted pieces curated with care. 
+            <a href="#products" class="text-gray-900 hover:text-amber-700 font-bold ml-2 underline decoration-2 underline-offset-4 decoration-amber-500 transition-colors">
+                Shop Best Sellers
+            </a>
+        </p>
+    </div>
+</section>
 
     <section id="products" class="py-12 sm:py-16">
         <div class="max-w-7xl mx-auto px-3 sm:px-4 md:px-6">
@@ -88,10 +229,125 @@
             </div>
         </div>
     </section>
+    <!-- Shopping Cart Modal -->
+    <div id="cart-modal" class="hidden fixed inset-0 z-50">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black bg-opacity-50 transition-opacity" onclick="closeCart()"></div>
+        
+        <!-- Cart Sidebar (slides from right) -->
+        <div id="cart-sidebar" class="absolute right-0 top-0 h-full w-full sm:w-[480px] bg-white shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col">
+            <!-- Header -->
+            <div class="flex items-center justify-between p-6 border-b">
+                <h2 class="text-2xl font-bold text-gray-900">Shopping Cart</h2>
+                <button onclick="closeCart()" class="p-2 hover:bg-gray-100 rounded-full transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
 
-    <footer class="bg-gray-800 text-white py-6 sm:py-8">
-        <div class="max-w-7xl mx-auto px-4 text-center text-sm sm:text-base">
-            <p>&copy; 2025 Import From Nepal. All rights reserved.</p>
+            <!-- Cart Items (scrollable) -->
+            <div id="cart-items" class="flex-1 overflow-y-auto p-6 space-y-4">
+                <!-- Items will be inserted here by JavaScript -->
+            </div>
+
+            <!-- Footer with Subtotal -->
+            <div class="border-t p-6 space-y-4 bg-gray-50">
+                <div class="flex justify-between items-center text-lg">
+                    <span class="font-semibold text-gray-700">Subtotal:</span>
+                    <span id="cart-subtotal" class="text-2xl font-bold text-gray-900">$0.00</span>
+                </div>
+                <button onclick="proceedToCheckout()" class="w-full bg-gray-900 text-white py-4 rounded-lg font-bold text-lg hover:bg-gray-800 transition shadow-lg">
+                    Proceed to Checkout
+                </button>
+                <button onclick="closeCart()" class="w-full border-2 border-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:border-gray-400 transition">
+                    Continue Shopping
+                </button>
+            </div>
+        </div>
+    </div>
+
+<footer class="bg-gray-900 text-white">
+        <!-- Main Footer -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+                <!-- Column 1: About -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Import From Nepal</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                        Bringing authentic Himalayan handicrafts to the world. Each piece tells a story of tradition and craftsmanship.
+                    </p>
+                    <!-- Social Icons -->
+                    <div class="flex gap-3">
+                        <a href="#" class="bg-gray-800 p-2.5 rounded-full hover:bg-gray-700 transition">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        </a>
+                        <a href="#" class="bg-gray-800 p-2.5 rounded-full hover:bg-gray-700 transition">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073z"/><path d="M12 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        </a>
+                        <a href="#" class="bg-gray-800 p-2.5 rounded-full hover:bg-gray-700 transition">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Column 2: Quick Links -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="#home" class="hover:text-white transition">Home</a></li>
+                        <li><a href="#products" class="hover:text-white transition">Products</a></li>
+                        <li><a href="#about" class="hover:text-white transition">About Us</a></li>
+                        <li><a href="#contact" class="hover:text-white transition">Contact</a></li>
+                        <li><a href="#" class="hover:text-white transition">Track Order</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 3: Customer Service -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Customer Service</h3>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-white transition">Shipping Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition">Return & Refund</a></li>
+                        <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition">Terms & Conditions</a></li>
+                        <li><a href="#" class="hover:text-white transition">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 4: Newsletter -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Newsletter</h3>
+                    <p class="text-gray-400 text-sm mb-4">Subscribe to get special offers and updates.</p>
+                    <form class="space-y-2" onsubmit="subscribeNewsletter(event)">
+                        <input type="email" placeholder="Your email" required 
+                               class="w-full px-4 py-2.5 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-gray-600 text-sm">
+                        <button type="submit" class="w-full bg-white text-gray-900 px-4 py-2.5 rounded-lg font-semibold hover:bg-gray-100 transition text-sm">
+                            Subscribe
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Bar -->
+        <div class="border-t border-gray-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                    <p class="text-gray-400 text-sm">&copy; 2025 Import From Nepal. All rights reserved.</p>
+                    
+                    <!-- Payment Icons -->
+                    <div class="flex items-center gap-3">
+                        <span class="text-gray-500 text-xs">We Accept:</span>
+                        <div class="flex gap-2">
+                            <div class="bg-white rounded px-2 py-1"><span class="text-xs font-bold text-blue-600">VISA</span></div>
+                            <div class="bg-white rounded px-2 py-1"><span class="text-xs font-bold text-orange-500">MC</span></div>
+                            <div class="bg-white rounded px-2 py-1"><span class="text-xs font-bold text-blue-400">AMEX</span></div>
+                            <div class="bg-white rounded px-2 py-1"><span class="text-xs font-bold text-indigo-600">PayPal</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </footer>
 
@@ -411,8 +667,299 @@
             <div id="form-message" class="hidden mx-4 sm:mx-6 mb-4 p-3 rounded-lg text-sm"></div>
         </div>
     </div>
+<script>
+    // Cart and Wishlist Management
+    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
 
-    <script type="module">
+    window.addToCart = function(productId, productName, price, imageUrl) {
+        const existingItem = cart.find(item => item.id === productId);
+        
+        if (existingItem) {
+            existingItem.quantity += 1;
+            showNotification(`Increased quantity of "${productName}" in cart!`, 'success');
+        } else {
+            cart.push({
+                id: productId,
+                name: productName,
+                price: price,
+                image: imageUrl,
+                quantity: 1
+            });
+            showNotification(`"${productName}" added to cart!`, 'success');
+        }
+        
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartCount();
+    }
+
+    window.toggleWishlist = function(productId, productName, imageUrl) {
+        const existingIndex = wishlist.findIndex(item => item.id === productId);
+        
+        if (existingIndex > -1) {
+            wishlist.splice(existingIndex, 1);
+            showNotification(`"${productName}" removed from wishlist`, 'info');
+        } else {
+            wishlist.push({
+                id: productId,
+                name: productName,
+                image: imageUrl
+            });
+            showNotification(`"${productName}" added to wishlist!`, 'success');
+        }
+        
+        localStorage.setItem('wishlist', JSON.stringify(wishlist));
+        updateWishlistCount();
+        markWishlistItems();
+    }
+
+    window.markWishlistItems = function() {
+        document.querySelectorAll('.wishlist-btn').forEach(btn => {
+            const productId = btn.dataset.productId;
+            const icon = btn.querySelector('.wishlist-icon');
+            
+            if (wishlist.some(item => item.id === productId)) {
+                icon.classList.add('fill-red-500', 'text-red-500');
+                icon.classList.remove('text-gray-400');
+            } else {
+                icon.classList.remove('fill-red-500', 'text-red-500');
+                icon.classList.add('text-gray-400');
+            }
+        });
+    }
+
+    function showNotification(message, type = 'success') {
+        const colors = {
+            success: 'bg-green-500',
+            info: 'bg-blue-500',
+            error: 'bg-red-500'
+        };
+        
+        const notification = document.createElement('div');
+        notification.className = `fixed top-24 right-4 ${colors[type]} text-white px-6 py-3 rounded-lg shadow-2xl z-50 transform transition-all duration-300`;
+        notification.textContent = message;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.opacity = '0';
+            notification.style.transform = 'translateX(400px)';
+            setTimeout(() => notification.remove(), 300);
+        }, 2500);
+    }
+
+    window.toggleSearch = function() {
+        const searchBar = document.getElementById('search-bar');
+        const searchInput = document.getElementById('search-input');
+        searchBar.classList.toggle('hidden');
+        if (!searchBar.classList.contains('hidden')) {
+            searchInput.focus();
+        } else {
+            searchInput.value = '';
+            if (window.allProducts) {
+                window.displayProducts(window.allProducts);
+            }
+        }
+    }
+
+    window.openCart = function() {
+        if (cart.length === 0) {
+            showNotification('Your cart is empty', 'info');
+            return;
+        }
+        
+        const modal = document.getElementById('cart-modal');
+        const sidebar = document.getElementById('cart-sidebar');
+        
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            sidebar.classList.remove('translate-x-full');
+        }, 10);
+        
+        renderCartItems();
+        document.body.style.overflow = 'hidden';
+    }
+
+    window.closeCart = function() {
+        const modal = document.getElementById('cart-modal');
+        const sidebar = document.getElementById('cart-sidebar');
+        
+        sidebar.classList.add('translate-x-full');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }, 300);
+    }
+
+    function renderCartItems() {
+        const container = document.getElementById('cart-items');
+        const subtotalEl = document.getElementById('cart-subtotal');
+        
+        if (cart.length === 0) {
+            container.innerHTML = '<p class="text-center text-gray-500 py-8">Your cart is empty</p>';
+            subtotalEl.textContent = '$0.00';
+            return;
+        }
+        
+        const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
+        
+        container.innerHTML = cart.map(item => `
+            <div class="flex gap-4 bg-gray-50 p-4 rounded-lg">
+                <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded-lg" onerror="this.src='https://via.placeholder.com/80x80'">
+                <div class="flex-1 min-w-0">
+                    <h4 class="font-semibold text-gray-900 truncate">${item.name}</h4>
+                    <p class="text-sm text-gray-600 mt-1">$${item.price}</p>
+                    <div class="flex items-center gap-3 mt-2">
+                        <button onclick="updateCartQuantity('${item.id}', ${item.quantity - 1})" class="w-8 h-8 flex items-center justify-center bg-white border rounded-lg hover:bg-gray-100 transition">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/></svg>
+                        </button>
+                        <span class="font-semibold w-8 text-center">${item.quantity}</span>
+                        <button onclick="updateCartQuantity('${item.id}', ${item.quantity + 1})" class="w-8 h-8 flex items-center justify-center bg-white border rounded-lg hover:bg-gray-100 transition">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <button onclick="removeFromCart('${item.id}')" class="text-gray-400 hover:text-red-500 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        `).join('');
+    }
+
+    window.updateCartQuantity = function(productId, newQuantity) {
+        if (newQuantity < 1) {
+            removeFromCart(productId);
+            return;
+        }
+        
+        const item = cart.find(i => i.id === productId);
+        if (item) {
+            item.quantity = newQuantity;
+            localStorage.setItem('cart', JSON.stringify(cart));
+            renderCartItems();
+            updateCartCount();
+        }
+    }
+
+    window.removeFromCart = function(productId) {
+        cart = cart.filter(item => item.id !== productId);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        renderCartItems();
+        updateCartCount();
+        showNotification('Item removed from cart', 'info');
+        
+        if (cart.length === 0) {
+            closeCart();
+        }
+    }
+
+    window.proceedToCheckout = function() {
+        // Build cart summary for inquiry
+        const cartItems = cart.map(item => `${item.name} (x${item.quantity}) - $${(item.price * item.quantity).toFixed(2)}`).join('\n');
+        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        
+        // Open inquiry modal with cart details
+        closeCart();
+        document.getElementById('inquiry-product-name').value = 'Checkout - Multiple Items';
+        document.getElementById('inquiry-product-display').value = 'Checkout - Multiple Items';
+        document.querySelector('[name="message"]').value = `I would like to purchase the following items:\n\n${cartItems}\n\nTotal: $${total.toFixed(2)}`;
+        document.getElementById('inquiry-modal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    window.subscribeNewsletter = function(event) {
+        event.preventDefault();
+        const email = event.target.querySelector('input[type="email"]').value;
+        showNotification(`Thank you for subscribing, ${email}!`, 'success');
+        event.target.reset();
+    }
+
+    window.openWishlist = function() {
+        if (wishlist.length === 0) {
+            showNotification('Your wishlist is empty', 'info');
+            return;
+        }
+        alert('Wishlist modal - building after cart!');
+    }
+
+    window.searchProducts = function(query) {
+        if (!window.allProducts) return;
+        
+        const searchTerm = query.toLowerCase().trim();
+        
+        if (searchTerm === '') {
+            window.displayProducts(window.allProducts);
+            return;
+        }
+
+        const filtered = window.allProducts.filter(product => {
+            return product.name.toLowerCase().includes(searchTerm) ||
+                   (product.description && product.description.toLowerCase().includes(searchTerm)) ||
+                   (product.category && product.category.toLowerCase().includes(searchTerm));
+        });
+
+        window.displayProducts(filtered);
+    }
+
+    function updateCartCount() {
+        const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+        const badge = document.getElementById('cart-count');
+        if (count > 0) {
+            badge.textContent = count;
+            badge.classList.remove('hidden');
+        } else {
+            badge.classList.add('hidden');
+        }
+    }
+
+    function updateWishlistCount() {
+        const count = wishlist.length;
+        const badge = document.getElementById('wishlist-count');
+        const mobileBadge = document.getElementById('wishlist-count-mobile');
+        if (count > 0) {
+            badge.textContent = count;
+            badge.classList.remove('hidden');
+            if (mobileBadge) mobileBadge.textContent = count;
+        } else {
+            badge.classList.add('hidden');
+            if (mobileBadge) mobileBadge.textContent = '0';
+        }
+    }
+
+    // Rotating Word Effect
+    const rotatingWords = ['For Every Home', 'For Every Space', 'For Every Story', 'For Every Moment'];
+    let wordIndex = 0;
+
+    function rotateWord() {
+        const wordElement = document.getElementById('rotating-word');
+        if (!wordElement) return;
+        
+        wordElement.style.opacity = '0';
+        wordElement.style.transform = 'translateY(-10px)';
+        
+        setTimeout(() => {
+            wordIndex = (wordIndex + 1) % rotatingWords.length;
+            wordElement.textContent = rotatingWords[wordIndex];
+            wordElement.style.opacity = '1';
+            wordElement.style.transform = 'translateY(0)';
+        }, 300);
+    }
+
+    // Initialize on page load
+    window.addEventListener('DOMContentLoaded', () => {
+        updateCartCount();
+        updateWishlistCount();
+        
+        const wordElement = document.getElementById('rotating-word');
+        if (wordElement) {
+            wordElement.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+            setInterval(rotateWord, 3000);
+        }
+    });
+</script>
+
+    <script type="module">  
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/+esm'
 
         const supabase = createClient(
@@ -509,34 +1056,102 @@
             }
         }
 
-        function displayProducts(products) {
-            const grid = document.getElementById('products-grid')
-            
-            if (products.length === 0) {
-                grid.innerHTML = '<p class="col-span-full text-center text-gray-500 text-sm sm:text-base">No products in this category yet.</p>'
-                return
-            }
+      window.displayProducts = function(products) {
+    const grid = document.getElementById('products-grid')
+    
+    if (products.length === 0) {
+        grid.innerHTML = '<p class="col-span-full text-center text-gray-500 text-sm sm:text-base">No products in this category yet.</p>'
+        return
+    }
 
-            grid.innerHTML = products.map(product => `
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition cursor-pointer animate-fade-in" 
-                     onclick='window.openProductDetail(${JSON.stringify(product).replace(/'/g, "&#39;")})'>
-                    <img src="${escapeHtml(product.image_url)}" alt="${escapeHtml(product.name)}" 
-                         class="w-full h-40 sm:h-48 object-cover"
-                         onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
-                    <div class="p-4 sm:p-6">
-                        <h3 class="text-base sm:text-lg md:text-xl font-bold mb-2 leading-tight">${escapeHtml(product.name)}</h3>
-                        <p class="text-gray-600 mb-2 line-clamp-2 text-xs sm:text-sm">${escapeHtml(product.description)}</p>
-                        <span class="inline-block bg-blue-100 text-blue-800 px-2 sm:px-3 py-1 rounded-full text-xs font-semibold mb-3 sm:mb-4">
-                            ${escapeHtml(product.category)}
-                        </span>
-                        <button onclick="event.stopPropagation(); window.openInquiryModal('${escapeHtml(product.name).replace(/'/g, "\\'")}', '${product.id}')" 
-                                class="w-full bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-blue-700 text-xs sm:text-sm font-medium transition">
-                            Quick Inquiry
-                        </button>
-                    </div>
+    grid.innerHTML = products.map(product => {
+        // Generate random price for demo (you'll replace this with real DB prices later)
+        const price = Math.floor(Math.random() * 150) + 25;
+        const originalPrice = Math.floor(price * 1.3);
+        
+        return `
+
+        <div class="group bg-white rounded-2xl shadow-md hover:shadow-2xl overflow-hidden transition-all duration-500 transform hover:-translate-y-2 animate-fade-in border border-gray-100">
+            <!-- Image Container with Wishlist -->
+            <div class="relative overflow-hidden bg-gray-100 h-64 sm:h-72">
+                <img src="${escapeHtml(product.image_url)}" 
+                     alt="${escapeHtml(product.name)}" 
+                     class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 cursor-pointer"
+                     onclick='window.openProductDetail(${JSON.stringify(product).replace(/'/g, "&#39;")})'
+                     onerror="this.src='https://via.placeholder.com/400x400?text=No+Image'">
+                
+                <!-- Wishlist Heart (Top Right) -->
+                <button onclick="event.stopPropagation(); toggleWishlist('${product.id}', '${escapeHtml(product.name).replace(/'/g, "\\'")}', '${escapeHtml(product.image_url)}')" 
+                        class="wishlist-btn absolute top-3 right-3 bg-white/90 backdrop-blur-sm p-2.5 rounded-full shadow-lg hover:bg-white hover:scale-110 transition-all duration-300 z-10"
+                        data-product-id="${product.id}">
+                    <svg class="w-5 h-5 text-gray-400 wishlist-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                    </svg>
+                </button>
+
+                <!-- Category Badge (Top Left) -->
+                <div class="absolute top-3 left-3 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-md">
+                    <span class="text-xs font-semibold text-gray-700 uppercase tracking-wide">${escapeHtml(product.category)}</span>
                 </div>
-            `).join('')
-        }
+
+                <!-- Hover Overlay with Quick View -->
+                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <button onclick='window.openProductDetail(${JSON.stringify(product).replace(/'/g, "&#39;")})' 
+                            class="bg-white text-gray-900 px-6 py-2.5 rounded-lg font-semibold text-sm shadow-xl transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 hover:bg-gray-50">
+                        Quick View
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="p-5">
+                <!-- Product Name -->
+                <h3 class="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-amber-700 transition-colors cursor-pointer" 
+                    onclick='window.openProductDetail(${JSON.stringify(product).replace(/'/g, "&#39;")})'>
+                    ${escapeHtml(product.name)}
+                </h3>
+
+                <!-- Description -->
+                <p class="text-sm text-gray-600 mb-4 line-clamp-2 leading-relaxed">
+                    ${escapeHtml(product.description)}
+                </p>
+
+                <!-- Price Section -->
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-2xl font-bold text-gray-900">$${price}</span>
+                    <span class="text-sm text-gray-400 line-through">$${originalPrice}</span>
+                    <span class="ml-auto bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded-full">
+                        ${Math.floor((originalPrice - price) / originalPrice * 100)}% OFF
+                    </span>
+                </div>
+
+                <!-- Stock Status -->
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    <span class="text-xs text-gray-600 font-medium">In Stock • Ships in 2-3 days</span>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="event.stopPropagation(); addToCart('${product.id}', '${escapeHtml(product.name).replace(/'/g, "\\'")}', ${price}, '${escapeHtml(product.image_url)}')" 
+                            class="bg-gray-900 text-white px-4 py-3 rounded-lg font-semibold text-sm hover:bg-gray-800 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                        </svg>
+                        Add to Cart
+                    </button>
+                    <button onclick="event.stopPropagation(); window.openInquiryModal('${escapeHtml(product.name).replace(/'/g, "\\'")}', '${product.id}')" 
+                            class="bg-white border-2 border-gray-300 text-gray-900 px-4 py-3 rounded-lg font-semibold text-sm hover:border-gray-900 transition-all duration-300 hover:shadow-md">
+                        Inquire
+                    </button>
+                </div>
+            </div>
+        </div>
+    `}).join('')
+    
+    // Mark wishlist items after rendering
+    markWishlistItems()
+}
 
         function escapeHtml(text) {
             const div = document.createElement('div')

@@ -277,6 +277,13 @@
                         </select>
                     </div>
 
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Product Price</label>
+                        <input type="number" id="product-price" required 
+                               class="w-full px-5 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-amber-500 transition font-light text-lg"
+                               placeholder="Enter price in USD">
+                    </div>
+
                     <!-- Action Buttons -->
                     <div class="flex gap-4 pt-6">
                         <button type="submit" class="flex-1 gold-gradient text-white py-4 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all transform hover:scale-105">
@@ -423,6 +430,7 @@
                     </div>
                     <div class="p-6">
                         <h3 class="text-xl font-light text-gray-900 mb-2 leading-tight">${product.name}</h3>
+                        <p class="text-lg font-bold text-amber-800 mb-2">${product.price ? `$${product.price.toFixed(2)}` : ''}</p>
                         <p class="text-gray-600 mb-6 text-sm font-light line-clamp-2">${product.description}</p>
                         <div class="flex gap-3">
                             <button onclick="window.editProduct('${product.id}')" 
@@ -465,6 +473,7 @@
                 document.getElementById('product-description').value = data.description
                 document.getElementById('product-image').value = data.image_url
                 document.getElementById('product-category').value = data.category
+                document.getElementById('product-price').value = data.price
                 
                 // Show preview
                 previewImage(data.image_url)
@@ -507,11 +516,13 @@
         document.getElementById('product-form').addEventListener('submit', async (e) => {
             e.preventDefault()
 
+            const priceValue = document.getElementById('product-price').value;
             const productData = {
                 name: document.getElementById('product-name').value,
                 description: document.getElementById('product-description').value,
                 image_url: document.getElementById('product-image').value,
-                category: document.getElementById('product-category').value
+                category: document.getElementById('product-category').value,
+                price: priceValue ? parseFloat(priceValue) : null
             }
 
             try {
@@ -521,23 +532,30 @@
                         .update(productData)
                         .eq('id', editingProductId)
 
-                    if (error) throw error
+                    if (error) {
+                        console.error('Supabase update error:', error)
+                        throw error
+                    }
                     showSuccess('Masterpiece updated successfully!')
                 } else {
                     const { error } = await supabase
                         .from('products')
                         .insert([productData])
 
-                    if (error) throw error
+                    if (error) {
+                        console.error('Supabase insert error:', error)
+                        alert('Supabase insert error: ' + JSON.stringify(error, null, 2))
+                        throw error
+                    }
                     showSuccess('Masterpiece added to collection!')
                 }
 
                 closeModal()
                 loadProducts()
             } catch (error) {
-                showError('Error saving product: ' + error.message)
-            }
-        })
+                    console.error('Error saving product:', error)
+                    showError('Error saving product: ' + error.message)
+                }        })
 
         document.getElementById('product-modal').addEventListener('click', function(e) {
             if (e.target === this) closeModal()

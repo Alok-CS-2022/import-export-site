@@ -470,7 +470,6 @@ if (inquiryForm) {
             if (document.getElementById('inquiry-product-display').value.includes('Bulk Order')) {
                 cart = [];
                 updateCartCount();
-                updateCartModal();
                 localStorage.removeItem('cart');
             }
 

@@ -1,22 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <!-- Umami Analytics -->
-    <script defer src="https://cloud.umami.is/script.js" data-website-id="ac82397e-0bc4-4fe6-bac5-42f6b962b391"></script>
+    <script defer src="https://cloud.umami.is/script.js"
+        data-website-id="ac82397e-0bc4-4fe6-bac5-42f6b962b391"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-30N5XW6E4C"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
 
-  gtag('config', 'G-30N5XW6E4C');
-</script>
+        gtag('config', 'G-30N5XW6E4C');
+    </script>
 
 </head>
+
 <body class="bg-gray-50">
     <nav class="bg-gray-900 text-white p-4">
         <div class="container mx-auto flex justify-between items-center">
@@ -36,12 +39,12 @@
                 <h3 class="text-xl font-bold mb-2">📦 Orders</h3>
                 <p class="text-gray-600">Manage customer inquiries and orders</p>
             </a>
-            
+
             <a href="products.html" class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
                 <h3 class="text-xl font-bold mb-2">📦 Products</h3>
                 <p class="text-gray-600">Add, edit, and manage products</p>
             </a>
-            
+
             <a href="content.html" class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
                 <h3 class="text-xl font-bold mb-2">✏️ Content</h3>
                 <p class="text-gray-600">Update website content and information</p>
@@ -66,33 +69,36 @@
 
         async function checkAuth() {
             const { data: { session }, error } = await supabase.auth.getSession()
-            
+
             if (error || !session) {
                 console.log('Not authenticated, redirecting to login...')
                 window.location.href = 'login.html'
                 return false
             }
-            
+
             document.getElementById('admin-email').textContent = session.user.email
             return true
         }
 
         async function loadRecentOrders() {
             try {
-                const { data: orders, error } = await supabase
-                    .from('orders')
-                    .select('*')
-                    .order('created_at', { ascending: false })
-                    .limit(5)
+                const { data: { session } } = await supabase.auth.getSession()
+                if (!session) return
+
+                const response = await fetch('/api/admin/orders', {
+                    headers: {
+                        'Authorization': `Bearer ${session.access_token}`
+                    }
+                })
+
+                if (!response.ok) throw new Error('Failed to fetch orders')
+
+                const allOrders = await response.json()
+                const orders = allOrders.slice(0, 5) // Just take 5 for preview
 
                 const container = document.getElementById('recent-orders')
-                
-                if (error) {
-                    container.innerHTML = '<p class="text-red-500">Error loading orders</p>'
-                    return
-                }
 
-                if (!orders || orders.length === 0) {
+                if (orders.length === 0) {
                     container.innerHTML = '<p class="text-gray-500">No recent orders</p>'
                     return
                 }
@@ -109,10 +115,11 @@
 
             } catch (err) {
                 console.error('Error:', err)
+                document.getElementById('recent-orders').innerHTML = '<p class="text-red-500">Error loading orders</p>'
             }
         }
 
-        window.logout = async function() {
+        window.logout = async function () {
             await supabase.auth.signOut()
             window.location.href = 'login.html'
         }
@@ -130,4 +137,5 @@
         })
     </script>
 </body>
+
 </html>

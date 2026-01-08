@@ -21,6 +21,23 @@
         async function loadProducts() {
             const grid = document.getElementById('products-grid')
             
+            // Show Skeleton Loading State
+            const skeletonHTML = Array(6).fill(0).map(() => `
+                <div class="bg-white rounded-xl overflow-hidden shadow-lg h-full border border-gray-100">
+                    <div class="aspect-square skeleton w-full"></div>
+                    <div class="p-6 space-y-3">
+                        <div class="h-3 skeleton w-1/3 rounded-full"></div>
+                        <div class="h-6 skeleton w-3/4 rounded-lg"></div>
+                        <div class="h-4 skeleton w-1/2 rounded-full"></div>
+                        <div class="pt-4 flex gap-2">
+                            <div class="h-10 skeleton flex-1 rounded-lg"></div>
+                            <div class="h-10 skeleton flex-1 rounded-lg"></div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            grid.innerHTML = skeletonHTML;
+            
             try {
                 const response = await fetch('/api/products');
                 const data = await response.json();
@@ -386,3 +403,39 @@ Received at: ${new Date().toLocaleString()}`.trim()
         })
 
         loadProducts()
+
+        // Toast Notification System
+        window.showToast = function(message, type = 'success') {
+            let container = document.querySelector('.toast-container');
+            if (!container) {
+                container = document.createElement('div');
+                container.className = 'toast-container';
+                document.body.appendChild(container);
+            }
+
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            
+            let icon = '';
+            if (type === 'success') icon = '<svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>';
+            if (type === 'error') icon = '<svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
+            if (type === 'warning') icon = '<svg class="w-6 h-6 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>';
+
+            toast.innerHTML = `
+                ${icon}
+                <div class="flex-1 text-sm font-medium text-gray-800">${message}</div>
+            `;
+
+            container.appendChild(toast);
+
+            // Trigger animation
+            requestAnimationFrame(() => {
+                toast.classList.add('show');
+            });
+
+            // Remove after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }

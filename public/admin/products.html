@@ -1,94 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Artisan Vault - Product Studio</title>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-30N5XW6E4C"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
 
-  gtag('config', 'G-30N5XW6E4C');
-</script>
-    <script defer src="https://cloud.umami.is/script.js" data-website-id="ac82397e-0bc4-4fe6-bac5-42f6b962b391"></script>
+        gtag('config', 'G-30N5XW6E4C');
+    </script>
+    <script defer src="https://cloud.umami.is/script.js"
+        data-website-id="ac82397e-0bc4-4fe6-bac5-42f6b962b391"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        
+
         @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
-        
-        .animate-fadeIn { animation: fadeIn 0.6s ease-out; }
-        .animate-slideIn { animation: slideIn 0.4s ease-out; }
-        
+
+        .animate-fadeIn {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .animate-slideIn {
+            animation: slideIn 0.4s ease-out;
+        }
+
         /* Premium gradient backgrounds */
         .premium-gradient {
             background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
         }
-        
+
         .gold-gradient {
             background: linear-gradient(135deg, #D97706 0%, #F59E0B 100%);
         }
-        
+
         /* Glass effect */
         .glass {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
         }
-        
+
         /* Card hover effect */
         .product-card {
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
+
         .product-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 20px 60px rgba(217, 119, 6, 0.3);
         }
-        
+
         /* Smooth transitions */
         * {
             transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
+
         /* Custom scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
-        
+
         ::-webkit-scrollbar-track {
             background: #f1f1f1;
         }
-        
+
         ::-webkit-scrollbar-thumb {
             background: #D97706;
             border-radius: 4px;
         }
-        
+
         ::-webkit-scrollbar-thumb:hover {
             background: #B45309;
         }
-        
+
         /* Image preview animation */
         .image-preview {
             transition: all 0.3s ease;
         }
-        
+
         .image-preview:hover {
             transform: scale(1.02);
         }
     </style>
 </head>
+
 <body class="bg-gradient-to-br from-stone-50 to-amber-50 min-h-screen">
-    
+
     <!-- Premium Header -->
     <nav class="premium-gradient text-white shadow-2xl sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-6 py-4">
@@ -103,15 +125,17 @@
                         <p class="text-xs text-gray-400 font-light">Product Studio</p>
                     </div>
                 </div>
-                
+
                 <!-- Navigation -->
                 <div class="flex items-center gap-6">
                     <a href="dashboard.html" class="text-gray-300 hover:text-white transition font-light">Dashboard</a>
                     <a href="order.html" class="text-gray-300 hover:text-white transition font-light">Orders</a>
-                    <a href="../index.html" target="_blank" class="gold-gradient px-5 py-2.5 rounded-lg font-medium text-white hover:shadow-lg transition">
+                    <a href="../index.html" target="_blank"
+                        class="gold-gradient px-5 py-2.5 rounded-lg font-medium text-white hover:shadow-lg transition">
                         View Live Site
                     </a>
-                    <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-5 py-2.5 rounded-lg font-medium transition">
+                    <button onclick="logout()"
+                        class="bg-red-600 hover:bg-red-700 px-5 py-2.5 rounded-lg font-medium transition">
                         Sign Out
                     </button>
                 </div>
@@ -121,10 +145,14 @@
 
     <!-- Main Content -->
     <div class="max-w-7xl mx-auto px-6 py-12">
-        
+
         <!-- Alerts -->
-        <div id="error-banner" class="hidden bg-red-50 border-l-4 border-red-500 text-red-800 px-6 py-4 rounded-lg mb-6 shadow-md animate-fadeIn"></div>
-        <div id="success-banner" class="hidden bg-green-50 border-l-4 border-green-500 text-green-800 px-6 py-4 rounded-lg mb-6 shadow-md animate-fadeIn"></div>
+        <div id="error-banner"
+            class="hidden bg-red-50 border-l-4 border-red-500 text-red-800 px-6 py-4 rounded-lg mb-6 shadow-md animate-fadeIn">
+        </div>
+        <div id="success-banner"
+            class="hidden bg-green-50 border-l-4 border-green-500 text-green-800 px-6 py-4 rounded-lg mb-6 shadow-md animate-fadeIn">
+        </div>
 
         <!-- Header Section -->
         <div class="mb-12 animate-fadeIn">
@@ -133,10 +161,12 @@
                     <h2 class="text-5xl font-light text-gray-900 mb-2">Product Collection</h2>
                     <p class="text-gray-600 font-light text-lg">Curate your handcrafted masterpieces</p>
                 </div>
-                <button id="add-product-btn" class="group gold-gradient text-white px-8 py-4 rounded-xl font-medium shadow-xl hover:shadow-2xl transition-all transform hover:scale-105">
+                <button id="add-product-btn"
+                    class="group gold-gradient text-white px-8 py-4 rounded-xl font-medium shadow-xl hover:shadow-2xl transition-all transform hover:scale-105">
                     <span class="flex items-center gap-2">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                         </svg>
                         Create Masterpiece
                     </span>
@@ -148,9 +178,11 @@
         <div id="stats-bar" class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12 animate-slideIn">
             <div class="glass p-6 rounded-2xl shadow-lg border border-amber-100">
                 <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center">
+                    <div
+                        class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                         </svg>
                     </div>
                     <div>
@@ -159,12 +191,15 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="glass p-6 rounded-2xl shadow-lg border border-amber-100">
                 <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-gradient-to-br from-amber-400 to-amber-600 rounded-xl flex items-center justify-center">
+                    <div
+                        class="w-12 h-12 bg-gradient-to-br from-amber-400 to-amber-600 rounded-xl flex items-center justify-center">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z">
+                            </path>
                         </svg>
                     </div>
                     <div>
@@ -173,12 +208,14 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="glass p-6 rounded-2xl shadow-lg border border-amber-100">
                 <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center">
+                    <div
+                        class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
                     <div>
@@ -187,12 +224,14 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="glass p-6 rounded-2xl shadow-lg border border-amber-100">
                 <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex items-center justify-center">
+                    <div
+                        class="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex items-center justify-center">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                         </svg>
                     </div>
                     <div>
@@ -207,7 +246,8 @@
         <div id="products-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div class="col-span-full flex flex-col items-center justify-center py-20 text-gray-400">
                 <svg class="w-20 h-20 mb-4 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                 </svg>
                 <p class="text-lg font-light">Loading artisan collection...</p>
             </div>
@@ -215,7 +255,8 @@
     </div>
 
     <!-- Premium Modal -->
-    <div id="product-modal" class="hidden fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div id="product-modal"
+        class="hidden fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
         <div class="glass rounded-3xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden animate-fadeIn">
             <!-- Modal Header -->
             <div class="premium-gradient text-white p-8">
@@ -224,7 +265,8 @@
                         <h2 id="modal-title" class="text-3xl font-light tracking-tight">Create Masterpiece</h2>
                         <p class="text-gray-400 font-light mt-1">Add authentic craftsmanship to your collection</p>
                     </div>
-                    <button id="close-modal-btn" class="text-gray-400 hover:text-white transition text-3xl w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10">×</button>
+                    <button id="close-modal-btn"
+                        class="text-gray-400 hover:text-white transition text-3xl w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10">×</button>
                 </div>
             </div>
 
@@ -232,7 +274,7 @@
             <div class="p-8 overflow-y-auto max-h-[calc(90vh-180px)]">
                 <form id="product-form" class="space-y-6">
                     <input type="hidden" id="product-id">
-                    
+
                     <!-- Image Preview -->
                     <div id="image-preview-container" class="hidden mb-6">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Preview</label>
@@ -240,34 +282,34 @@
                             <img id="image-preview" src="" alt="Preview" class="w-full h-64 object-cover image-preview">
                         </div>
                     </div>
-                    
+
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Product Name</label>
-                        <input type="text" id="product-name" required 
-                               class="w-full px-5 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-amber-500 transition font-light text-lg"
-                               placeholder="Handwoven Pashmina Shawl">
+                        <input type="text" id="product-name" required
+                            class="w-full px-5 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-amber-500 transition font-light text-lg"
+                            placeholder="Handwoven Pashmina Shawl">
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
                         <textarea id="product-description" rows="4" required
-                                  class="w-full px-5 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-amber-500 transition font-light resize-none"
-                                  placeholder="Describe the craftsmanship, materials, and story behind this piece..."></textarea>
+                            class="w-full px-5 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-amber-500 transition font-light resize-none"
+                            placeholder="Describe the craftsmanship, materials, and story behind this piece..."></textarea>
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Image URL</label>
-                        <input type="url" id="product-image" required 
-                               oninput="previewImage(this.value)"
-                               class="w-full px-5 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-amber-500 transition font-light"
-                               placeholder="https://images.unsplash.com/photo-...">
-                        <p class="text-sm text-gray-500 mt-2 font-light">💡 Use Unsplash: Right-click image → Copy image address</p>
+                        <input type="url" id="product-image" required oninput="previewImage(this.value)"
+                            class="w-full px-5 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-amber-500 transition font-light"
+                            placeholder="https://images.unsplash.com/photo-...">
+                        <p class="text-sm text-gray-500 mt-2 font-light">💡 Use Unsplash: Right-click image → Copy image
+                            address</p>
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
                         <select id="product-category" required
-                                class="w-full px-5 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-amber-500 transition font-light text-lg">
+                            class="w-full px-5 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-amber-500 transition font-light text-lg">
                             <option value="">Select a category...</option>
                             <option value="Pashmina & Textiles">🧣 Pashmina & Textiles</option>
                             <option value="Traditional Clothing">👘 Traditional Clothing</option>
@@ -287,17 +329,19 @@
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Product Price</label>
-                        <input type="number" id="product-price" required 
-                               class="w-full px-5 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-amber-500 transition font-light text-lg"
-                               placeholder="Enter price in USD">
+                        <input type="number" id="product-price" required
+                            class="w-full px-5 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-amber-500 transition font-light text-lg"
+                            placeholder="Enter price in USD">
                     </div>
 
                     <!-- Action Buttons -->
                     <div class="flex gap-4 pt-6">
-                        <button type="submit" class="flex-1 gold-gradient text-white py-4 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all transform hover:scale-105">
+                        <button type="submit"
+                            class="flex-1 gold-gradient text-white py-4 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all transform hover:scale-105">
                             Save to Collection
                         </button>
-                        <button type="button" id="cancel-btn" class="px-8 py-4 border-2 border-gray-300 rounded-xl hover:bg-gray-50 transition font-medium">
+                        <button type="button" id="cancel-btn"
+                            class="px-8 py-4 border-2 border-gray-300 rounded-xl hover:bg-gray-50 transition font-medium">
                             Cancel
                         </button>
                     </div>
@@ -310,7 +354,7 @@
         function previewImage(url) {
             const preview = document.getElementById('image-preview');
             const container = document.getElementById('image-preview-container');
-            
+
             if (url && url.startsWith('http')) {
                 preview.src = url;
                 container.classList.remove('hidden');
@@ -344,16 +388,16 @@
 
         async function checkAuth() {
             const { data: { session } } = await supabase.auth.getSession()
-            
+
             if (!session) {
                 window.location.href = 'login.html'
                 return false
             }
-            
+
             return true
         }
 
-        window.logout = async function() {
+        window.logout = async function () {
             await supabase.auth.signOut()
             window.location.href = 'login.html'
         }
@@ -362,18 +406,21 @@
 
         async function loadProducts() {
             try {
-                const { data, error } = await supabase
-                    .from('products')
-                    .select('*')
-                    .order('created_at', { ascending: false })
+                const { data: { session } } = await supabase.auth.getSession()
+                if (!session) return
 
-                if (error) throw error
+                const response = await fetch('/api/admin/products', {
+                    headers: { 'Authorization': `Bearer ${session.access_token}` }
+                })
 
+                if (!response.ok) throw new Error('Failed to fetch products')
+
+                const data = await response.json()
                 displayProducts(data || [])
                 updateStats(data || [])
             } catch (error) {
                 showError('Error loading products: ' + error.message)
-                document.getElementById('products-container').innerHTML = 
+                document.getElementById('products-container').innerHTML =
                     `<div class="col-span-full flex flex-col items-center justify-center py-20">
                         <p class="text-red-500 mb-4 text-lg">⚠️ Error loading products</p>
                         <p class="text-gray-600 mb-6">${error.message}</p>
@@ -386,15 +433,15 @@
 
         function updateStats(products) {
             document.getElementById('total-count').textContent = products.length
-            
+
             const uniqueCategories = new Set(products.map(p => p.category))
             document.getElementById('category-count').textContent = uniqueCategories.size
-            
+
             if (products.length > 0) {
                 const latest = new Date(products[0].created_at)
                 const now = new Date()
                 const diffMinutes = Math.floor((now - latest) / 60000)
-                
+
                 if (diffMinutes < 1) {
                     document.getElementById('last-updated').textContent = 'Just now'
                 } else if (diffMinutes < 60) {
@@ -408,7 +455,7 @@
 
         function displayProducts(products) {
             const container = document.getElementById('products-container')
-            
+
             if (products.length === 0) {
                 container.innerHTML = `
                     <div class="col-span-full flex flex-col items-center justify-center py-20">
@@ -464,7 +511,7 @@
             document.getElementById('product-modal').classList.remove('hidden')
         }
 
-        window.editProduct = async function(productId) {
+        window.editProduct = async function (productId) {
             try {
                 const { data, error } = await supabase
                     .from('products')
@@ -482,10 +529,10 @@
                 document.getElementById('product-image').value = data.image_url
                 document.getElementById('product-category').value = data.category
                 document.getElementById('product-price').value = data.price
-                
+
                 // Show preview
                 previewImage(data.image_url)
-                
+
                 document.getElementById('product-modal').classList.remove('hidden')
             } catch (error) {
                 showError('Error loading product: ' + error.message)
@@ -499,16 +546,18 @@
             editingProductId = null
         }
 
-        window.deleteProduct = async function(id) {
+        window.deleteProduct = async function (id) {
             if (!confirm('Delete this masterpiece from your collection?')) return
 
             try {
-                const { error } = await supabase
-                    .from('products')
-                    .delete()
-                    .eq('id', id)
+                const { data: { session } } = await supabase.auth.getSession()
 
-                if (error) throw error
+                const response = await fetch(`/api/admin/products?id=${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${session.access_token}` }
+                })
+
+                if (!response.ok) throw new Error('Failed to delete product')
 
                 showSuccess('Product removed from collection')
                 loadProducts()
@@ -533,39 +582,38 @@
                 price: priceValue ? parseFloat(priceValue) : null
             }
 
+            if (editingProductId) {
+                productData.id = editingProductId;
+            }
+
             try {
-                if (editingProductId) {
-                    const { error } = await supabase
-                        .from('products')
-                        .update(productData)
-                        .eq('id', editingProductId)
+                const { data: { session } } = await supabase.auth.getSession()
 
-                    if (error) {
-                        console.error('Supabase update error:', error)
-                        throw error
-                    }
-                    showSuccess('Masterpiece updated successfully!')
-                } else {
-                    const { error } = await supabase
-                        .from('products')
-                        .insert([productData])
+                const response = await fetch('/api/admin/products', {
+                    method: editingProductId ? 'PUT' : 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${session.access_token}`
+                    },
+                    body: JSON.stringify(productData)
+                })
 
-                    if (error) {
-                        console.error('Supabase insert error:', error)
-                        alert('Supabase insert error: ' + JSON.stringify(error, null, 2))
-                        throw error
-                    }
-                    showSuccess('Masterpiece added to collection!')
+                if (!response.ok) {
+                    const error = await response.json()
+                    throw new Error(error.error || 'Failed to save product')
                 }
+
+                showSuccess(editingProductId ? 'Masterpiece updated successfully!' : 'Masterpiece added to collection!')
 
                 closeModal()
                 loadProducts()
             } catch (error) {
-                    console.error('Error saving product:', error)
-                    showError('Error saving product: ' + error.message)
-                }        })
+                console.error('Error saving product:', error)
+                showError('Error saving product: ' + error.message)
+            }
+        })
 
-        document.getElementById('product-modal').addEventListener('click', function(e) {
+        document.getElementById('product-modal').addEventListener('click', function (e) {
             if (e.target === this) closeModal()
         })
 
@@ -579,4 +627,5 @@
         init()
     </script>
 </body>
+
 </html>

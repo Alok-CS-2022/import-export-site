@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabase.js';
+import { loadSiteContent } from './content-loader.js';
 
 // Global State
 let currentUser = null;
@@ -27,7 +28,10 @@ if (mobileMenu) {
 
 // Initialization
 document.addEventListener('DOMContentLoaded', async () => {
-    // 1. AUTH INITIALIZATION
+    // 1. LOAD SITE CONTENT FIRST
+    await loadSiteContent();
+
+    // 2. AUTH INITIALIZATION
     const { data: { session } } = await supabase.auth.getSession();
     currentUser = session?.user || null;
     updateAuthUI();
@@ -37,7 +41,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         updateAuthUI();
     });
 
-    // 2. APP INITIALIZATION
+    // 3. APP INITIALIZATION
     loadProducts();
     updateCartCount(); // Defined in ui.js but accessible if ui.js loaded before
     updateWishlistCount(); // Defined in ui.js

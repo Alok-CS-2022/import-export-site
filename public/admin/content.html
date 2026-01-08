@@ -1,130 +1,374 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Content Management - Admin</title>
-    <!-- Umami Analytics -->
-    <script defer src="https://cloud.umami.is/script.js" data-website-id="ac82397e-0bc4-4fe6-bac5-42f6b962b391"></script>
+    <title>Content Studio - Artisan Vault</title>
+    <script defer src="https://cloud.umami.is/script.js"
+        data-website-id="ac82397e-0bc4-4fe6-bac5-42f6b962b391"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-30N5XW6E4C"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-30N5XW6E4C');
+    </script>
+    <style>
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
 
-  gtag('config', 'G-30N5XW6E4C');
-</script>
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
+        .animate-fadeIn {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .premium-gradient {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        }
+
+        .gold-gradient {
+            background: linear-gradient(135deg, #D97706 0%, #F59E0B 100%);
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .char-counter {
+            font-size: 0.75rem;
+            color: #9CA3AF;
+        }
+
+        .char-counter.warning {
+            color: #F59E0B;
+        }
+
+        .char-counter.error {
+            color: #EF4444;
+        }
+    </style>
 </head>
-<body class="bg-gray-50">
-    <nav class="bg-gray-900 text-white p-4 mb-6">
-        <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold">Content Management</h1>
-            <div class="flex items-center gap-4">
-                <a href="dashboard.html" class="text-gray-300 hover:text-white">Dashboard</a>
-                <a href="order.html" class="text-gray-300 hover:text-white">Orders</a>
-                <span id="admin-email" class="text-gray-300"></span>
-                <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded">Logout</button>
+
+<body class="bg-gradient-to-br from-stone-50 to-amber-50 min-h-screen">
+    <!-- Premium Header -->
+    <nav class="premium-gradient text-white shadow-2xl sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 gold-gradient rounded-lg flex items-center justify-center shadow-lg">
+                        <span class="text-2xl">✨</span>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-light tracking-tight">Content Studio</h1>
+                        <p class="text-xs text-gray-400 font-light">Manage your website content</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-6">
+                    <a href="dashboard.html" class="text-gray-300 hover:text-white transition font-light">Dashboard</a>
+                    <a href="products.html" class="text-gray-300 hover:text-white transition font-light">Products</a>
+                    <a href="order.html" class="text-gray-300 hover:text-white transition font-light">Orders</a>
+                    <a href="../index.html" target="_blank"
+                        class="gold-gradient px-5 py-2.5 rounded-lg font-medium text-white hover:shadow-lg transition">
+                        Preview Site
+                    </a>
+                    <button onclick="logout()"
+                        class="bg-red-600 hover:bg-red-700 px-5 py-2.5 rounded-lg font-medium transition">
+                        Sign Out
+                    </button>
+                </div>
             </div>
         </div>
     </nav>
 
-    <div class="container mx-auto px-6 max-w-4xl">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-3xl font-bold">Website Content</h2>
-            <a href="../index.html" target="_blank" class="text-blue-600 hover:text-blue-800">
-                Preview Website →
-            </a>
+    <div class="max-w-5xl mx-auto px-6 py-12">
+        <!-- Success/Error Messages -->
+        <div id="success-message"
+            class="hidden bg-green-50 border-l-4 border-green-500 text-green-800 px-6 py-4 rounded-lg mb-6 shadow-md animate-fadeIn">
+        </div>
+        <div id="error-message"
+            class="hidden bg-red-50 border-l-4 border-red-500 text-red-800 px-6 py-4 rounded-lg mb-6 shadow-md animate-fadeIn">
         </div>
 
-        <div id="success-message" class="hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6"></div>
-        <div id="error-message" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6"></div>
+        <form id="content-form" class="space-y-6">
 
-        <form id="content-form" class="space-y-8">
-            <!-- Hero Section -->
-            <div class="bg-white p-6 rounded-lg shadow">
-                <h3 class="text-2xl font-bold mb-4 text-gray-900">Hero Section</h3>
-                <div class="space-y-4">
+            <!-- Hero Studio -->
+            <div class="glass rounded-2xl shadow-xl border border-amber-100 overflow-hidden animate-fadeIn">
+                <div class="gold-gradient px-6 py-4">
+                    <h3 class="text-2xl font-light text-white flex items-center gap-2">
+                        <span>🎨</span> Hero Studio
+                    </h3>
+                    <p class="text-amber-100 text-sm font-light mt-1">Your homepage's first impression</p>
+                </div>
+                <div class="p-6 space-y-4">
                     <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Title</label>
-                        <input type="text" id="hero-title" required maxlength="100" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900">
-                        <p class="text-sm text-gray-500 mt-1">5-100 characters</p>
+                        <label class="block text-gray-700 font-semibold mb-2">Hero Title</label>
+                        <input type="text" id="hero-title" maxlength="60"
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-amber-500 transition"
+                            placeholder="Authentic Handicrafts from Nepal">
+                        <p class="char-counter mt-1" id="hero-title-counter">0/60 characters</p>
                     </div>
                     <div>
                         <label class="block text-gray-700 font-semibold mb-2">Subtitle</label>
-                        <textarea id="hero-subtitle" required rows="3" maxlength="300" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900"></textarea>
-                        <p class="text-sm text-gray-500 mt-1">10-300 characters</p>
+                        <input type="text" id="hero-subtitle" maxlength="120"
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-amber-500 transition"
+                            placeholder="Handcrafted treasures from the Himalayas">
+                        <p class="char-counter mt-1" id="hero-subtitle-counter">0/120 characters</p>
                     </div>
                     <div>
                         <label class="block text-gray-700 font-semibold mb-2">Button Text</label>
-                        <input type="text" id="hero-button" required maxlength="30" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900">
-                        <p class="text-sm text-gray-500 mt-1">2-30 characters</p>
+                        <input type="text" id="hero-button" maxlength="30"
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-amber-500 transition"
+                            placeholder="Explore Collection">
+                        <p class="char-counter mt-1" id="hero-button-counter">0/30 characters</p>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Hero Image</label>
+                        <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 hover:border-amber-500 transition-colors text-center cursor-pointer"
+                            onclick="document.getElementById('hero-image-upload').click()" id="hero-drop-zone">
+                            <div id="hero-upload-placeholder">
+                                <svg class="w-12 h-12 text-gray-400 mx-auto" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                    </path>
+                                </svg>
+                                <p class="text-gray-600 mt-2">Click to upload hero image</p>
+                                <p class="text-xs text-gray-400">PNG, JPG, WEBP up to 2MB</p>
+                            </div>
+                            <div id="hero-upload-loading" class="hidden">
+                                <svg class="animate-spin h-8 w-8 text-amber-600 mx-auto"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                        stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                    </path>
+                                </svg>
+                                <p class="text-amber-800 mt-2 text-sm font-medium">Uploading...</p>
+                            </div>
+                        </div>
+                        <input type="file" id="hero-image-upload" class="hidden" accept="image/*"
+                            onchange="handleImageUpload(this, 'hero')">
+                        <input type="hidden" id="hero-image-url">
+                        <div id="hero-image-preview" class="hidden mt-4">
+                            <img id="hero-image-preview-img" src="" alt="Preview"
+                                class="w-full h-48 object-cover rounded-xl">
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- About Section -->
-            <div class="bg-white p-6 rounded-lg shadow">
-                <h3 class="text-2xl font-bold mb-4 text-gray-900">About Section</h3>
-                <div class="space-y-4">
+            <!-- SEO Vault -->
+            <div class="glass rounded-2xl shadow-xl border border-amber-100 overflow-hidden animate-fadeIn">
+                <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
+                    <h3 class="text-2xl font-light text-white flex items-center gap-2">
+                        <span>🔍</span> SEO Vault
+                    </h3>
+                    <p class="text-blue-100 text-sm font-light mt-1">Optimize for search engines</p>
+                </div>
+                <div class="p-6 space-y-4">
                     <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Title</label>
-                        <input type="text" id="about-title" required maxlength="100" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900">
-                        <p class="text-sm text-gray-500 mt-1">5-100 characters</p>
+                        <label class="block text-gray-700 font-semibold mb-2">Meta Title</label>
+                        <input type="text" id="seo-title" maxlength="60"
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 transition"
+                            placeholder="Import From Nepal - Authentic Handicrafts">
+                        <p class="char-counter mt-1" id="seo-title-counter">0/60 characters (optimal for Google)</p>
                     </div>
                     <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Description</label>
-                        <textarea id="about-description" required rows="5" maxlength="1000" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900"></textarea>
-                        <p class="text-sm text-gray-500 mt-1">20-1000 characters</p>
+                        <label class="block text-gray-700 font-semibold mb-2">Meta Description</label>
+                        <textarea id="seo-description" maxlength="160" rows="3"
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 transition resize-none"
+                            placeholder="Discover authentic handcrafted treasures from Nepal..."></textarea>
+                        <p class="char-counter mt-1" id="seo-description-counter">0/160 characters (optimal for Google)
+                        </p>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Keywords</label>
+                        <input type="text" id="seo-keywords"
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 transition"
+                            placeholder="nepal handicrafts, singing bowls, buddha statues">
+                        <p class="text-xs text-gray-500 mt-1">Separate with commas</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Contact Section -->
-            <div class="bg-white p-6 rounded-lg shadow">
-                <h3 class="text-2xl font-bold mb-4 text-gray-900">Contact Information</h3>
-                <div class="space-y-4">
+            <!-- Business Information -->
+            <div class="glass rounded-2xl shadow-xl border border-amber-100 overflow-hidden animate-fadeIn">
+                <div class="bg-gradient-to-r from-green-600 to-green-700 px-6 py-4">
+                    <h3 class="text-2xl font-light text-white flex items-center gap-2">
+                        <span>🏢</span> Business Information
+                    </h3>
+                    <p class="text-green-100 text-sm font-light mt-1">About your company</p>
+                </div>
+                <div class="p-6 space-y-4">
                     <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Email</label>
-                        <input type="email" id="contact-email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900">
+                        <label class="block text-gray-700 font-semibold mb-2">About Title</label>
+                        <input type="text" id="about-title"
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-green-500 transition"
+                            placeholder="About Us">
                     </div>
                     <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Phone</label>
-                        <input type="text" id="contact-phone" required maxlength="20" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900">
-                        <p class="text-sm text-gray-500 mt-1">10-20 characters</p>
+                        <label class="block text-gray-700 font-semibold mb-2">About Description</label>
+                        <textarea id="about-description" rows="5"
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-green-500 transition resize-none"
+                            placeholder="Tell your story..."></textarea>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">Contact Email</label>
+                            <input type="email" id="contact-email"
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-green-500 transition"
+                                placeholder="info@example.com">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">Contact Phone</label>
+                            <input type="tel" id="contact-phone"
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-green-500 transition"
+                                placeholder="+977 1234567890">
+                        </div>
                     </div>
                     <div>
                         <label class="block text-gray-700 font-semibold mb-2">Address</label>
-                        <input type="text" id="contact-address" required maxlength="200" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900">
-                        <p class="text-sm text-gray-500 mt-1">10-200 characters</p>
+                        <input type="text" id="contact-address"
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-green-500 transition"
+                            placeholder="Kathmandu, Nepal">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Business Hours</label>
+                        <input type="text" id="contact-hours"
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-green-500 transition"
+                            placeholder="Mon-Fri: 9AM-6PM NPT">
                     </div>
                 </div>
             </div>
 
-            <!-- Footer Section -->
-            <div class="bg-white p-6 rounded-lg shadow">
-                <h3 class="text-2xl font-bold mb-4 text-gray-900">Footer</h3>
-                <div>
-                    <label class="block text-gray-700 font-semibold mb-2">Copyright Text</label>
-                    <input type="text" id="footer-copyright" required maxlength="100" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900">
-                    <p class="text-sm text-gray-500 mt-1">5-100 characters</p>
+            <!-- Social Media Hub -->
+            <div class="glass rounded-2xl shadow-xl border border-amber-100 overflow-hidden animate-fadeIn">
+                <div class="bg-gradient-to-r from-purple-600 to-purple-700 px-6 py-4">
+                    <h3 class="text-2xl font-light text-white flex items-center gap-2">
+                        <span>📱</span> Social Media Hub
+                    </h3>
+                    <p class="text-purple-100 text-sm font-light mt-1">Connect with your customers</p>
+                </div>
+                <div class="p-6 space-y-4">
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Facebook Page URL</label>
+                        <input type="url" id="social-facebook"
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-500 transition"
+                            placeholder="https://facebook.com/yourpage">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Instagram Profile URL</label>
+                        <input type="url" id="social-instagram"
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-500 transition"
+                            placeholder="https://instagram.com/yourprofile">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">WhatsApp Business Number</label>
+                        <input type="tel" id="social-whatsapp"
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-500 transition"
+                            placeholder="+977 9812345678">
+                        <p class="text-xs text-gray-500 mt-1">Include country code</p>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Twitter/X Profile URL</label>
+                        <input type="url" id="social-twitter"
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-500 transition"
+                            placeholder="https://twitter.com/yourprofile">
+                    </div>
                 </div>
             </div>
 
-            <div class="flex gap-4">
-                <button type="submit" id="save-btn" class="flex-1 bg-gray-900 text-white py-4 rounded-lg font-semibold hover:bg-gray-800 text-lg">
-                    Save Changes
+            <!-- Branding -->
+            <div class="glass rounded-2xl shadow-xl border border-amber-100 overflow-hidden animate-fadeIn">
+                <div class="bg-gradient-to-r from-pink-600 to-pink-700 px-6 py-4">
+                    <h3 class="text-2xl font-light text-white flex items-center gap-2">
+                        <span>🎨</span> Branding
+                    </h3>
+                    <p class="text-pink-100 text-sm font-light mt-1">Your visual identity</p>
+                </div>
+                <div class="p-6 space-y-4">
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Logo</label>
+                        <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 hover:border-pink-500 transition-colors text-center cursor-pointer"
+                            onclick="document.getElementById('logo-upload').click()" id="logo-drop-zone">
+                            <div id="logo-upload-placeholder">
+                                <svg class="w-12 h-12 text-gray-400 mx-auto" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                    </path>
+                                </svg>
+                                <p class="text-gray-600 mt-2">Click to upload your logo</p>
+                                <p class="text-xs text-gray-400">PNG with transparent background recommended</p>
+                            </div>
+                            <div id="logo-upload-loading" class="hidden">
+                                <svg class="animate-spin h-8 w-8 text-pink-600 mx-auto"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                        stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                    </path>
+                                </svg>
+                                <p class="text-pink-800 mt-2 text-sm font-medium">Uploading...</p>
+                            </div>
+                        </div>
+                        <input type="file" id="logo-upload" class="hidden" accept="image/*"
+                            onchange="handleImageUpload(this, 'logo')">
+                        <input type="hidden" id="logo-url">
+                        <div id="logo-preview" class="hidden mt-4">
+                            <img id="logo-preview-img" src="" alt="Logo Preview" class="h-16 mx-auto">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="glass rounded-2xl shadow-xl border border-amber-100 overflow-hidden animate-fadeIn">
+                <div class="bg-gradient-to-r from-gray-700 to-gray-800 px-6 py-4">
+                    <h3 class="text-2xl font-light text-white flex items-center gap-2">
+                        <span>📄</span> Footer
+                    </h3>
+                    <p class="text-gray-300 text-sm font-light mt-1">Bottom of your website</p>
+                </div>
+                <div class="p-6">
+                    <label class="block text-gray-700 font-semibold mb-2">Copyright Text</label>
+                    <input type="text" id="footer-copyright"
+                        class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-gray-500 transition"
+                        placeholder="© 2024 Your Company. All rights reserved.">
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-4 pt-6">
+                <button type="submit" id="save-btn"
+                    class="flex-1 gold-gradient text-white py-4 rounded-xl font-semibold shadow-xl hover:shadow-2xl transition-all transform hover:scale-105">
+                    💾 Save All Changes
                 </button>
-                <button type="button" onclick="loadContent()" class="px-8 bg-gray-300 text-gray-700 py-4 rounded-lg font-semibold hover:bg-gray-400">
+                <button type="button" onclick="loadContent()"
+                    class="px-8 py-4 border-2 border-gray-300 rounded-xl hover:bg-gray-50 transition font-semibold">
                     Reset
                 </button>
             </div>
         </form>
 
-        <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div class="mt-6 bg-blue-50 border border-blue-200 rounded-xl p-4">
             <p class="text-sm text-blue-800">
-                <strong>💡 Tip:</strong> Changes will be reflected immediately on your website. Click "Preview Website" to see your updates.
+                <strong>💡 Tip:</strong> Changes will be reflected immediately on your website. Click "Preview Site" to
+                see your updates live!
             </p>
         </div>
     </div>
@@ -137,24 +381,94 @@
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwdnFvbGt6Y2JiemxxbHpjaHdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzNjA0MjgsImV4cCI6MjA4MTkzNjQyOH0.AU6ieHN1TSUHgSu7qfvkekvmMySDPJb2zOId4Oy7CeY'
         )
 
-        // Check authentication
+        // Character counters
+        function setupCharCounter(inputId, counterId, maxLength) {
+            const input = document.getElementById(inputId);
+            const counter = document.getElementById(counterId);
+
+            input.addEventListener('input', () => {
+                const length = input.value.length;
+                counter.textContent = `${length}/${maxLength} characters`;
+
+                if (length > maxLength * 0.9) {
+                    counter.classList.add('warning');
+                } else {
+                    counter.classList.remove('warning');
+                }
+
+                if (length >= maxLength) {
+                    counter.classList.add('error');
+                } else {
+                    counter.classList.remove('error');
+                }
+            });
+        }
+
+        setupCharCounter('hero-title', 'hero-title-counter', 60);
+        setupCharCounter('hero-subtitle', 'hero-subtitle-counter', 120);
+        setupCharCounter('hero-button', 'hero-button-counter', 30);
+        setupCharCounter('seo-title', 'seo-title-counter', 60);
+        setupCharCounter('seo-description', 'seo-description-counter', 160);
+
+        // Image upload handler
+        window.handleImageUpload = async function (input, type) {
+            if (!input.files || input.files.length === 0) return;
+
+            const file = input.files[0];
+            const dropZone = document.getElementById(`${type}-drop-zone`);
+            const loading = document.getElementById(`${type}-upload-loading`);
+            const placeholder = document.getElementById(`${type}-upload-placeholder`);
+            const preview = document.getElementById(`${type}-preview` || `${type}-image-preview`);
+            const previewImg = document.getElementById(`${type}-preview-img` || `${type}-image-preview-img`);
+
+            placeholder.classList.add('hidden');
+            loading.classList.remove('hidden');
+            dropZone.classList.add('border-amber-500', 'bg-amber-50');
+
+            try {
+                const fileExt = file.name.split('.').pop();
+                const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+                const bucket = type === 'logo' ? 'logos' : 'hero-images';
+
+                const { data, error } = await supabase.storage
+                    .from(bucket)
+                    .upload(fileName, file);
+
+                if (error) throw error;
+
+                const { data: { publicUrl } } = supabase.storage
+                    .from(bucket)
+                    .getPublicUrl(fileName);
+
+                document.getElementById(`${type}-url` || `${type}-image-url`).value = publicUrl;
+
+                if (previewImg) {
+                    previewImg.src = publicUrl;
+                    preview.classList.remove('hidden');
+                }
+
+                showSuccess('Image uploaded successfully!');
+            } catch (error) {
+                console.error('Upload error:', error);
+                showError('Upload failed: ' + error.message);
+                placeholder.classList.remove('hidden');
+            } finally {
+                loading.classList.add('hidden');
+                dropZone.classList.remove('border-amber-500', 'bg-amber-50');
+            }
+        }
+
         async function verifyAuth() {
-            const { data: { session }, error } = await supabase.auth.getSession()
-            
-            if (error || !session) {
-                console.log('Not authenticated, redirecting to login...')
+            const { data: { session } } = await supabase.auth.getSession()
+            if (!session) {
                 window.location.href = 'login.html'
                 return false
             }
-            
-            document.getElementById('admin-email').textContent = session.user.email
-            console.log('Authenticated as:', session.user.email)
             loadContent()
             return true
         }
 
-        // Load content from Supabase
-        async function loadContent() {
+        window.loadContent = async function () {
             try {
                 const { data, error } = await supabase
                     .from('site_content')
@@ -162,9 +476,7 @@
                     .single()
 
                 if (error) {
-                    // If no content exists yet, use defaults
                     if (error.code === 'PGRST116') {
-                        console.log('No content found, using defaults')
                         setDefaultContent()
                         return
                     }
@@ -172,20 +484,38 @@
                 }
 
                 if (data && data.content) {
-                    const content = data.content
-                    
-                    document.getElementById('hero-title').value = content.hero?.title || ''
-                    document.getElementById('hero-subtitle').value = content.hero?.subtitle || ''
-                    document.getElementById('hero-button').value = content.hero?.buttonText || ''
-                    
-                    document.getElementById('about-title').value = content.about?.title || ''
-                    document.getElementById('about-description').value = content.about?.description || ''
-                    
-                    document.getElementById('contact-email').value = content.contact?.email || ''
-                    document.getElementById('contact-phone').value = content.contact?.phone || ''
-                    document.getElementById('contact-address').value = content.contact?.address || ''
-                    
-                    document.getElementById('footer-copyright').value = content.footer?.copyright || ''
+                    const c = data.content
+
+                    document.getElementById('hero-title').value = c.hero?.title || ''
+                    document.getElementById('hero-subtitle').value = c.hero?.subtitle || ''
+                    document.getElementById('hero-button').value = c.hero?.buttonText || ''
+                    document.getElementById('hero-image-url').value = c.hero?.imageUrl || ''
+
+                    document.getElementById('seo-title').value = c.seo?.metaTitle || ''
+                    document.getElementById('seo-description').value = c.seo?.metaDescription || ''
+                    document.getElementById('seo-keywords').value = c.seo?.keywords || ''
+
+                    document.getElementById('about-title').value = c.about?.title || ''
+                    document.getElementById('about-description').value = c.about?.description || ''
+
+                    document.getElementById('contact-email').value = c.contact?.email || ''
+                    document.getElementById('contact-phone').value = c.contact?.phone || ''
+                    document.getElementById('contact-address').value = c.contact?.address || ''
+                    document.getElementById('contact-hours').value = c.contact?.businessHours || ''
+
+                    document.getElementById('social-facebook').value = c.social?.facebook || ''
+                    document.getElementById('social-instagram').value = c.social?.instagram || ''
+                    document.getElementById('social-whatsapp').value = c.social?.whatsapp || ''
+                    document.getElementById('social-twitter').value = c.social?.twitter || ''
+
+                    document.getElementById('logo-url').value = c.branding?.logoUrl || ''
+
+                    document.getElementById('footer-copyright').value = c.footer?.copyright || ''
+
+                    // Trigger char counters
+                    ['hero-title', 'hero-subtitle', 'hero-button', 'seo-title', 'seo-description'].forEach(id => {
+                        document.getElementById(id).dispatchEvent(new Event('input'));
+                    });
                 }
             } catch (error) {
                 console.error('Error loading content:', error)
@@ -193,29 +523,31 @@
             }
         }
 
-        // Set default content
         function setDefaultContent() {
-            document.getElementById('hero-title').value = 'Global Trade Solutions'
-            document.getElementById('hero-subtitle').value = 'Your trusted partner in international import and export'
-            document.getElementById('hero-button').value = 'Get Started'
-            
+            document.getElementById('hero-title').value = 'Authentic Handicrafts from Nepal'
+            document.getElementById('hero-subtitle').value = 'Handcrafted treasures from the Himalayas'
+            document.getElementById('hero-button').value = 'Explore Collection'
+
+            document.getElementById('seo-title').value = 'Import From Nepal - Authentic Handicrafts'
+            document.getElementById('seo-description').value = 'Discover authentic handcrafted treasures from Nepal. Shop statues, singing bowls, thangkas, and more.'
+            document.getElementById('seo-keywords').value = 'nepal handicrafts, singing bowls, buddha statues'
+
             document.getElementById('about-title').value = 'About Us'
-            document.getElementById('about-description').value = 'We are a leading import-export company...'
-            
+            document.getElementById('about-description').value = 'We bring authentic Nepalese handicrafts to the world...'
+
             document.getElementById('contact-email').value = 'info@example.com'
-            document.getElementById('contact-phone').value = '+1234567890'
-            document.getElementById('contact-address').value = '123 Business Street, City'
-            
-            document.getElementById('footer-copyright').value = '© 2024 Your Company. All rights reserved.'
+            document.getElementById('contact-phone').value = '+977 1234567890'
+            document.getElementById('contact-address').value = 'Kathmandu, Nepal'
+            document.getElementById('contact-hours').value = 'Mon-Fri: 9AM-6PM NPT'
+
+            document.getElementById('footer-copyright').value = '© 2024 Import From Nepal. All rights reserved.'
         }
 
-        // Save content
         document.getElementById('content-form').addEventListener('submit', async (e) => {
             e.preventDefault()
-            
+
             const saveBtn = document.getElementById('save-btn')
-            
-            saveBtn.textContent = 'Saving...'
+            saveBtn.textContent = '💾 Saving...'
             saveBtn.disabled = true
             hideMessages()
 
@@ -224,23 +556,38 @@
                     title: document.getElementById('hero-title').value,
                     subtitle: document.getElementById('hero-subtitle').value,
                     buttonText: document.getElementById('hero-button').value,
+                    imageUrl: document.getElementById('hero-image-url').value
+                },
+                seo: {
+                    metaTitle: document.getElementById('seo-title').value,
+                    metaDescription: document.getElementById('seo-description').value,
+                    keywords: document.getElementById('seo-keywords').value
                 },
                 about: {
                     title: document.getElementById('about-title').value,
-                    description: document.getElementById('about-description').value,
+                    description: document.getElementById('about-description').value
                 },
                 contact: {
                     email: document.getElementById('contact-email').value,
                     phone: document.getElementById('contact-phone').value,
                     address: document.getElementById('contact-address').value,
+                    businessHours: document.getElementById('contact-hours').value
+                },
+                social: {
+                    facebook: document.getElementById('social-facebook').value,
+                    instagram: document.getElementById('social-instagram').value,
+                    whatsapp: document.getElementById('social-whatsapp').value,
+                    twitter: document.getElementById('social-twitter').value
+                },
+                branding: {
+                    logoUrl: document.getElementById('logo-url').value
                 },
                 footer: {
-                    copyright: document.getElementById('footer-copyright').value,
+                    copyright: document.getElementById('footer-copyright').value
                 }
             }
 
             try {
-                // Check if content exists
                 const { data: existing } = await supabase
                     .from('site_content')
                     .select('id')
@@ -248,13 +595,11 @@
 
                 let result
                 if (existing) {
-                    // Update existing content
                     result = await supabase
                         .from('site_content')
                         .update({ content: contentData, updated_at: new Date().toISOString() })
                         .eq('id', existing.id)
                 } else {
-                    // Insert new content
                     result = await supabase
                         .from('site_content')
                         .insert([{ content: contentData }])
@@ -262,18 +607,17 @@
 
                 if (result.error) throw result.error
 
-                showSuccess('Content updated successfully! Changes are now live on your website.')
+                showSuccess('✅ Content updated successfully! Your changes are now live.')
                 window.scrollTo({ top: 0, behavior: 'smooth' })
             } catch (error) {
                 console.error('Error saving content:', error)
                 showError('Failed to save content: ' + error.message)
             } finally {
-                saveBtn.textContent = 'Save Changes'
+                saveBtn.textContent = '💾 Save All Changes'
                 saveBtn.disabled = false
             }
         })
 
-        // Helper functions
         function showSuccess(message) {
             const successMsg = document.getElementById('success-message')
             successMsg.textContent = message
@@ -292,16 +636,13 @@
             document.getElementById('error-message').classList.add('hidden')
         }
 
-        window.logout = async function() {
+        window.logout = async function () {
             await supabase.auth.signOut()
             window.location.href = 'login.html'
         }
 
-        // Make loadContent available globally for the Reset button
-        window.loadContent = loadContent
-
-        // Initialize
         verifyAuth()
     </script>
 </body>
+
 </html>

@@ -1,4 +1,17 @@
 import { supabase } from '../lib/supabase.js';
+import { z } from 'zod';
+
+// Define Validation Schema
+const inquirySchema = z.object({
+    customer_name: z.string().min(1, "Name is required"),
+    customer_email: z.string().email("Invalid email address"),
+    customer_phone: z.string().optional().nullable(),
+    product_name: z.string().min(1, "Product name is required"),
+    message: z.string().min(1, "Message is required").max(1000),
+    items: z.string().optional().nullable(), // JSON string
+    total_amount: z.number().optional().default(0),
+    status: z.string().optional().default('pending')
+});
 
 export default async function handler(req, res) {
     // Enable CORS for preflight requests
@@ -7,7 +20,6 @@ export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-CSRF-Token');
 
     if (req.method === 'OPTIONS') {
-        // Respond to preflight requests
         return res.status(200).end();
     }
 
@@ -16,18 +28,24 @@ export default async function handler(req, res) {
     }
 
     try {
-        const inquiry = req.body;
+        // 1. VALIDATE INPUT
+        const validationResult = inquirySchema.safeParse(req.body);
 
+        if (!validationResult.success) {
+            // Return validation errors
+            const errorMessage = validationResult.error.errors.map(e => e.message).join(', ');
+            return res.status(400).json({ error: errorMessage });
+        }
+
+        const inquiry = validationResult.data;
+
+        // 2. INSERT INTO DB
         const { error } = await supabase.from('orders').insert([inquiry]);
 
         if (error) {
             console.error('Supabase insert error:', error);
             return res.status(500).json({ error: error.message });
         }
-
-        // Optionally, re-send email notification from here if desired
-        // For now, we'll assume the client will handle it, or you can
-        // move the web3forms fetch here.
 
         res.status(200).json({ message: 'Inquiry submitted successfully' });
 

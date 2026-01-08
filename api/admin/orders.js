@@ -25,6 +25,12 @@ export default async function handler(req, res) {
         return res.status(401).json({ error: 'Unauthorized: Invalid token' });
     }
 
+    // RBAC: Check for Admin Role
+    const role = user.app_metadata.role;
+    if (role !== 'admin') {
+        return res.status(403).json({ error: 'Forbidden: Admin access only' });
+    }
+
     // 2. HANDLE ORDERS
     try {
         switch (req.method) {

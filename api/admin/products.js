@@ -1,11 +1,22 @@
 import { supabase } from '../../lib/supabase.js';
+import { z } from 'zod';
+
+// Product Validation Schema
+const productSchema = z.object({
+  name: z.string().min(3, "Name must be at least 3 chars"),
+  description: z.string().min(10, "Description must be at least 10 chars"),
+  price: z.number().min(0, "Price cannot be negative").nullable().optional(),
+  category: z.string().min(1, "Category is required"),
+  image_url: z.string().url("Invalid image URL"),
+  id: z.string().optional() // For updates
+});
 
 export default async function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  
+
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
@@ -17,12 +28,18 @@ export default async function handler(req, res) {
   }
 
   const token = authHeader.replace('Bearer ', '');
-  
+
   // Verify the token with Supabase
   const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-  
+
   if (authError || !user) {
     return res.status(401).json({ error: 'Unauthorized: Invalid token' });
+  }
+
+  // RBAC: Check for Admin Role
+  const role = user.app_metadata.role;
+  if (role !== 'admin') {
+    return res.status(403).json({ error: 'Forbidden: Admin access only' });
   }
 
   // At this point, user is authenticated
@@ -37,28 +54,40 @@ export default async function handler(req, res) {
           .from('products')
           .select('*')
           .order('created_at', { ascending: false });
-        
+
         if (getError) throw getError;
         return res.status(200).json(products);
 
       case 'POST':
+        // VALIDATE INPUT
+        const resultPost = productSchema.safeParse(req.body);
+        if (!resultPost.success) {
+          return res.status(400).json({ error: resultPost.error.errors[0].message });
+        }
+
         // Create new product
         const { data: newProduct, error: postError } = await supabase
           .from('products')
-          .insert([req.body])
+          .insert([resultPost.data])
           .select()
           .single();
-        
+
         if (postError) throw postError;
         return res.status(201).json(newProduct);
 
       case 'PUT':
-        // Update existing product
-        const { id, ...updateData } = req.body;
-        
-        if (!id) {
-          return res.status(400).json({ error: 'Product ID required' });
+        // VALIDATE INPUT
+        if (!req.body.id) return res.status(400).json({ error: 'Product ID required' });
+
+        // Allow partial updates or full updates. 
+        // We use partial() to allow updating just price or just name, etc.
+        const resultPut = productSchema.partial().safeParse(req.body);
+        if (!resultPut.success) {
+          return res.status(400).json({ error: resultPut.error.errors[0].message });
         }
+
+        // Update existing product
+        const { id, ...updateData } = resultPut.data;
 
         const { data: updatedProduct, error: putError } = await supabase
           .from('products')
@@ -66,14 +95,14 @@ export default async function handler(req, res) {
           .eq('id', id)
           .select()
           .single();
-        
+
         if (putError) throw putError;
         return res.status(200).json(updatedProduct);
 
       case 'DELETE':
         // Delete product
         const productId = req.query.id;
-        
+
         if (!productId) {
           return res.status(400).json({ error: 'Product ID required' });
         }
@@ -82,7 +111,7 @@ export default async function handler(req, res) {
           .from('products')
           .delete()
           .eq('id', productId);
-        
+
         if (deleteError) throw deleteError;
         return res.status(200).json({ success: true, message: 'Product deleted' });
 

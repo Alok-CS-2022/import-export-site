@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | Import From Nepal</title>
+    <!-- Umami Analytics -->
+    <script defer src="https://cloud.umami.is/script.js"
+        data-website-id="ac82397e-0bc4-4fe6-bac5-42f6b962b391"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/custom.css">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-30N5XW6E4C"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-30N5XW6E4C');
+    </script>
+</head>
+
+<body class="bg-gray-50 flex flex-col min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg fixed w-full z-50 top-0">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-14 sm:h-16">
+                <div class="flex items-center site-logo-container">
+                    <a href="index.html"
+                        class="text-base sm:text-xl md:text-2xl font-bold text-amber-700 leading-tight">Import From
+                        Nepal</a>
+                </div>
+
+                <div class="hidden md:flex items-center space-x-6 lg:space-x-8">
+                    <a href="index.html" class="text-gray-700 hover:text-amber-700 transition">Home</a>
+                    <a href="products.html" class="text-gray-700 hover:text-amber-700 transition">Products</a>
+                    <a href="index.html#about" class="text-gray-700 hover:text-amber-700 transition">About</a>
+                    <a href="contact.html" class="text-amber-700 font-semibold transition">Contact</a>
+                </div>
+
+                <!-- Right side icons -->
+                <div class="flex items-center space-x-2 sm:space-x-4">
+                    <button onclick="openCart()" class="relative p-2 hover:bg-gray-100 rounded-full transition">
+                        <svg class="w-5 h-5 sm:w-6 sm:h-6 text-gray-700" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
+                            </path>
+                        </svg>
+                        <span id="cart-count"
+                            class="hidden absolute -top-1 -right-1 bg-amber-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+            <!-- Left: Contact Info -->
+            <div class="space-y-12">
+                <div>
+                    <h1 class="text-4xl md:text-5xl font-light text-gray-900 mb-6">Get in Touch</h1>
+                    <p class="text-gray-600 font-light text-lg leading-relaxed max-w-md">Whether you are looking for a
+                        bulk export or a single artisan piece, our team in Kathmandu is ready to assist you.</p>
+                </div>
+
+                <div class="space-y-8">
+                    <!-- Contact Details -->
+                    <div class="flex items-start gap-4">
+                        <div
+                            class="w-12 h-12 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-700 shrink-0">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-1">Email Us</p>
+                            <a href="mailto:info@importfromnepal.com"
+                                class="text-gray-600 hover:text-amber-700 transition"
+                                id="contact-email-link">info@importfromnepal.com</a>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-4">
+                        <div
+                            class="w-12 h-12 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-700 shrink-0">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
+                                </path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-1">Visit Our
+                                Sourcing Hub</p>
+                            <p class="text-gray-600" id="contact-address-text">Thamel, Kathmandu, Nepal</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-4">
+                        <div
+                            class="w-12 h-12 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-700 shrink-0">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-1">Business Hours
+                            </p>
+                            <p class="text-gray-600" id="contact-hours-text">Mon - Fri: 9:00 AM - 6:00 PM (NPT)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Map Placeholder -->
+                <div class="rounded-3xl overflow-hidden bg-gray-200 aspect-video relative group">
+                    <img src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&q=80" alt="Kathmandu Map"
+                        class="w-full h-full object-cover grayscale opacity-50">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="bg-white/90 backdrop-blur px-6 py-3 rounded-full shadow-lg text-sm font-medium">
+                            Located in the heart of Kathmandu</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Contact Form -->
+            <div class="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-gray-100">
+                <h3 class="text-2xl font-light text-gray-900 mb-8">Send a Message</h3>
+                <form id="contact-page-form" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                            <input type="text" name="customer_name" required
+                                class="w-full px-5 py-4 bg-gray-50 border-0 rounded-2xl focus:ring-2 focus:ring-amber-500 outline-none transition"
+                                placeholder="John Doe">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                            <input type="email" name="customer_email" required
+                                class="w-full px-5 py-4 bg-gray-50 border-0 rounded-2xl focus:ring-2 focus:ring-amber-500 outline-none transition"
+                                placeholder="john@example.com">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Phone (Optional)</label>
+                        <input type="tel" name="customer_phone"
+                            class="w-full px-5 py-4 bg-gray-50 border-0 rounded-2xl focus:ring-2 focus:ring-amber-500 outline-none transition"
+                            placeholder="+1 234 567 8900">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                        <textarea name="message" required rows="5"
+                            class="w-full px-5 py-4 bg-gray-50 border-0 rounded-2xl focus:ring-2 focus:ring-amber-500 outline-none transition resize-none"
+                            placeholder="Tell us about the artifacts or export services you're interested in..."></textarea>
+                    </div>
+                    <button type="submit"
+                        class="w-full bg-amber-700 text-white py-5 rounded-2xl font-medium shadow-xl hover:bg-amber-800 transition transform hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-3">
+                        Send Inquiry
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                        </svg>
+                    </button>
+                    <div id="contact-form-message" class="hidden p-4 rounded-xl text-sm"></div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 px-4 sm:px-6 lg:px-8 mt-auto">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+            <div class="col-span-1 md:col-span-2">
+                <span class="text-2xl font-bold text-amber-500 block mb-6">Import From Nepal</span>
+                <p class="text-gray-400 font-light leading-relaxed max-w-md">Bridging the gap between Himalayan
+                    craftsmanship and the global stage. Every piece in our collection tells a story of tradition,
+                    devotion, and unparalleled skill.</p>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-6">Explore</h4>
+                <ul class="space-y-4 text-gray-400 font-light">
+                    <li><a href="index.html" class="hover:text-amber-500 transition">Homepage</a></li>
+                    <li><a href="products.html" class="hover:text-amber-500 transition">Artisan Catalog</a></li>
+                    <li><a href="index.html#about" class="hover:text-amber-500 transition">Our Story</a></li>
+                    <li><a href="contact.html" class="hover:text-amber-500 transition">Contact Us</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-6">Connect</h4>
+                <div id="footer-social-links" class="flex gap-4">
+                    <!-- Loaded via content-loader.js -->
+                </div>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto border-t border-gray-800 mt-12 pt-8 text-center text-gray-500 text-sm font-light">
+            <p id="footer-copyright-text">© 2024 Import From Nepal. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Core Scripts -->
+    <script src="js/ui.js"></script>
+    <script type="module" src="js/app.js"></script>
+    <script type="module" src="js/contact.js"></script>
+</body>
+
+</html>

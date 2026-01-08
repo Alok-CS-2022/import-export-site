@@ -55,10 +55,9 @@
                 </div>
 
                 <div class="hidden md:flex items-center space-x-6 lg:space-x-8">
-                    <a href="#home" class="text-gray-700 hover:text-amber-700 transition">Home</a>
-                    <a href="#products" class="text-gray-700 hover:text-amber-700 transition">Products</a>
-                    <a href="#about" class="text-gray-700 hover:text-amber-700 transition">About</a>
-                    <a href="#contact" class="text-gray-700 hover:text-amber-700 transition">Contact</a>
+                    <a href="index.html" class="text-gray-700 hover:text-amber-700 transition">Home</a>
+                    <a href="products.html" class="text-gray-700 hover:text-amber-700 transition">Products</a>
+                    <a href="contact.html" class="text-gray-700 hover:text-amber-700 transition">Contact</a>
                 </div>
 
                 <!-- Right side icons -->
@@ -120,10 +119,9 @@
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
             <div class="px-4 py-3 space-y-3">
-                <a href="#home" class="block py-2 text-gray-700 hover:text-amber-700 transition">Home</a>
-                <a href="#products" class="block py-2 text-gray-700 hover:text-amber-700 transition">Products</a>
-                <a href="#about" class="block py-2 text-gray-700 hover:text-amber-700 transition">About</a>
-                <a href="#contact" class="block py-2 text-gray-700 hover:text-amber-700 transition">Contact</a>
+                <a href="index.html" class="block py-2 text-gray-700 hover:text-amber-700 transition">Home</a>
+                <a href="products.html" class="block py-2 text-gray-700 hover:text-amber-700 transition">Products</a>
+                <a href="contact.html" class="block py-2 text-gray-700 hover:text-amber-700 transition">Contact</a>
                 <button onclick="openWishlist()"
                     class="w-full text-left py-2 text-gray-700 hover:text-amber-700 transition sm:hidden">
                     Wishlist (<span id="wishlist-count-mobile">0</span>)
@@ -239,7 +237,7 @@
                         <!-- CTAs with staggered animation -->
                         <div class="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start animate-fade-in opacity-0"
                             style="animation-delay: 0.8s;">
-                            <a href="#products"
+                            <a href="products.html"
                                 class="hero-button group relative inline-flex items-center justify-center bg-amber-800 text-white px-8 py-4 rounded-lg font-medium text-base overflow-hidden transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:-translate-y-1">
                                 <!-- Shine effect -->
                                 <div
@@ -252,9 +250,9 @@
                                         d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                                 </svg>
                             </a>
-                            <a href="#about"
+                            <a href="#featured-products"
                                 class="group inline-flex items-center justify-center bg-white text-gray-900 px-8 py-4 rounded-lg font-medium text-base border-2 border-gray-300 hover:border-amber-700 hover:text-amber-900 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1">
-                                Learn More
+                                Discover Masterpieces
                                 <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform"
                                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -278,66 +276,141 @@
         </div>
     </section>
 
-    <section id="products" class="py-20 sm:py-28 relative overflow-hidden">
-        <!-- Subtle background pattern -->
-        <div class="absolute inset-0 opacity-5">
-            <div class="absolute inset-0"
-                style="background-image: radial-gradient(circle at 2px 2px, #d97706 1px, transparent 0); background-size: 40px 40px;">
+    <!-- Category Showcase [NEW] -->
+    <section class="py-24 bg-white overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6 scroll-reveal">
+                <div class="max-w-xl">
+                    <p class="text-sm tracking-widest uppercase text-amber-700 mb-3 font-light">Explore Traditions</p>
+                    <h2 class="text-4xl md:text-5xl font-light text-gray-900 leading-tight">Masterpieces by <span
+                            class="italic font-normal text-amber-800">Category</span></h2>
+                </div>
+                <a href="products.html"
+                    class="group flex items-center gap-2 text-amber-800 font-medium hover:text-amber-900 transition-colors">
+                    View Full Catalog
+                    <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                    </svg>
+                </a>
+            </div>
+
+            <div id="category-showcase" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Loaded via home.js -->
             </div>
         </div>
+    </section>
+
+    <!-- Featured Masterpieces [REDESIGNED] -->
+    <section id="featured-products" class="py-24 bg-stone-50 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-[0.03] pointer-events-none"
+            style="background-image: url('https://www.transparenttextures.com/patterns/natural-paper.png');"></div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
-            <!-- Section Header with Scroll Reveal -->
             <div class="text-center mb-16 scroll-reveal">
-                <p class="text-sm tracking-widest uppercase text-amber-700 mb-3 font-light">
-                    Curated Collection
-                </p>
-                <h2 class="text-4xl sm:text-5xl lg:text-6xl font-light text-gray-900 mb-6">
-                    Timeless <span class="italic font-normal text-amber-800">Himalayan</span> Artistry
-                </h2>
-                <p class="text-lg text-gray-600 max-w-2xl mx-auto font-light leading-relaxed">
-                    Each piece tells a story of tradition, craftsmanship, and the timeless beauty of Nepal's artisan
-                    heritage.
-                </p>
+                <p class="text-sm tracking-widest uppercase text-amber-700 mb-3 font-light">Curated Selection</p>
+                <h2 class="text-4xl md:text-5xl font-light text-gray-900 mb-6">Featured <span
+                        class="italic font-normal text-amber-800">Masterpieces</span></h2>
+                <div class="w-24 h-px bg-amber-200 mx-auto"></div>
             </div>
 
-            <!-- Category Filter Pills -->
-            <div id="category-container" class="flex flex-wrap justify-center gap-3 mb-16 scroll-reveal">
-                <button onclick="filterByCategory('all')"
-                    class="category-btn active px-6 py-2.5 rounded-full text-sm font-light tracking-wide transition-all duration-300 hover:scale-105">
-                    All
-                </button>
+            <div id="featured-products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <!-- Loaded via home.js -->
             </div>
 
-            <!-- Products Grid with Staggered Reveal -->
-            <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
-                <p class="col-span-full text-center text-gray-500">Loading artisan treasures...</p>
+            <div class="mt-20 text-center scroll-reveal">
+                <a href="products.html"
+                    class="inline-flex items-center gap-4 bg-gray-900 text-white px-10 py-5 rounded-2xl font-medium hover:bg-amber-800 transition shadow-xl hover:shadow-2xl">
+                    Discover More Creations
+                </a>
             </div>
         </div>
     </section>
 
-    <section id="about" class="py-12 sm:py-16 bg-white">
+    <!-- Why Choose Us [NEW] -->
+    <section class="py-24 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6">
-            <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-6 sm:mb-8">About Us</h2>
-            <p class="text-center text-gray-600 max-w-2xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed">
-                We specialize in exporting authentic Nepalese handicrafts to the world. Each piece is handcrafted by
-                skilled artisans using traditional techniques passed down through generations.
-            </p>
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 id="why-choose-us-title" class="text-3xl md:text-4xl font-light text-gray-900">Why Collectors Choose
+                    <span class="text-amber-800">Us</span>
+                </h2>
+            </div>
+            <div id="why-choose-us-items" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Loaded via content-loader.js -->
+            </div>
         </div>
     </section>
 
-    <section id="contact" class="py-12 sm:py-16 bg-gray-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 text-center">
-            <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 sm:mb-8">Get In Touch</h2>
-            <div class="space-y-3 sm:space-y-4 text-sm sm:text-base">
-                <p class="text-gray-600"><span class="font-semibold">Email:</span><br class="sm:hidden"> <a
-                        href="mailto:Importfromnelpal2025@gmail.com"
-                        class="text-blue-600 hover:underline">Importfromnelpal2025@gmail.com</a></p>
-                <p class="text-gray-600"><span class="font-semibold">Phone:</span><br class="sm:hidden"> <a
-                        href="tel:+9779802320151" class="text-blue-600 hover:underline">+977-9802320151</a></p>
-                <p class="text-gray-600"><span class="font-semibold">Location:</span><br class="sm:hidden"> Trade Tower
-                    Nepal, Thapathali-11, Kathmandu</p>
+    <!-- Impact Stats [NEW] -->
+    <section id="impact-stats" class="py-24 bg-amber-900 text-white relative overflow-hidden">
+        <div
+            class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1600&q=80')] bg-cover bg-center opacity-10 grayscale">
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-12 text-center">
+                <div class="space-y-2">
+                    <div class="text-4xl md:text-5xl font-light stat-number" id="stat-happy-customers">0</div>
+                    <p class="text-amber-200/60 uppercase tracking-widest text-xs">Happy Patrons</p>
+                </div>
+                <div class="space-y-2">
+                    <div class="text-4xl md:text-5xl font-light stat-number" id="stat-products-sold">0</div>
+                    <p class="text-amber-200/60 uppercase tracking-widest text-xs">Artifacts Exported</p>
+                </div>
+                <div class="space-y-2">
+                    <div class="text-4xl md:text-5xl font-light stat-number" id="stat-years-business">0</div>
+                    <p class="text-amber-200/60 uppercase tracking-widest text-xs">Years of Heritage</p>
+                </div>
+                <div class="space-y-2">
+                    <div class="text-4xl md:text-5xl font-light stat-number" id="stat-avg-rating" data-suffix="/5">0
+                    </div>
+                    <p class="text-amber-200/60 uppercase tracking-widest text-xs">Average Rating</p>
+                </div>
             </div>
+        </div>
+    </section>
+
+    <!-- Testimonial Slider [NEW] -->
+    <section class="py-24 bg-stone-50 overflow-hidden">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6">
+            <div class="text-center mb-16 scroll-reveal">
+                <p class="text-sm tracking-widest uppercase text-amber-700 mb-3 font-light">Patron Voices</p>
+                <h2 class="text-4xl font-light text-gray-900">What the <span
+                        class="italic font-normal text-amber-800">World</span> Says</h2>
+            </div>
+
+            <div class="relative">
+                <!-- Quote Icon Decor -->
+                <div class="absolute -top-10 -left-10 text-amber-100 opacity-50">
+                    <svg class="w-32 h-32 fill-current" viewBox="0 0 24 24">
+                        <path
+                            d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H16.017C14.9124 8 14.017 7.10457 14.017 6V5C14.017 3.89543 14.9124 3 16.017 3H19.017C21.2261 3 23.017 4.79086 23.017 7V15C23.017 18.3137 20.3307 21 17.017 21H14.017ZM1.017 21L1.017 18C1.017 16.8954 1.91243 16 3.017 16H6.017C6.56928 16 7.017 15.5523 7.017 15V9C7.017 8.44772 6.56928 8 6.017 8H3.017C1.91243 8 1.017 7.10457 1.017 6V5C1.017 3.89543 1.91243 3 3.017 3H6.017C8.22614 3 10.017 4.79086 10.017 7V15C10.017 18.3137 7.33072 21 4.017 21H1.017Z" />
+                    </svg>
+                </div>
+
+                <div id="testimonials-slider" class="flex overflow-hidden relative">
+                    <!-- Slides loaded via home.js -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section [NEW] -->
+    <section class="py-24 bg-white border-t border-stone-100">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+            <h2 id="newsletter-title" class="text-3xl md:text-4xl font-light text-gray-900 mb-4">Join Our Inner Circle
+            </h2>
+            <p id="newsletter-subtitle" class="text-gray-600 font-light mb-10 max-w-md mx-auto">Subscribe for exclusive
+                early access to our rarest Himalayan masterpieces and artisan stories.</p>
+
+            <form onsubmit="subscribeNewsletter(event)" class="relative max-w-lg mx-auto">
+                <input type="email" required placeholder="your@email.com"
+                    class="w-full px-8 py-5 rounded-2xl bg-stone-50 border-0 focus:ring-2 focus:ring-amber-500 transition-all outline-none pr-36 text-lg font-light">
+                <button id="newsletter-btn" type="submit"
+                    class="absolute right-2 top-2 bottom-2 bg-amber-800 text-white px-8 rounded-xl font-medium hover:bg-amber-900 transition-colors">
+                    Subscribe
+                </button>
+            </form>
         </div>
     </section>
     <!-- Shopping Cart Modal -->
@@ -925,6 +998,7 @@
     <script src="js/ui.js"></script>
 
     <script type="module" src="js/app.js"></script>
+    <script type="module" src="js/home.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Products | Import From Nepal</title>
+    <!-- Umami Analytics -->
+    <script defer src="https://cloud.umami.is/script.js"
+        data-website-id="ac82397e-0bc4-4fe6-bac5-42f6b962b391"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/custom.css">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-30N5XW6E4C"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-30N5XW6E4C');
+    </script>
+    <style>
+        .product-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-chip {
+            transition: all 0.2s ease;
+        }
+
+        .filter-chip.active {
+            background-color: #B45309;
+            color: white;
+            border-color: #B45309;
+        }
+
+        .sidebar-sticky {
+            position: sticky;
+            top: 5rem;
+            max-height: calc(100vh - 6rem);
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 flex flex-col min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg fixed w-full z-50 top-0">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-14 sm:h-16">
+                <div class="flex items-center site-logo-container">
+                    <a href="index.html"
+                        class="text-base sm:text-xl md:text-2xl font-bold text-amber-700 leading-tight">Import From
+                        Nepal</a>
+                </div>
+
+                <div class="hidden md:flex items-center space-x-6 lg:space-x-8">
+                    <a href="index.html" class="text-gray-700 hover:text-amber-700 transition">Home</a>
+                    <a href="products.html" class="text-amber-700 font-semibold transition">Products</a>
+                    <a href="index.html#about" class="text-gray-700 hover:text-amber-700 transition">About</a>
+                    <a href="contact.html" class="text-gray-700 hover:text-amber-700 transition">Contact</a>
+                </div>
+
+                <!-- Right side icons -->
+                <div class="flex items-center space-x-2 sm:space-x-4">
+                    <button onclick="toggleSearch()" class="p-2 hover:bg-gray-100 rounded-full transition">
+                        <svg class="w-5 h-5 sm:w-6 sm:h-6 text-gray-700" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </button>
+                    <button onclick="openCart()" class="relative p-2 hover:bg-gray-100 rounded-full transition">
+                        <svg class="w-5 h-5 sm:w-6 sm:h-6 text-gray-700" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
+                            </path>
+                        </svg>
+                        <span id="cart-count"
+                            class="hidden absolute -top-1 -right-1 bg-amber-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+        <!-- Breadcrumbs & Header -->
+        <div class="mb-8">
+            <nav class="text-sm text-gray-500 mb-2">
+                <a href="index.html" class="hover:text-amber-700">Home</a> /
+                <span class="text-gray-900 font-medium">Shop All Masterpieces</span>
+            </nav>
+            <h1 class="text-3xl md:text-4xl font-light text-gray-900">Artisan Collection</h1>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Sidebar -->
+            <aside class="w-full lg:w-64 flex-shrink-0">
+                <div class="sidebar-sticky space-y-8">
+                    <!-- Search -->
+                    <div>
+                        <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Search</h3>
+                        <div class="relative">
+                            <input type="text" id="catalog-search" placeholder="Find a masterpiece..."
+                                class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none transition">
+                            <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Categories -->
+                    <div>
+                        <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Categories</h3>
+                        <div id="category-filters" class="flex flex-wrap lg:flex-col gap-2">
+                            <button onclick="filterByCategory('all')"
+                                class="filter-chip active px-4 py-2 border border-gray-200 rounded-full text-sm text-left hover:border-amber-500 transition">
+                                All Collection
+                            </button>
+                            <!-- Dynamically loaded -->
+                        </div>
+                    </div>
+
+                    <!-- Sorting -->
+                    <div>
+                        <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Sort By</h3>
+                        <select id="sort-select" onchange="handleSort()"
+                            class="w-full px-4 py-2 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500">
+                            <option value="newest">Newest First</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                            <option value="name">Name: A to Z</option>
+                        </select>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Product Grid -->
+            <div class="flex-grow">
+                <!-- Active Filters Label -->
+                <div id="active-filters" class="mb-6 flex items-center gap-4 text-sm text-gray-600 hidden">
+                    <span>Showing artifacts in: <strong id="current-category-name"
+                            class="text-amber-800">All</strong></span>
+                    <button onclick="filterByCategory('all')" class="text-blue-600 hover:underline">Clear all</button>
+                </div>
+
+                <div id="products-catalog" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Skeleton Loaders -->
+                    <div class="skeleton-card bg-gray-200 h-96 rounded-2xl animate-pulse"></div>
+                    <div class="skeleton-card bg-gray-200 h-96 rounded-2xl animate-pulse"></div>
+                    <div class="skeleton-card bg-gray-200 h-96 rounded-2xl animate-pulse"></div>
+                </div>
+
+                <!-- Load More / Empty State -->
+                <div id="catalog-footer" class="mt-12 text-center hidden">
+                    <p class="text-gray-500 font-light">End of collection</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 px-4 sm:px-6 lg:px-8 mt-auto">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+            <div class="col-span-1 md:col-span-2">
+                <span class="text-2xl font-bold text-amber-500 block mb-6">Import From Nepal</span>
+                <p class="text-gray-400 font-light leading-relaxed max-w-md">Bridging the gap between Himalayan
+                    craftsmanship and the global stage. Every piece in our collection tells a story of tradition,
+                    devotion, and unparalleled skill.</p>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-6">Explore</h4>
+                <ul class="space-y-4 text-gray-400 font-light">
+                    <li><a href="index.html" class="hover:text-amber-500 transition">Homepage</a></li>
+                    <li><a href="products.html" class="hover:text-amber-500 transition">Artisan Catalog</a></li>
+                    <li><a href="index.html#about" class="hover:text-amber-500 transition">Our Story</a></li>
+                    <li><a href="contact.html" class="hover:text-amber-500 transition">Contact Us</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-6">Connect</h4>
+                <div id="footer-social-links" class="flex gap-4">
+                    <!-- Loaded via content-loader.js -->
+                </div>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto border-t border-gray-800 mt-12 pt-8 text-center text-gray-500 text-sm font-light">
+            <p id="footer-copyright-text">© 2024 Import From Nepal. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Modals (Cart, Search, Inquiry) -->
+    <div id="cart-modal" class="hidden fixed inset-0 z-[60] overflow-hidden">
+        <div class="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm" onclick="closeCart()"></div>
+        <div
+            class="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl flex flex-col transform transition-transform duration-300">
+            <!-- Cart Header -->
+            <div class="p-6 border-b flex justify-between items-center">
+                <h2 class="text-2xl font-light">Your Collection</h2>
+                <button onclick="closeCart()" class="text-gray-500 hover:text-black">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+            <!-- Cart Items -->
+            <div id="cart-items" class="flex-grow overflow-y-auto p-6 space-y-6">
+                <!-- Dynamic cart items -->
+            </div>
+            <!-- Cart Footer -->
+            <div class="p-6 border-t bg-gray-50 space-y-4">
+                <div class="flex justify-between text-lg">
+                    <span>Estimate Subtotal:</span>
+                    <span id="cart-total" class="font-semibold text-amber-700">$0.00</span>
+                </div>
+                <button onclick="openInquiryModal()"
+                    class="w-full bg-amber-700 text-white py-4 rounded-xl font-medium shadow-lg hover:bg-amber-800 transition transform hover:scale-[1.02]">
+                    Proceed to Inquiry
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inquiry Modal -->
+    <div id="inquiry-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black bg-opacity-60 backdrop-blur-md" onclick="closeInquiryModal()"></div>
+        <div class="bg-white rounded-3xl w-full max-w-lg relative overflow-hidden shadow-2xl">
+            <div class="bg-amber-700 p-8 text-white relative">
+                <h2 class="text-3xl font-light">Submit Inquiry</h2>
+                <p class="text-amber-100 font-light mt-2">Let us know which masterpieces you're interested in.</p>
+                <button onclick="closeInquiryModal()" class="absolute top-8 right-8 text-white/70 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+            <form id="catalog-inquiry-form" class="p-8 space-y-5">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                        <input type="text" name="customer_name" required
+                            class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                        <input type="email" name="customer_email" required
+                            class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                    <textarea name="message" rows="4" placeholder="Tell us about your interest in these items..."
+                        class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none resize-none"></textarea>
+                </div>
+                <button type="submit"
+                    class="w-full bg-amber-700 text-white py-4 rounded-xl font-medium shadow-lg hover:bg-amber-800 transition">Send
+                    Inquiry Request</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Core Scripts -->
+    <script src="js/ui.js"></script>
+    <script type="module" src="js/app.js"></script>
+    <script type="module" src="js/catalog.js"></script>
+</body>
+
+</html>

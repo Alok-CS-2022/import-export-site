@@ -1,4 +1,4 @@
-import { supabase } from './supabase.js';
+import { supabase } from '../lib/supabase.js';
 
 // Load and apply site content from database
 export async function loadSiteContent() {
@@ -49,6 +49,17 @@ export async function loadSiteContent() {
             // Apply Footer
             if (content.footer) {
                 updateFooter(content.footer);
+            }
+
+            // Apply Homepage Specific Sections
+            if (content.whyChooseUs) {
+                updateWhyChooseUs(content.whyChooseUs);
+            }
+            if (content.stats) {
+                updateStatsSection(content.stats);
+            }
+            if (content.newsletter) {
+                updateNewsletterSection(content.newsletter);
             }
         }
     } catch (error) {
@@ -105,10 +116,10 @@ function updateAboutSection(about) {
 }
 
 function updateContactSection(contact) {
-    const emailEl = document.querySelector('.contact-email');
+    const emailEl = document.querySelector('.contact-email') || document.getElementById('contact-email-link');
     const phoneEl = document.querySelector('.contact-phone');
-    const addressEl = document.querySelector('.contact-address');
-    const hoursEl = document.querySelector('.contact-hours');
+    const addressEl = document.querySelector('.contact-address') || document.getElementById('contact-address-text');
+    const hoursEl = document.querySelector('.contact-hours') || document.getElementById('contact-hours-text');
 
     if (emailEl && contact.email) {
         emailEl.textContent = contact.email;
@@ -127,6 +138,7 @@ function updateSocialLinks(social) {
     const instagramEl = document.querySelector('.social-instagram');
     const whatsappEl = document.querySelector('.social-whatsapp');
     const twitterEl = document.querySelector('.social-twitter');
+    const footerSocialContainer = document.getElementById('footer-social-links');
 
     if (facebookEl && social.facebook) {
         facebookEl.href = social.facebook;
@@ -145,6 +157,19 @@ function updateSocialLinks(social) {
         twitterEl.href = social.twitter;
         twitterEl.classList.remove('hidden');
     }
+
+    // Dynamic Footer Social Links
+    if (footerSocialContainer) {
+        let html = '';
+        if (social.facebook) html += `<a href="${social.facebook}" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-amber-600 transition">FB</a>`;
+        if (social.instagram) html += `<a href="${social.instagram}" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-amber-600 transition">IG</a>`;
+        if (social.whatsapp) {
+            const cleanNumber = social.whatsapp.replace(/\D/g, '');
+            html += `<a href="https://wa.me/${cleanNumber}" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-amber-600 transition">WA</a>`;
+        }
+        if (social.twitter) html += `<a href="${social.twitter}" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-amber-600 transition">TW</a>`;
+        footerSocialContainer.innerHTML = html;
+    }
 }
 
 function updateLogo(logoUrl) {
@@ -155,8 +180,48 @@ function updateLogo(logoUrl) {
 }
 
 function updateFooter(footer) {
-    const copyrightEl = document.querySelector('.footer-copyright');
+    const copyrightEl = document.querySelector('.footer-copyright') || document.getElementById('footer-copyright-text');
     if (copyrightEl && footer.copyright) {
         copyrightEl.textContent = footer.copyright;
     }
+}
+
+function updateWhyChooseUs(data) {
+    const titleEl = document.getElementById('why-choose-us-title');
+    const container = document.getElementById('why-choose-us-items');
+
+    if (titleEl && data.title) titleEl.textContent = data.title;
+    if (container && data.items) {
+        container.innerHTML = data.items.map(item => `
+            <div class="p-8 bg-white rounded-3xl shadow-sm border border-gray-100 hover:shadow-xl transition-shadow scroll-reveal">
+                <div class="w-14 h-14 bg-amber-50 rounded-2xl flex items-center justify-center text-3xl mb-6">${item.icon}</div>
+                <h3 class="text-xl font-medium text-gray-900 mb-4">${item.title}</h3>
+                <p class="text-gray-600 font-light leading-relaxed">${item.description}</p>
+            </div>
+        `).join('');
+    }
+}
+
+function updateStatsSection(stats) {
+    const mapping = {
+        'stat-happy-customers': stats.happyCustomers,
+        'stat-products-sold': stats.productsSold,
+        'stat-years-business': stats.yearsInBusiness,
+        'stat-avg-rating': stats.averageRating
+    };
+
+    for (const [id, value] of Object.entries(mapping)) {
+        const el = document.getElementById(id);
+        if (el) el.setAttribute('data-target', value);
+    }
+}
+
+function updateNewsletterSection(data) {
+    const titleEl = document.getElementById('newsletter-title');
+    const subEl = document.getElementById('newsletter-subtitle');
+    const btnEl = document.getElementById('newsletter-btn');
+
+    if (titleEl && data.title) titleEl.textContent = data.title;
+    if (subEl && data.subtitle) subEl.textContent = data.subtitle;
+    if (btnEl && data.buttonText) btnEl.textContent = data.buttonText;
 }

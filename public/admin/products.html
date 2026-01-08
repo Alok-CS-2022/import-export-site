@@ -338,19 +338,7 @@
                         <select id="product-category" required
                             class="w-full px-5 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-amber-500 transition font-light text-lg">
                             <option value="">Select a category...</option>
-                            <option value="Pashmina & Textiles">🧣 Pashmina & Textiles</option>
-                            <option value="Traditional Clothing">👘 Traditional Clothing</option>
-                            <option value="Handmade Shoes">👞 Handmade Shoes & Slippers</option>
-                            <option value="Wooden Masks">🎭 Wooden Masks</option>
-                            <option value="Dolls & Figurines">🪆 Dolls & Figurines</option>
-                            <option value="Bags & Accessories">👜 Bags & Accessories</option>
-                            <option value="Pottery & Ceramics">🏺 Pottery & Ceramics</option>
-                            <option value="Jewelry & Ornaments">💍 Jewelry & Ornaments</option>
-                            <option value="Home Decor">🏠 Home Decor</option>
-                            <option value="Statues & Sculptures">🗿 Statues & Sculptures</option>
-                            <option value="Musical Instruments">🎵 Musical Instruments</option>
-                            <option value="Paper Products">📄 Paper Products</option>
-                            <option value="Other Handicrafts">✨ Other Handicrafts</option>
+                            <!-- Categories loaded dynamically -->
                         </select>
                     </div>
 
@@ -359,6 +347,17 @@
                         <input type="number" id="product-price" required
                             class="w-full px-5 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-amber-500 transition font-light text-lg"
                             placeholder="Enter price in USD">
+                    </div>
+
+                    <div class="bg-amber-50 border-2 border-amber-200 rounded-xl p-4">
+                        <label class="flex items-center gap-3 cursor-pointer">
+                            <input type="checkbox" id="is-featured"
+                                class="w-5 h-5 text-amber-600 rounded focus:ring-amber-500">
+                            <div>
+                                <span class="text-sm font-semibold text-gray-900">⭐ Featured Product</span>
+                                <p class="text-xs text-gray-600">Show this product on the homepage (max 6)</p>
+                            </div>
+                        </label>
                     </div>
 
                     <!-- Action Buttons -->
@@ -479,6 +478,31 @@
         }
 
         let editingProductId = null
+
+        async function loadCategories() {
+            try {
+                const { data, error } = await supabase
+                    .from('categories')
+                    .select('*')
+                    .order('display_order', { ascending: true })
+
+                if (error) throw error
+
+                const select = document.getElementById('product-category')
+                select.innerHTML = '<option value="">Select a category...</option>'
+
+                if (data && data.length > 0) {
+                    data.forEach(cat => {
+                        const option = document.createElement('option')
+                        option.value = cat.id
+                        option.textContent = cat.name
+                        select.appendChild(option)
+                    })
+                }
+            } catch (error) {
+                console.error('Error loading categories:', error)
+            }
+        }
 
         async function loadProducts() {
             try {
@@ -603,8 +627,9 @@
                 document.getElementById('product-name').value = data.name
                 document.getElementById('product-description').value = data.description
                 document.getElementById('product-image').value = data.image_url
-                document.getElementById('product-category').value = data.category
+                document.getElementById('product-category').value = data.category_id || data.category
                 document.getElementById('product-price').value = data.price
+                document.getElementById('is-featured').checked = data.is_featured || false
 
                 // Show preview
                 previewImage(data.image_url)
@@ -656,8 +681,9 @@
                 name: document.getElementById('product-name').value,
                 description: document.getElementById('product-description').value,
                 image_url: document.getElementById('product-image').value,
-                category: document.getElementById('product-category').value,
-                price: priceValue ? parseFloat(priceValue) : null
+                category_id: document.getElementById('product-category').value || null,
+                price: priceValue ? parseFloat(priceValue) : null,
+                is_featured: document.getElementById('is-featured').checked
             }
 
             if (editingProductId) {
@@ -698,6 +724,7 @@
         async function init() {
             const isAuth = await checkAuth()
             if (isAuth) {
+                await loadCategories()
                 await loadProducts()
             }
         }

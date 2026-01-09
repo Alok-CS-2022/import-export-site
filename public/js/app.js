@@ -161,11 +161,18 @@ function buildCategoryButtons() {
     container.innerHTML = buttonsHTML;
 }
 
-window.filterByCategory = function (category) {
+window.filterByCategory = function (category, categoryName) {
+    // If we are on the catalog page, defer to catalog.js logic
+    if (window.catalogFilterByCategory) {
+        return window.catalogFilterByCategory(category, categoryName);
+    }
+
     document.querySelectorAll('.category-btn').forEach(btn => {
         btn.classList.remove('active');
     });
-    event.target.classList.add('active');
+    if (event && event.target && event.target.classList.contains('category-btn')) {
+        event.target.classList.add('active');
+    }
 
     if (category === 'all') {
         displayProducts(allProducts);

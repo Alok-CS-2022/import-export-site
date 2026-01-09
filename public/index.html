@@ -56,20 +56,13 @@
 
                 <div class="hidden md:flex items-center space-x-6 lg:space-x-8">
                     <a href="index.html" class="text-gray-700 hover:text-amber-700 transition">Home</a>
-                    <a href="products.html" class="text-gray-700 hover:text-amber-700 transition">Products</a>
+                    <a href="products.html" class="text-amber-700 font-semibold transition">Products</a>
                     <a href="contact.html" class="text-gray-700 hover:text-amber-700 transition">Contact</a>
                 </div>
 
                 <!-- Right side icons -->
                 <div class="flex items-center space-x-2 sm:space-x-4">
-                    <!-- Search Icon -->
-                    <button onclick="toggleSearch()" class="p-2 hover:bg-gray-100 rounded-full transition">
-                        <svg class="w-5 h-5 sm:w-6 sm:h-6 text-gray-700" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
-                    </button>
+                    <!-- Wishlist Icon -->
 
                     <!-- Wishlist Icon -->
                     <button onclick="openWishlist()"
@@ -337,7 +330,25 @@
                 </h2>
             </div>
             <div id="why-choose-us-items" class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Loaded via content-loader.js -->
+                <!-- Skeleton Loading -->
+                <div class="p-8 bg-white rounded-3xl shadow-sm border border-gray-100 skeleton-wrapper">
+                    <div class="w-14 h-14 bg-gray-100 rounded-2xl mb-6 animate-pulse"></div>
+                    <div class="h-6 bg-gray-100 rounded-lg mb-4 w-3/4 animate-pulse"></div>
+                    <div class="h-4 bg-gray-100 rounded-lg mb-2 w-full animate-pulse"></div>
+                    <div class="h-4 bg-gray-100 rounded-lg w-2/3 animate-pulse"></div>
+                </div>
+                <div class="p-8 bg-white rounded-3xl shadow-sm border border-gray-100 skeleton-wrapper hidden md:block">
+                    <div class="w-14 h-14 bg-gray-100 rounded-2xl mb-6 animate-pulse"></div>
+                    <div class="h-6 bg-gray-100 rounded-lg mb-4 w-3/4 animate-pulse"></div>
+                    <div class="h-4 bg-gray-100 rounded-lg mb-2 w-full animate-pulse"></div>
+                    <div class="h-4 bg-gray-100 rounded-lg w-2/3 animate-pulse"></div>
+                </div>
+                <div class="p-8 bg-white rounded-3xl shadow-sm border border-gray-100 skeleton-wrapper hidden lg:block">
+                    <div class="w-14 h-14 bg-gray-100 rounded-2xl mb-6 animate-pulse"></div>
+                    <div class="h-6 bg-gray-100 rounded-lg mb-4 w-3/4 animate-pulse"></div>
+                    <div class="h-4 bg-gray-100 rounded-lg mb-2 w-full animate-pulse"></div>
+                    <div class="h-4 bg-gray-100 rounded-lg w-2/3 animate-pulse"></div>
+                </div>
             </div>
         </div>
     </section>
@@ -388,29 +399,113 @@
                     </svg>
                 </div>
 
-                <div id="testimonials-slider" class="flex overflow-hidden relative">
+                <div id="testimonials-slider" class="flex overflow-hidden relative transition-all duration-500">
                     <!-- Slides loaded via home.js -->
                 </div>
+
+                <!-- Navigation dots -->
+                <div id="testimonial-dots" class="flex justify-center gap-2 mt-8"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Latest Stories (Blog) [NEW] -->
+    <section class="py-24 bg-white border-t border-stone-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="flex justify-between items-end mb-16 px-4">
+                <div>
+                    <p class="text-sm tracking-widest uppercase text-amber-700 mb-3 font-light">Craftsman Chronicles</p>
+                    <h2 class="text-4xl font-light text-gray-900">Latest <span
+                            class="italic font-normal text-amber-800">Stories</span></h2>
+                </div>
+                <a href="/blog" class="text-amber-800 font-medium hover:underline hidden sm:block">Explore All
+                    Stories</a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <!-- Blog 1 -->
+                <article class="group">
+                    <div
+                        class="aspect-[4/5] overflow-hidden rounded-2xl mb-6 shadow-md group-hover:shadow-xl transition-all duration-500">
+                        <img src="https://images.unsplash.com/photo-1582719366955-bfb54a72b2fc?w=800&q=100"
+                            alt="Singing Bowls"
+                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <p class="text-xs tracking-widest uppercase text-gray-400 mb-2">Tradition</p>
+                    <h3
+                        class="text-2xl font-light text-gray-900 mb-3 group-hover:text-amber-800 transition-colors leading-tight">
+                        The Resonance of Seven Metals: Singing Bowl Secrets</h3>
+                    <p class="text-gray-600 font-light text-sm line-clamp-2">Discover the ancient metallurgical secrets
+                        behind the healing vibrations of Himalayan singing bowls.</p>
+                </article>
+
+                <!-- Blog 2 -->
+                <article class="group">
+                    <div
+                        class="aspect-[4/5] overflow-hidden rounded-2xl mb-6 shadow-md group-hover:shadow-xl transition-all duration-500">
+                        <img src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&q=100"
+                            alt="Kathmandu Artisans"
+                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <p class="text-xs tracking-widest uppercase text-gray-400 mb-2">Artisans</p>
+                    <h3
+                        class="text-2xl font-light text-gray-900 mb-3 group-hover:text-amber-800 transition-colors leading-tight">
+                        Preserving Heritage: The Copper Smiths of Patan</h3>
+                    <p class="text-gray-600 font-light text-sm line-clamp-2">Meet the families who have perfected the
+                        art of copper sculpture over ten generations in Nepal.</p>
+                </article>
+
+                <!-- Blog 3 -->
+                <article class="group">
+                    <div
+                        class="aspect-[4/5] overflow-hidden rounded-2xl mb-6 shadow-md group-hover:shadow-xl transition-all duration-500">
+                        <img src="https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=100"
+                            alt="Thangka Art"
+                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <p class="text-xs tracking-widest uppercase text-gray-400 mb-2">Symbolism</p>
+                    <h3
+                        class="text-2xl font-light text-gray-900 mb-3 group-hover:text-amber-800 transition-colors leading-tight">
+                        Mandala Meditation: Decoding Sacred Geometry</h3>
+                    <p class="text-gray-600 font-light text-sm line-clamp-2">A deep dive into the mathematical precision
+                        and spiritual significance of Thangka mandala paintings.</p>
+                </article>
+            </div>
+
+            <div class="mt-12 text-center sm:hidden">
+                <a href="/blog" class="text-amber-800 font-medium hover:underline">Explore All Stories</a>
             </div>
         </div>
     </section>
 
     <!-- Newsletter Section [NEW] -->
-    <section class="py-24 bg-white border-t border-stone-100">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-            <h2 id="newsletter-title" class="text-3xl md:text-4xl font-light text-gray-900 mb-4">Join Our Inner Circle
-            </h2>
-            <p id="newsletter-subtitle" class="text-gray-600 font-light mb-10 max-w-md mx-auto">Subscribe for exclusive
-                early access to our rarest Himalayan masterpieces and artisan stories.</p>
+    <section class="py-24 bg-stone-50 border-t border-stone-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center text-center lg:text-left">
+                <!-- Column 1: Title -->
+                <div>
+                    <h2 id="newsletter-title" class="text-3xl md:text-4xl font-light text-gray-900 leading-tight">Join
+                        Our <br><span class="italic font-normal text-amber-800">Inner Circle</span></h2>
+                </div>
 
-            <form onsubmit="subscribeNewsletter(event)" class="relative max-w-lg mx-auto">
-                <input type="email" required placeholder="your@email.com"
-                    class="w-full px-8 py-5 rounded-2xl bg-stone-50 border-0 focus:ring-2 focus:ring-amber-500 transition-all outline-none pr-36 text-lg font-light">
-                <button id="newsletter-btn" type="submit"
-                    class="absolute right-2 top-2 bottom-2 bg-amber-800 text-white px-8 rounded-xl font-medium hover:bg-amber-900 transition-colors">
-                    Subscribe
-                </button>
-            </form>
+                <!-- Column 2: Subtitle -->
+                <div>
+                    <p id="newsletter-subtitle" class="text-gray-600 font-light max-w-md mx-auto lg:mx-0">Subscribe for
+                        early access to Himalayan masterpieces and artisan stories.</p>
+                </div>
+
+                <!-- Column 3: Form -->
+                <div>
+                    <form onsubmit="subscribeNewsletter(event)" class="relative">
+                        <input type="email" required placeholder="your@email.com"
+                            class="w-full px-6 py-4 rounded-2xl bg-white border border-stone-200 focus:ring-2 focus:ring-amber-500 transition-all outline-none pr-36 text-lg font-light shadow-sm">
+                        <button id="newsletter-btn" type="submit"
+                            class="absolute right-1.5 top-1.5 bottom-1.5 bg-gray-900 text-white px-8 rounded-xl font-medium hover:bg-amber-800 transition-colors shadow-lg">
+                            Join
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
     </section>
     <!-- Shopping Cart Modal -->

@@ -48,6 +48,9 @@ async function loadFeaturedProducts() {
                 </div>
             </div>
         `).join('')
+
+        // Initialize reveal animations for new items
+        if (window.initScrollReveal) window.initScrollReveal()
     } catch (err) {
         console.error('Error loading featured products:', err)
     }
@@ -75,6 +78,9 @@ async function loadCategoryShowcase() {
                 </div>
             </div>
         `).join('')
+
+        // Initialize reveal animations for new items
+        if (window.initScrollReveal) window.initScrollReveal()
     } catch (err) {
         console.error('Error loading categories:', err)
     }
@@ -98,6 +104,8 @@ async function loadFeaturedTestimonials() {
             return
         }
 
+        const dotsContainer = document.getElementById('testimonial-dots')
+
         testimonialsContainer.innerHTML = testimonials.map(t => `
             <div class="testimonial-slide min-w-full px-4 md:px-20 text-center">
                 <div class="flex justify-center mb-6">
@@ -116,15 +124,34 @@ async function loadFeaturedTestimonials() {
             </div>
         `).join('')
 
+        // Dots
+        if (dotsContainer) {
+            dotsContainer.innerHTML = testimonials.map((_, i) => `
+                <button class="testimonial-dot w-2 h-2 rounded-full bg-amber-200 transition-all ${i === 0 ? 'bg-amber-800 w-4' : ''}" 
+                        onclick="scrollToSlide(${i})"></button>
+            `).join('')
+        }
+
         // Simple Carousel Logic
         let currentSlide = 0
-        setInterval(() => {
-            currentSlide = (currentSlide + 1) % testimonials.length
+        window.scrollToSlide = (index) => {
+            currentSlide = index
             testimonialsContainer.scrollTo({
                 left: testimonialsContainer.offsetWidth * currentSlide,
                 behavior: 'smooth'
             })
-        }, 5000)
+            // Update dots
+            document.querySelectorAll('.testimonial-dot').forEach((dot, i) => {
+                dot.classList.toggle('bg-amber-800', i === index)
+                dot.classList.toggle('w-4', i === index)
+                dot.classList.toggle('bg-amber-200', i !== index)
+                dot.classList.toggle('w-2', i !== index)
+            })
+        }
+
+        setInterval(() => {
+            scrollToSlide((currentSlide + 1) % testimonials.length)
+        }, 8000)
 
     } catch (err) {
         console.error('Error loading testimonials:', err)
@@ -147,24 +174,34 @@ function initStatsCounter() {
 }
 
 function animateCounters() {
-    const counters = document.querySelectorAll('.stat-number')
+    const counters = document.querySelectorAll('.stat-number');
     counters.forEach(counter => {
-        const target = +counter.getAttribute('data-target')
-        const duration = 2000
-        const step = target / (duration / 16)
-        let current = 0
-
-        const update = () => {
-            current += step
-            if (current < target) {
-                counter.innerText = Math.round(current)
-                requestAnimationFrame(update)
-            } else {
-                counter.innerText = target + (counter.getAttribute('data-suffix') || '')
+        const updateCount = () => {
+            const targetAttr = counter.getAttribute('data-target');
+            if (!targetAttr || targetAttr === '0') {
+                // If data isn't loaded yet, check again in a bit
+                setTimeout(updateCount, 100);
+                return;
             }
-        }
-        update()
-    })
+
+            const target = +targetAttr;
+            const duration = 2000;
+            const step = target / (duration / 16);
+            let current = 0;
+
+            const update = () => {
+                current += step;
+                if (current < target) {
+                    counter.innerText = Math.round(current);
+                    requestAnimationFrame(update);
+                } else {
+                    counter.innerText = target + (counter.getAttribute('data-suffix') || '');
+                }
+            };
+            update();
+        };
+        updateCount();
+    });
 }
 
 // Navigation helpers

@@ -50,13 +50,16 @@ function renderCategoryFilters() {
     `).join('')
 
     // Add "All" button at the start if not already there
-    categoryFilters.innerHTML = `
-        <button onclick="filterByCategory('all', 'All Collection')" 
-            class="filter-chip px-4 py-2 border border-gray-200 rounded-full text-sm text-left hover:border-amber-500 transition 
-            ${currentCategory === 'all' ? 'active' : ''}">
-            All Collection
-        </button>
-    ` + html
+    const container = document.getElementById('category-filters');
+    if (container) {
+        container.innerHTML = `
+            <button onclick="filterByCategory('all', 'All Collection')" 
+                class="filter-chip px-4 py-2 border border-gray-200 rounded-full text-sm text-left hover:border-amber-500 transition 
+                ${currentCategory === 'all' ? 'active' : ''}">
+                All Collection
+            </button>
+        ` + html
+    }
 }
 
 // Load Products
@@ -151,13 +154,16 @@ function renderProducts() {
 }
 
 // Global filter function (attached to window for onclick)
-window.filterByCategory = (id, name) => {
+window.catalogFilterByCategory = (id, name) => {
     currentCategory = id
+    const label = document.getElementById('active-filters');
+    const nameLabel = document.getElementById('current-category-name');
+
     if (id === 'all') {
-        activeFiltersLabel.classList.add('hidden')
+        if (label) label.classList.add('hidden')
     } else {
-        currentCategoryName.textContent = name
-        activeFiltersLabel.classList.remove('hidden')
+        if (nameLabel) nameLabel.textContent = name
+        if (label) label.classList.remove('hidden')
     }
     renderCategoryFilters()
     applyFilters()

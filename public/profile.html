@@ -142,11 +142,20 @@
                                     <!-- Action buttons could go here (e.g. View Invoice) -->
                                 </div>
                             </div>
-                            ${order.items ? `
-                            <div class="mt-4 pt-4 border-t border-gray-100">
-                                <p class="text-xs text-gray-500 italic">${JSON.parse(order.items)[0]?.message || 'No specific notes.'}</p>
-                            </div>
-                            ` : ''}
+                            ${(() => {
+                        try {
+                            if (!order.items) return '';
+                            const items = typeof order.items === 'string' ? JSON.parse(order.items) : order.items;
+                            const firstItem = Array.isArray(items) ? items[0] : items;
+                            return `
+                                    <div class="mt-4 pt-4 border-t border-gray-100">
+                                        <p class="text-xs text-gray-500 italic">${firstItem?.message || 'No specific notes.'}</p>
+                                    </div>
+                                    `;
+                        } catch (e) {
+                            return '';
+                        }
+                    })()}
                         </div>
                     </div>
                 `).join('');

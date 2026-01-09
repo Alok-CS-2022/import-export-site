@@ -199,6 +199,7 @@ function updateWhyChooseUs(data) {
                 <p class="text-gray-600 font-light leading-relaxed">${item.description}</p>
             </div>
         `).join('');
+        if (window.initScrollReveal) window.initScrollReveal();
     }
 }
 

@@ -72,9 +72,9 @@ async function loadCategoryShowcase() {
         categoryShowcase.innerHTML = categories.map(cat => `
             <div class="group relative aspect-square rounded-3xl overflow-hidden cursor-pointer scroll-reveal" onclick="goToCategory('${cat.id}')">
                 <img src="${cat.image_url || 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80'}" alt="${cat.name}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-8 text-white">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                     <h3 class="text-2xl font-light mb-2">${cat.name}</h3>
-                    <p class="text-sm text-gray-300 font-light opacity-0 group-hover:opacity-100 transition-opacity duration-300">Explore Collection →</p>
+                    <p class="text-sm text-gray-300 font-light">Explore Collection →</p>
                 </div>
             </div>
         `).join('')

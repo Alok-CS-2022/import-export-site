@@ -43,6 +43,34 @@ html {
     overflow: hidden;
 }
 
+.line-clamp-4 {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Owl Carousel Custom Dots */
+.owl-theme .owl-dots {
+    margin-top: 2rem !important;
+}
+
+.owl-theme .owl-dots .owl-dot span {
+    width: 6px;
+    height: 6px;
+    margin: 5px 6px;
+    background: rgba(0, 0, 0, 0.1);
+    display: block;
+    transition: all 0.4s ease;
+    border-radius: 30px;
+}
+
+.owl-theme .owl-dots .owl-dot.active span,
+.owl-theme .owl-dots .owl-dot:hover span {
+    background: #D97706;
+    width: 24px;
+}
+
 .category-btn {
     background-color: #FEF3C7;
     color: #92400E;

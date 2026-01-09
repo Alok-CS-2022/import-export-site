@@ -207,31 +207,29 @@ function initStatsCounter() {
 function animateCounters() {
     const counters = document.querySelectorAll('.stat-number');
     counters.forEach(counter => {
-        const updateCount = () => {
-            const targetAttr = counter.getAttribute('data-target');
-            if (!targetAttr || targetAttr === '0') {
-                // If data isn't loaded yet, check again in a bit
-                setTimeout(updateCount, 100);
-                return;
+        const targetAttr = counter.getAttribute('data-target');
+        if (!targetAttr) return;
+
+        const target = parseFloat(targetAttr);
+        const suffix = counter.getAttribute('data-suffix') || '';
+        const duration = 2000;
+        const startTime = performance.now();
+
+        const update = (currentTime) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+
+            const current = progress * target;
+            counter.innerText = (target % 1 === 0 ? Math.floor(current) : current.toFixed(1)) + suffix;
+
+            if (progress < 1) {
+                requestAnimationFrame(update);
+            } else {
+                counter.innerText = target + suffix;
             }
-
-            const target = +targetAttr;
-            const duration = 2000;
-            const step = target / (duration / 16);
-            let current = 0;
-
-            const update = () => {
-                current += step;
-                if (current < target) {
-                    counter.innerText = Math.round(current);
-                    requestAnimationFrame(update);
-                } else {
-                    counter.innerText = target + (counter.getAttribute('data-suffix') || '');
-                }
-            };
-            update();
         };
-        updateCount();
+
+        requestAnimationFrame(update);
     });
 }
 

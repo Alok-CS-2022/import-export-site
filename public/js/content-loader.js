@@ -192,10 +192,10 @@ function updateWhyChooseUs(data) {
 
     if (titleEl && data.title) titleEl.textContent = data.title;
     if (container && data.items) {
-        container.innerHTML = data.items.map(item => `
-            <div class="p-8 bg-white rounded-3xl shadow-sm border border-gray-100 hover:shadow-xl transition-shadow scroll-reveal">
-                <div class="w-14 h-14 bg-amber-50 rounded-2xl flex items-center justify-center text-3xl mb-6">${item.icon}</div>
-                <h3 class="text-xl font-medium text-gray-900 mb-4">${item.title}</h3>
+        container.innerHTML = data.items.map((item, index) => `
+            <div class="group p-10 bg-white rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-2xl hover:border-amber-100 transition-all duration-500 hover:-translate-y-2 scroll-reveal" style="transition-delay: ${index * 100}ms">
+                <div class="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center text-3xl mb-8 group-hover:scale-110 group-hover:bg-amber-100 transition-all">${item.icon}</div>
+                <h3 class="text-2xl font-light text-gray-900 mb-4">${item.title}</h3>
                 <p class="text-gray-600 font-light leading-relaxed">${item.description}</p>
             </div>
         `).join('');

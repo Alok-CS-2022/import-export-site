@@ -119,71 +119,37 @@ async function loadCategoryShowcase() {
 
 // Load featured testimonials
 async function loadFeaturedTestimonials() {
-    if (!testimonialsContainer) return
+    const container = document.getElementById('testimonials-grid')
+    if (!container) return
 
     try {
         const { data: testimonials, error } = await supabase
             .from('testimonials')
             .select('*')
             .eq('is_featured', true)
-            .limit(5)
+            .limit(2)
 
         if (error) throw error
 
-        if (!testimonials || testimonials.length === 0) {
-            testimonialsContainer.innerHTML = '<p class="text-center text-gray-400">Voices of our patrons will appear here soon.</p>'
-            return
-        }
-
-        const dotsContainer = document.getElementById('testimonial-dots')
-
-        testimonialsContainer.innerHTML = testimonials.map(t => `
-            <div class="testimonial-slide min-w-full px-4 md:px-20 text-center">
-                <div class="flex justify-center mb-6">
-                    <div class="flex text-amber-500 text-xl">
+        if (testimonials && testimonials.length > 0) {
+            container.innerHTML = testimonials.map(t => `
+                <div class="p-8 bg-white rounded-3xl border border-stone-100 shadow-sm hover:shadow-xl transition-all duration-500 scroll-reveal">
+                    <div class="flex text-amber-500 mb-4">
                         ${'★'.repeat(t.rating)}${'☆'.repeat(5 - t.rating)}
                     </div>
-                </div>
-                <p class="text-xl md:text-2xl font-light text-gray-700 italic mb-8 leading-relaxed">"${t.review_text}"</p>
-                <div class="flex flex-col items-center">
-                    <div class="w-16 h-16 rounded-full overflow-hidden bg-gray-200 mb-4 border-2 border-amber-100">
-                        <img src="${t.customer_photo_url || 'https://via.placeholder.com/64'}" alt="${t.customer_name}" class="w-full h-full object-cover">
+                    <p class="text-gray-700 italic mb-6 leading-relaxed">"${t.review_text}"</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full overflow-hidden bg-amber-50 flex items-center justify-center text-amber-800 font-bold border border-amber-100">
+                            ${t.customer_photo_url ? `<img src="${t.customer_photo_url}" alt="${t.customer_name}" class="w-full h-full object-cover">` : t.customer_name.split(' ').map(n => n[0]).join('')}
+                        </div>
+                        <div>
+                            <h4 class="text-gray-900 font-medium">${t.customer_name}</h4>
+                            <p class="text-amber-800 text-xs tracking-widest uppercase">Verified Collector</p>
+                        </div>
                     </div>
-                    <h4 class="text-gray-900 font-medium">${t.customer_name}</h4>
-                    <p class="text-amber-800 text-xs tracking-widest uppercase mt-1">Authentic Patron</p>
                 </div>
-            </div>
-        `).join('')
-
-        // Dots
-        if (dotsContainer) {
-            dotsContainer.innerHTML = testimonials.map((_, i) => `
-                <button class="testimonial-dot w-2 h-2 rounded-full bg-amber-200 transition-all ${i === 0 ? 'bg-amber-800 w-4' : ''}" 
-                        onclick="scrollToSlide(${i})"></button>
             `).join('')
         }
-
-        // Simple Carousel Logic
-        let currentSlide = 0
-        window.scrollToSlide = (index) => {
-            currentSlide = index
-            testimonialsContainer.scrollTo({
-                left: testimonialsContainer.offsetWidth * currentSlide,
-                behavior: 'smooth'
-            })
-            // Update dots
-            document.querySelectorAll('.testimonial-dot').forEach((dot, i) => {
-                dot.classList.toggle('bg-amber-800', i === index)
-                dot.classList.toggle('w-4', i === index)
-                dot.classList.toggle('bg-amber-200', i !== index)
-                dot.classList.toggle('w-2', i !== index)
-            })
-        }
-
-        setInterval(() => {
-            scrollToSlide((currentSlide + 1) % testimonials.length)
-        }, 8000)
-
     } catch (err) {
         console.error('Error loading testimonials:', err)
     }

@@ -10,6 +10,9 @@ export async function loadSiteContent() {
 
         if (error) {
             console.log('No custom content found, using defaults');
+            // Still call these to apply hardcoded fallbacks
+            updateWhyChooseUs({});
+            updateStatsSection({});
             return;
         }
 
@@ -17,47 +20,30 @@ export async function loadSiteContent() {
             const content = data.content;
 
             // Apply SEO Meta Tags
-            if (content.seo) {
-                updateMetaTags(content.seo);
-            }
+            if (content.seo) updateMetaTags(content.seo);
 
             // Apply Hero Section
-            if (content.hero) {
-                updateHeroSection(content.hero);
-            }
+            if (content.hero) updateHeroSection(content.hero);
 
             // Apply About Section
-            if (content.about) {
-                updateAboutSection(content.about);
-            }
+            if (content.about) updateAboutSection(content.about);
 
             // Apply Contact Information
-            if (content.contact) {
-                updateContactSection(content.contact);
-            }
+            if (content.contact) updateContactSection(content.contact);
 
             // Apply Social Media Links
-            if (content.social) {
-                updateSocialLinks(content.social);
-            }
+            if (content.social) updateSocialLinks(content.social);
 
             // Apply Branding (Logo)
-            if (content.branding && content.branding.logoUrl) {
-                updateLogo(content.branding.logoUrl);
-            }
+            if (content.branding && content.branding.logoUrl) updateLogo(content.branding.logoUrl);
 
             // Apply Footer
-            if (content.footer) {
-                updateFooter(content.footer);
-            }
+            if (content.footer) updateFooter(content.footer);
 
             // Apply Homepage Specific Sections
-            if (content.whyChooseUs) {
-                updateWhyChooseUs(content.whyChooseUs);
-            }
-            if (content.stats) {
-                updateStatsSection(content.stats);
-            }
+            updateWhyChooseUs(content.whyChooseUs || {});
+            updateStatsSection(content.stats || {});
+
             if (content.newsletter) {
                 updateNewsletterSection(content.newsletter);
             }

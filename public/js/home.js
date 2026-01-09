@@ -8,15 +8,15 @@ const testimonialsContainer = document.getElementById('testimonials-slider')
 async function initHome() {
     loadFeaturedProducts()
     loadCategoryShowcase()
-    loadProductMarquee()
+    loadHeritageSlider()
     loadFeaturedTestimonials()
     initStatsCounter()
 }
 
-// Load products for the infinite marquee
-async function loadProductMarquee() {
-    const marquee = document.getElementById('product-marquee')
-    if (!marquee) return
+// Load products for the heritage spotlight slider
+async function loadHeritageSlider() {
+    const slider = document.getElementById('heritage-mini-slider')
+    if (!slider) return
 
     try {
         const { data: products, error } = await supabase
@@ -27,19 +27,19 @@ async function loadProductMarquee() {
         if (error) throw error
 
         const productHTML = products.map(product => `
-            <div class="marquee-card cursor-pointer" onclick="window.location.href='product-detail.html?id=${product.id}'">
-                <img src="${product.image_url}" alt="${product.name}" class="w-16 h-16 rounded-xl object-cover shadow-sm">
+            <div class="mini-marquee-card cursor-pointer" onclick="window.location.href='product-detail.html?id=${product.id}'">
+                <img src="${product.image_url}" alt="${product.name}" class="w-12 h-12 rounded-lg object-cover shadow-sm">
                 <div class="min-w-0">
-                    <h4 class="text-sm font-semibold text-gray-900 truncate">${product.name}</h4>
-                    <p class="text-xs text-amber-700 font-medium">$${product.price}</p>
+                    <h4 class="text-[10px] sm:text-xs font-semibold text-white truncate">${product.name}</h4>
+                    <p class="text-[10px] sm:text-xs text-amber-500 font-medium">$${product.price}</p>
                 </div>
             </div>
         `).join('')
 
         // Duplicate for seamless infinite loop
-        marquee.innerHTML = productHTML + productHTML
+        slider.innerHTML = productHTML + productHTML
     } catch (err) {
-        console.error('Error loading marquee:', err)
+        console.error('Error loading heritage slider:', err)
     }
 }
 

@@ -504,7 +504,15 @@ html {
     will-change: transform;
 }
 
-.animate-marquee:hover {
+.animate-marquee-slow {
+    display: flex;
+    width: max-content;
+    animation: marquee 60s linear infinite;
+    will-change: transform;
+}
+
+.animate-marquee:hover,
+.animate-marquee-slow:hover {
     animation-play-state: paused;
 }
 
@@ -525,4 +533,22 @@ html {
     border-color: #d97706;
     box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
     transform: translateY(-4px);
+}
+
+.mini-marquee-card {
+    flex: 0 0 auto;
+    width: 220px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.75rem;
+    border-radius: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.mini-marquee-card:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #d97706;
 }

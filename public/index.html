@@ -295,10 +295,47 @@
         </div>
     </section>
 
-    <!-- Dynamic Marquee Section [NEW] -->
-    <section class="py-12 bg-stone-50 border-y border-stone-200 overflow-hidden">
-        <div class="flex items-center gap-8 animate-marquee whitespace-nowrap" id="product-marquee">
-            <!-- Dynamically loaded via home.js -->
+    <!-- Heritage Feature & Spotlight [REDESIGNED] -->
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div
+                class="bg-[#1C1C1C] rounded-[3rem] overflow-hidden flex flex-col lg:flex-row items-stretch min-h-[500px] scroll-reveal">
+                <!-- Left: Heritage Image -->
+                <div class="lg:w-5/12 relative">
+                    <img src="heritage_thangka_spotlight_1767945306613.png" alt="Heritage Thangka"
+                        class="absolute inset-0 w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent lg:hidden"></div>
+                </div>
+                <!-- Right: Content & Auto-Slider -->
+                <div class="lg:w-7/12 p-8 lg:p-16 flex flex-col justify-center">
+                    <div class="max-w-xl">
+                        <span class="text-amber-500 font-medium tracking-widest uppercase text-xs sm:text-sm">Artisan
+                            Heritage</span>
+                        <h2 class="text-3xl lg:text-5xl font-light text-white mt-4 mb-6 leading-tight">Preserving <span
+                                class="italic text-amber-200">Centuries</span> of Himalayan Craft</h2>
+                        <p class="text-gray-400 font-light text-sm sm:text-base mb-10 leading-relaxed">
+                            Discover authentic masterpieces directly from the heart of the Himalayas. Every piece
+                            supports local artisan communities and keeps ancient traditions alive for future
+                            generations.
+                        </p>
+
+                        <!-- Trending Product Slider (Auto-scrolling) -->
+                        <div class="border-t border-white/10 pt-8 mt-4">
+                            <h4
+                                class="text-white text-xs uppercase tracking-widest mb-6 font-medium flex items-center gap-3">
+                                <span class="w-10 h-px bg-amber-500"></span>
+                                Trending Masterpieces
+                            </h4>
+                            <div class="overflow-hidden relative">
+                                <div class="flex gap-4 animate-marquee-slow whitespace-nowrap"
+                                    id="heritage-mini-slider">
+                                    <!-- Loaded via home.js -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 

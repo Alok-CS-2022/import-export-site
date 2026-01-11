@@ -172,6 +172,48 @@
         </div>
     </main>
 
+
+    <!-- Shopping Cart Modal -->
+    <div id="cart-modal" class="hidden fixed inset-0 z-50">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black bg-opacity-50 transition-opacity" onclick="closeCart()"></div>
+
+        <!-- Cart Sidebar (slides from right) -->
+        <div id="cart-sidebar"
+            class="absolute right-0 top-0 h-full w-full sm:w-[480px] bg-white shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col">
+            <!-- Header -->
+            <div class="flex items-center justify-between p-6 border-b">
+                <h2 class="text-2xl font-bold text-gray-900">Shopping Cart</h2>
+                <button onclick="closeCart()" class="p-2 hover:bg-gray-100 rounded-full transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Cart Items (scrollable) -->
+            <div id="cart-items" class="flex-1 overflow-y-auto p-6 space-y-4">
+                <!-- Items will be inserted here by JavaScript -->
+            </div>
+
+            <!-- Footer with Subtotal -->
+            <div class="border-t p-6 space-y-4 bg-gray-50">
+                <div class="flex justify-between items-center text-lg">
+                    <span class="font-semibold text-gray-700">Subtotal:</span>
+                    <span id="cart-subtotal" class="text-2xl font-bold text-gray-900">$0.00</span>
+                </div>
+                <button onclick="proceedToCheckout()"
+                    class="w-full bg-gray-900 text-white py-4 rounded-lg font-bold text-lg hover:bg-gray-800 transition shadow-lg">
+                    Proceed to Checkout
+                </button>
+                <button onclick="closeCart()"
+                    class="w-full border-2 border-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:border-gray-400 transition">
+                    Continue Shopping
+                </button>
+            </div>
+        </div>
+    </div>
     <!-- Footer -->
     <footer class="bg-gray-900 text-white mt-auto">
         <!-- Main Footer -->

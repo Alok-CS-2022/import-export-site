@@ -19,61 +19,73 @@ async function loadHeritageSlider() {
     if (!container) return
 
     try {
-        const { data: products, error } = await supabase
+        // Try to get featured products first, then fallback to any 5 products
+        let { data: products, error } = await supabase
             .from('products')
             .select('*')
             .eq('is_featured', true)
             .limit(5)
 
-        if (error) throw error
+        if (!error && products && products.length > 0) {
+            renderHeritageSlides(products);
+        } else {
+            // Fallback: try latest products if no featured
+            const { data: latest, error: latestError } = await supabase.from('products').select('*').limit(5);
+            if (!latestError && latest && latest.length > 0) {
+                renderHeritageSlides(latest);
+            }
+            // If still no products, we just leave the default placeholder already in HTML
+        }
+    } catch (err) {
+        console.error('Error loading heritage slider:', err);
+        // On error, let the static placeholder show
+    }
+}
 
-        if (products && products.length > 0) {
-            container.innerHTML = products.map(product => `
-                <div class="bg-[#1C1C1C] rounded-[3rem] overflow-hidden flex flex-col lg:flex-row items-stretch min-h-[500px]">
-                    <div class="lg:w-5/12 relative min-h-[300px] lg:min-h-full">
-                        <img src="${product.image_url}" alt="${product.name}" class="absolute inset-0 w-full h-full object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent lg:hidden"></div>
-                    </div>
-                    <div class="lg:w-7/12 p-8 lg:p-16 flex flex-col justify-center">
-                        <div class="max-w-xl">
-                            <span class="text-amber-500 font-medium tracking-widest uppercase text-xs sm:text-sm">Artisan Heritage</span>
-                            <h2 class="text-3xl lg:text-5xl font-light text-white mt-4 mb-6 leading-tight">${product.name}</h2>
-                            <p class="text-gray-400 font-light text-sm sm:text-base mb-10 leading-relaxed line-clamp-4">
-                                ${product.description || 'Discover this authentic masterpiece directly from the heart of the Himalayas. Every piece supports local artisan communities and keeps ancient traditions alive.'}
-                            </p>
-                            <div class="flex flex-wrap items-center gap-6">
-                                <a href="product-detail.html?id=${product.id}" class="inline-block bg-amber-600 text-white px-8 py-4 rounded-full hover:bg-amber-700 transition shadow-lg text-sm sm:text-base font-medium">View Masterpiece</a>
-                                <div class="flex flex-col">
-                                    <span class="text-xs text-amber-500/60 uppercase tracking-widest">Investment</span>
-                                    <span class="text-2xl font-light text-amber-200">$${product.price}</span>
-                                </div>
-                            </div>
+function renderHeritageSlides(products) {
+    const container = document.getElementById('heritage-carousel');
+    if (!container || !products.length) return;
+
+    container.innerHTML = products.map(product => `
+        <div class="bg-[#1C1C1C] rounded-[3rem] overflow-hidden flex flex-col lg:flex-row items-stretch min-h-[500px]">
+            <div class="lg:w-5/12 relative min-h-[300px] lg:min-h-full">
+                <img src="${product.image_url}" alt="${product.name}" class="absolute inset-0 w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent lg:hidden"></div>
+            </div>
+            <div class="lg:w-7/12 p-8 lg:p-16 flex flex-col justify-center">
+                <div class="max-w-xl">
+                    <span class="text-amber-500 font-medium tracking-widest uppercase text-xs sm:text-sm">Artisan Heritage</span>
+                    <h2 class="text-3xl lg:text-5xl font-light text-white mt-4 mb-6 leading-tight">${product.name}</h2>
+                    <p class="text-gray-400 font-light text-sm sm:text-base mb-10 leading-relaxed line-clamp-4">
+                        ${product.description || 'Discover this authentic masterpiece directly from the heart of the Himalayas. Every piece supports local artisan communities and keeps ancient traditions alive.'}
+                    </p>
+                    <div class="flex flex-wrap items-center gap-6">
+                        <a href="product-detail.html?id=${product.id}" class="inline-block bg-amber-600 text-white px-8 py-4 rounded-full hover:bg-amber-700 transition shadow-lg text-sm sm:text-base font-medium">View Masterpiece</a>
+                        <div class="flex flex-col">
+                            <span class="text-xs text-amber-500/60 uppercase tracking-widest">Investment</span>
+                            <span class="text-2xl font-light text-amber-200">$${product.price}</span>
                         </div>
                     </div>
                 </div>
-            `).join('')
+            </div>
+        </div>
+    `).join('');
 
-            // Initialize Owl Carousel (needs a slight delay for DOM insertion)
-            setTimeout(() => {
-                $('#heritage-carousel').owlCarousel({
-                    items: 1,
-                    loop: true,
-                    autoplay: true,
-                    autoplayTimeout: 6000,
-                    autoplayHoverPause: true,
-                    nav: false,
-                    dots: true,
-                    smartSpeed: 1000,
-                    animateOut: 'fadeOut',
-                    responsive: {
-                        0: { dots: true },
-                        768: { dots: true }
-                    }
-                })
-            }, 100)
-        }
-    } catch (err) {
-        console.error('Error loading heritage slider:', err)
+    // Add the owl-carousel class and init
+    container.classList.add('owl-carousel');
+
+    if (typeof $ !== 'undefined' && $.fn.owlCarousel) {
+        $(container).owlCarousel({
+            items: 1,
+            loop: products.length > 1,
+            autoplay: products.length > 1,
+            autoplayTimeout: 6000,
+            autoplayHoverPause: true,
+            nav: false,
+            dots: true,
+            smartSpeed: 1000,
+            animateOut: 'fadeOut'
+        });
     }
 }
 

@@ -301,15 +301,315 @@
         </div>
     </section>
 
+    <!-- Himalayan Collection Showcase Slider [NEW] -->
+    <section id="himalayan-showcase-slider" class="py-12 bg-white overflow-hidden relative"
+        data-agent-component="collection-slider">
+        <style>
+            #himalayan-showcase-slider .slider-container {
+                position: relative;
+                width: 100%;
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 0 1rem;
+            }
+
+            #himalayan-showcase-slider .slider-track {
+                display: flex;
+                transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+                will-change: transform;
+            }
+
+            #himalayan-showcase-slider .slide-item {
+                flex: 0 0 100%;
+                padding: 0 0.5rem;
+                opacity: 0.4;
+                transition: opacity 0.8s ease;
+            }
+
+            #himalayan-showcase-slider .slide-item.active {
+                opacity: 1;
+            }
+
+            #himalayan-showcase-slider .slide-content {
+                position: relative;
+                border-radius: 2rem;
+                overflow: hidden;
+                aspect-ratio: 16/9;
+                background: #f8f8f8;
+                box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.1);
+            }
+
+            #himalayan-showcase-slider .slide-image {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transform: scale(1.1);
+                transition: transform 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+            }
+
+            #himalayan-showcase-slider .slide-item.active .slide-image {
+                transform: scale(1);
+                animation: antiGravity 1.2s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+            }
+
+            #himalayan-showcase-slider .slide-overlay {
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, transparent 60%);
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-end;
+                padding: 3rem;
+                color: white;
+            }
+
+            @keyframes antiGravity {
+                0% {
+                    opacity: 0;
+                    transform: translateY(40px) scale(1.1);
+                }
+
+                100% {
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
+                }
+            }
+
+            #himalayan-showcase-slider .slide-text-box {
+                opacity: 0;
+                transform: translateY(20px);
+                transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.3s;
+            }
+
+            #himalayan-showcase-slider .slide-item.active .slide-text-box {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            /* Controls */
+            #himalayan-showcase-slider .slider-nav {
+                display: flex;
+                justify-content: center;
+                gap: 1rem;
+                margin-top: 2.5rem;
+            }
+
+            #himalayan-showcase-slider .nav-dot {
+                width: 40px;
+                height: 4px;
+                background: #e2e8f0;
+                border-radius: 2px;
+                cursor: pointer;
+                transition: all 0.4s ease;
+            }
+
+            #himalayan-showcase-slider .nav-dot.active {
+                background: #D97706;
+                /* Amber-700 */
+                width: 60px;
+            }
+
+            #himalayan-showcase-slider .slider-arrow {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                z-index: 10;
+                width: 50px;
+                height: 50px;
+                background: white;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                cursor: pointer;
+                color: #92400E;
+                /* Clay Deep */
+                transition: all 0.3s ease;
+                border: 1px solid #f3f4f6;
+            }
+
+            #himalayan-showcase-slider .slider-arrow:hover {
+                background: #FDE68A;
+                transform: translateY(-50%) scale(1.1);
+            }
+
+            #himalayan-showcase-slider .arrow-prev {
+                left: 2rem;
+            }
+
+            #himalayan-showcase-slider .arrow-next {
+                right: 2rem;
+            }
+
+            @media (max-width: 768px) {
+                #himalayan-showcase-slider .slide-content {
+                    aspect-ratio: 4/5;
+                }
+
+                #himalayan-showcase-slider .slide-overlay {
+                    padding: 1.5rem;
+                }
+
+                #himalayan-showcase-slider .slider-arrow {
+                    display: none;
+                }
+            }
+        </style>
+
+        <div class="slider-container">
+            <!-- Arrows -->
+            <button class="slider-arrow arrow-prev" onclick="moveSlider(-1)">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+            <button class="slider-arrow arrow-next" onclick="moveSlider(1)">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </button>
+
+            <div class="slider-track" id="himalayan-track">
+                <!-- Slide 1 -->
+                <div class="slide-item active" data-agent-index="0" data-agent-title="Zen Singing Bowls"
+                    data-agent-desc="Traditional 7-metal alloy for meditation and healing.">
+                    <div class="slide-content">
+                        <img src="https://images.unsplash.com/photo-1599458319801-443b73259966?w=1400&q=80"
+                            alt="image1.jpg" class="slide-image">
+                        <div class="slide-overlay">
+                            <div class="slide-text-box">
+                                <span class="text-amber-400 font-medium tracking-widest uppercase text-xs">Sacred
+                                    Sounds</span>
+                                <h3 class="text-3xl md:text-5xl font-light mt-2 mb-4">Zen Singing Bowls</h3>
+                                <p class="text-gray-200 font-light max-w-lg mb-6">Experience the ancient resonance of
+                                    hand-hammered bowls, crafted by generations of Himalayan masters.</p>
+                                <a href="products.html"
+                                    class="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-900 rounded-full font-medium hover:bg-amber-100 transition">View
+                                    Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 2 -->
+                <div class="slide-item" data-agent-index="1" data-agent-title="Spiritual Thangkas"
+                    data-agent-desc="Intricate scroll paintings on cotton or silk.">
+                    <div class="slide-content">
+                        <img src="https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=1400&q=80"
+                            alt="image2.jpg" class="slide-image">
+                        <div class="slide-overlay">
+                            <div class="slide-text-box">
+                                <span class="text-amber-400 font-medium tracking-widest uppercase text-xs">Sacred
+                                    Art</span>
+                                <h3 class="text-3xl md:text-5xl font-light mt-2 mb-4">Spiritual Thangkas</h3>
+                                <p class="text-gray-200 font-light max-w-lg mb-6">Each painting is a meditative portal,
+                                    created with natural minerals and real gold leaf.</p>
+                                <a href="products.html"
+                                    class="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-900 rounded-full font-medium hover:bg-amber-100 transition">View
+                                    Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 3 -->
+                <div class="slide-item" data-agent-index="2" data-agent-title="Himalayan Gemstones"
+                    data-agent-desc="Natural healing crystals from the mountain ranges.">
+                    <div class="slide-content">
+                        <img src="https://images.unsplash.com/photo-1626014303757-646637e90952?w=1400&q=80"
+                            alt="image3.jpg" class="slide-image">
+                        <div class="slide-overlay">
+                            <div class="slide-text-box">
+                                <span class="text-amber-400 font-medium tracking-widest uppercase text-xs">Natural
+                                    Energy</span>
+                                <h3 class="text-3xl md:text-5xl font-light mt-2 mb-4">Mountain Gemstones</h3>
+                                <p class="text-gray-200 font-light max-w-lg mb-6">Authentic stones collected from the
+                                    high altitudes, reflecting the raw beauty of the peaks.</p>
+                                <a href="products.html"
+                                    class="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-900 rounded-full font-medium hover:bg-amber-100 transition">View
+                                    Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Dots -->
+            <div class="slider-nav" id="himalayan-dots">
+                <div class="nav-dot active" onclick="goToSlide(0)"></div>
+                <div class="nav-dot" onclick="goToSlide(1)"></div>
+                <div class="nav-dot" onclick="goToSlide(2)"></div>
+            </div>
+        </div>
+
+        <script>
+            /**
+             * Himalayan Collection Slider Logic [Standalone]
+             * Features: Smooth horizontal transition, anti-gravity entry animations, 
+             * Auto-play with pause-on-hover.
+             */
+            (function () {
+                let currentSlide = 0;
+                const track = document.getElementById('himalayan-track');
+                const dots = document.querySelectorAll('#himalayan-dots .nav-dot');
+                const slides = document.querySelectorAll('#himalayan-showcase-slider .slide-item');
+                const totalSlides = slides.length;
+                let autoPlayInterval;
+
+                window.updateSlider = function () {
+                    if (!track) return;
+                    track.style.transform = `translateX(-${currentSlide * 100}%)`;
+                    slides.forEach((slide, idx) => {
+                        slide.classList.toggle('active', idx === currentSlide);
+                    });
+                    dots.forEach((dot, idx) => {
+                        dot.classList.toggle('active', idx === currentSlide);
+                    });
+                };
+
+                window.moveSlider = function (direction) {
+                    currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+                    updateSlider();
+                    resetAutoPlay();
+                };
+
+                window.goToSlide = function (index) {
+                    currentSlide = index;
+                    updateSlider();
+                    resetAutoPlay();
+                };
+
+                function startAutoPlay() {
+                    autoPlayInterval = setInterval(() => moveSlider(1), 5000);
+                }
+
+                function resetAutoPlay() {
+                    clearInterval(autoPlayInterval);
+                    startAutoPlay();
+                }
+
+                const sliderArea = document.getElementById('himalayan-showcase-slider');
+                if (sliderArea) {
+                    sliderArea.addEventListener('mouseenter', () => clearInterval(autoPlayInterval));
+                    sliderArea.addEventListener('mouseleave', () => startAutoPlay());
+                }
+
+                startAutoPlay();
+            })();
+        </script>
+    </section>
+
+
     <!-- Artisan Heritage Section [DYNAMIC OWL CAROUSEL] -->
     <section id="artisan-heritage" class="py-24 bg-white overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6">
-            <div id="heritage-carousel" class="owl-carousel owl-theme">
+            <div id="heritage-carousel" class="owl-theme">
                 <!-- Slides loaded via home.js -->
                 <!-- Default Placeholder Slide -->
                 <div
                     class="bg-[#1C1C1C] rounded-[3rem] overflow-hidden flex flex-col lg:flex-row items-stretch min-h-[500px]">
-                    <div class="lg:w-5/12 relative">
+                    <div class="lg:w-5/12 relative min-h-[300px]">
                         <img src="heritage_thangka_spotlight_1767945306613.png" alt="Heritage Spotlight"
                             class="absolute inset-0 w-full h-full object-cover">
                     </div>
@@ -319,13 +619,14 @@
                                 class="text-amber-500 font-medium tracking-widest uppercase text-xs sm:text-sm">Artisan
                                 Heritage</span>
                             <h2 class="text-3xl lg:text-5xl font-light text-white mt-4 mb-6 leading-tight">Preserving
-                                <span class="italic text-amber-200">Centuries</span> of Himalayan Craft</h2>
+                                <span class="italic text-amber-200">Centuries</span> of Himalayan Craft
+                            </h2>
                             <p class="text-gray-400 font-light text-sm sm:text-base mb-10 leading-relaxed">
                                 Discover authentic masterpieces directly from the heart of the Himalayas. Every piece
-                                supports local artisan communities.
+                                supports local artisan communities and keeps ancient traditions alive.
                             </p>
                             <a href="products.html"
-                                class="inline-block border border-amber-500/30 text-amber-200 px-8 py-3 rounded-full hover:bg-amber-500 hover:text-white transition">Explore
+                                class="inline-block bg-amber-600 text-white px-8 py-4 rounded-full hover:bg-amber-700 transition shadow-lg">Explore
                                 Collection</a>
                         </div>
                     </div>

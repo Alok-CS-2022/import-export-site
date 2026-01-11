@@ -641,14 +641,24 @@
         }
 
         window.loadContent = async function () {
+            // #region agent log
+            fetch('http://127.0.0.1:7242/ingest/4248bcae-602d-4474-ad8d-6c38cec2ec1',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'content.html:643',message:'loadContent entry',data:{timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
+            // #endregion
             try {
                 const { data, error } = await supabase
                     .from('site_content')
                     .select('*')
                     .single()
 
+                // #region agent log
+                fetch('http://127.0.0.1:7242/ingest/4248bcae-602d-4474-ad8d-6c38cec2ec1',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'content.html:648',message:'after supabase query',data:{hasData:!!data,hasError:!!error,errorCode:error?.code,dataType:typeof data,contentType:typeof data?.content},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B,E'})}).catch(()=>{});
+                // #endregion
+
                 if (error) {
                     if (error.code === 'PGRST116') {
+                        // #region agent log
+                        fetch('http://127.0.0.1:7242/ingest/4248bcae-602d-4474-ad8d-6c38cec2ec1',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'content.html:652',message:'calling setDefaultContent',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+                        // #endregion
                         setDefaultContent()
                         return
                     }
@@ -657,6 +667,9 @@
 
                 if (data && data.content) {
                     const c = data.content
+                    // #region agent log
+                    fetch('http://127.0.0.1:7242/ingest/4248bcae-602d-4474-ad8d-6c38cec2ec1',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'content.html:659',message:'content extracted',data:{hasWhyChooseUs:!!c.whyChooseUs,hasItems:!!c.whyChooseUs?.items,itemsType:Array.isArray(c.whyChooseUs?.items)?'array':typeof c.whyChooseUs?.items,itemsLength:c.whyChooseUs?.items?.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+                    // #endregion
 
                     document.getElementById('hero-title').value = c.hero?.title || ''
                     document.getElementById('hero-subtitle').value = c.hero?.subtitle || ''
@@ -709,7 +722,14 @@
                     document.getElementById('newsletter-button').value = c.newsletter?.buttonText || ''
 
                     // Trigger char counters
-                    ['hero-title', 'hero-subtitle', 'hero-button', 'seo-title', 'seo-description'].forEach(id => {
+                    // #region agent log
+                    const counterIds = ['hero-title', 'hero-subtitle', 'hero-button', 'seo-title', 'seo-description'];
+                    fetch('http://127.0.0.1:7242/ingest/4248bcae-602d-4474-ad8d-6c38cec2ec1',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'content.html:712',message:'before forEach char counters',data:{counterIdsType:typeof counterIds,isArray:Array.isArray(counterIds),length:counterIds?.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+                    // #endregion
+                    counterIds.forEach(id => {
+                        // #region agent log
+                        fetch('http://127.0.0.1:7242/ingest/4248bcae-602d-4474-ad8d-6c38cec2ec1',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'content.html:715',message:'forEach iteration',data:{id,hasElement:!!document.getElementById(id)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+                        // #endregion
                         const element = document.getElementById(id);
                         if (element) {
                             element.dispatchEvent(new Event('input'));
@@ -738,6 +758,9 @@
                     }
                 }
             } catch (error) {
+                // #region agent log
+                fetch('http://127.0.0.1:7242/ingest/4248bcae-602d-4474-ad8d-6c38cec2ec1',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'content.html:740',message:'catch block error',data:{errorMessage:error?.message,errorStack:error?.stack,errorName:error?.name},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A,B,C,D,E'})}).catch(()=>{});
+                // #endregion
                 console.error('Error loading content:', error)
                 showError('Failed to load content: ' + error.message)
             }

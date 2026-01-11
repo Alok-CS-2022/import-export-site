@@ -81,7 +81,7 @@ function updateAuthUI() {
                 <span class="text-amber-800 font-semibold">${userName}</span>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
              </button>
-             <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-100 hidden group-hover:block py-1 z-50">
+             <div class="absolute right-0 mt-0 pt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-100 hidden group-hover:block py-1 z-50">
                 <a href="profile.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-amber-50">My Orders</a>
                 <button onclick="window.handleLogout()" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">Sign Out</button>
              </div>

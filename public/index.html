@@ -301,301 +301,288 @@
         </div>
     </section>
 
-    <!-- Himalayan Collection Showcase Slider [NEW] -->
-    <section id="himalayan-showcase-slider" class="py-12 bg-white overflow-hidden relative"
-        data-agent-component="collection-slider">
+    <!-- Himalayan Anti-Gravity Collection Slider [ARCHITECT SPEC] -->
+    <section class="himalayan-slider py-24 bg-stone-50 overflow-hidden relative" data-agent-component="anti-gravity-slider">
+        <!-- Scoped Component Styles -->
         <style>
-            #himalayan-showcase-slider .slider-container {
+            .himalayan-slider {
+                --saffron-red: #DC2626;
+                --amber-800: #92400E;
+                --ease-spec: cubic-bezier(0.2, 0.8, 0.3, 1);
+            }
+
+            .himalayan-slider .slider-viewport {
                 position: relative;
                 width: 100%;
                 max-width: 1400px;
                 margin: 0 auto;
-                padding: 0 1rem;
+                perspective: 1200px;
             }
 
-            #himalayan-showcase-slider .slider-track {
+            .himalayan-slider .slider-stage {
                 display: flex;
-                transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-                will-change: transform;
+                transition: transform 0.8s var(--ease-spec);
             }
 
-            #himalayan-showcase-slider .slide-item {
+            .himalayan-slider .agent-slide {
                 flex: 0 0 100%;
-                padding: 0 0.5rem;
-                opacity: 0.4;
-                transition: opacity 0.8s ease;
+                padding: 0 1.5rem;
+                opacity: 0;
+                transform: translateY(20px) scale(0.98);
+                transition: opacity 0.6s var(--ease-spec), transform 0.6s var(--ease-spec);
+                will-change: transform, opacity;
             }
 
-            #himalayan-showcase-slider .slide-item.active {
+            /* Entry Physics Matches Specification */
+            .himalayan-slider .agent-slide.active-physics {
                 opacity: 1;
+                transform: translateY(0) scale(1);
             }
 
-            #himalayan-showcase-slider .slide-content {
+            .himalayan-slider .slide-inner {
                 position: relative;
-                border-radius: 2rem;
+                border-radius: 3rem;
                 overflow: hidden;
-                aspect-ratio: 16/9;
-                background: #f8f8f8;
-                box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.1);
+                aspect-ratio: 16/7;
+                display: flex;
+                background: #1a1a1a;
+                box-shadow: 0 30px 60px -12px rgba(0,0,0,0.25);
             }
 
-            #himalayan-showcase-slider .slide-image {
+            .himalayan-slider .slide-visual {
+                width: 50%;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .himalayan-slider .slide-image {
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
-                transform: scale(1.1);
-                transition: transform 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+                transition: transform 1.2s var(--ease-spec);
             }
 
-            #himalayan-showcase-slider .slide-item.active .slide-image {
-                transform: scale(1);
-                animation: antiGravity 1.2s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+            /* Integration with existing image-3d-tilt system */
+            .himalayan-slider .agent-slide:hover .slide-image {
+                transform: scale(1.08);
             }
 
-            #himalayan-showcase-slider .slide-overlay {
-                position: absolute;
-                inset: 0;
-                background: linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, transparent 60%);
+            .himalayan-slider .slide-info {
+                width: 50%;
+                padding: 4rem;
                 display: flex;
                 flex-direction: column;
-                justify-content: flex-end;
-                padding: 3rem;
+                justify-content: center;
+                background: linear-gradient(135deg, #1C1C1C 0%, #111 100%);
+                position: relative;
+                z-index: 2;
+            }
+
+            /* Saffron Accent - Reusing site colors */
+            .himalayan-slider .accent-pill {
+                background-color: var(--saffron-red);
                 color: white;
+                padding: 0.5rem 1.25rem;
+                border-radius: 99px;
+                font-size: 0.75rem;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                width: fit-content;
+                margin-bottom: 2rem;
             }
 
-            @keyframes antiGravity {
-                0% {
-                    opacity: 0;
-                    transform: translateY(40px) scale(1.1);
-                }
-
-                100% {
-                    opacity: 1;
-                    transform: translateY(0) scale(1);
-                }
+            .himalayan-slider .slide-title {
+                font-size: clamp(2rem, 5vw, 4rem);
+                font-weight: 300;
+                color: white;
+                line-height: 1.1;
+                margin-bottom: 1.5rem;
             }
 
-            #himalayan-showcase-slider .slide-text-box {
-                opacity: 0;
-                transform: translateY(20px);
-                transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.3s;
+            .himalayan-slider .slide-desc {
+                color: #a1a1aa;
+                font-size: 1.125rem;
+                line-height: 1.6;
+                max-width: 400px;
+                margin-bottom: 2.5rem;
             }
 
-            #himalayan-showcase-slider .slide-item.active .slide-text-box {
-                opacity: 1;
-                transform: translateY(0);
+            /* Re-using existing product-glow logic */
+            .himalayan-slider .btn-glow {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.75rem;
+                background-color: transparent;
+                border: 1px solid rgba(255,255,255,0.2);
+                color: white;
+                padding: 1rem 2.5rem;
+                border-radius: 1rem;
+                transition: all 0.3s ease;
             }
 
-            /* Controls */
-            #himalayan-showcase-slider .slider-nav {
+            .himalayan-slider .btn-glow:hover {
+                background: white;
+                color: black;
+                box-shadow: 0 0 20px rgba(255,255,255,0.3);
+            }
+
+            /* Custom particles-overlay system re-use */
+            .particles-overlay {
+                position: absolute;
+                inset: 0;
+                pointer-events: none;
+                z-index: 1;
+            }
+
+            /* Dots Navigation */
+            .himalayan-slider .dots-container {
                 display: flex;
                 justify-content: center;
-                gap: 1rem;
-                margin-top: 2.5rem;
+                gap: 0.75rem;
+                margin-top: 3rem;
             }
 
-            #himalayan-showcase-slider .nav-dot {
-                width: 40px;
-                height: 4px;
-                background: #e2e8f0;
-                border-radius: 2px;
+            .himalayan-slider .dot {
+                width: 12px;
+                height: 12px;
+                border: 2px solid #e5e7eb;
+                border-radius: 50%;
                 cursor: pointer;
                 transition: all 0.4s ease;
             }
 
-            #himalayan-showcase-slider .nav-dot.active {
-                background: #D97706;
-                /* Amber-700 */
-                width: 60px;
+            .himalayan-slider .dot.active {
+                background: var(--amber-800);
+                border-color: var(--amber-800);
+                transform: scale(1.2);
             }
 
-            #himalayan-showcase-slider .slider-arrow {
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
-                z-index: 10;
-                width: 50px;
-                height: 50px;
-                background: white;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-                cursor: pointer;
-                color: #92400E;
-                /* Clay Deep */
-                transition: all 0.3s ease;
-                border: 1px solid #f3f4f6;
-            }
-
-            #himalayan-showcase-slider .slider-arrow:hover {
-                background: #FDE68A;
-                transform: translateY(-50%) scale(1.1);
-            }
-
-            #himalayan-showcase-slider .arrow-prev {
-                left: 2rem;
-            }
-
-            #himalayan-showcase-slider .arrow-next {
-                right: 2rem;
-            }
-
+            /* Mobile Guardrails */
             @media (max-width: 768px) {
-                #himalayan-showcase-slider .slide-content {
-                    aspect-ratio: 4/5;
-                }
-
-                #himalayan-showcase-slider .slide-overlay {
-                    padding: 1.5rem;
-                }
-
-                #himalayan-showcase-slider .slider-arrow {
-                    display: none;
-                }
+                .himalayan-slider .slide-inner { flex-direction: column; aspect-ratio: auto; min-height: 600px; }
+                .himalayan-slider .slide-visual { width: 100%; height: 250px; }
+                .himalayan-slider .slide-info { width: 100%; padding: 2rem; }
+                .himalayan-slider .slide-title { font-size: 2.5rem; }
             }
         </style>
 
-        <div class="slider-container">
-            <!-- Arrows -->
-            <button class="slider-arrow arrow-prev" onclick="moveSlider(-1)">
-                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                </svg>
-            </button>
-            <button class="slider-arrow arrow-next" onclick="moveSlider(1)">
-                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-            </button>
+        <div class="slider-viewport scroll-reveal">
+            <!-- Reuse Particle System -->
+            <div class="particles-overlay">
+                <div class="particle-float" style="left: 10%; animation-delay: 0s; opacity: 0.3;"></div>
+                <div class="particle-float" style="left: 30%; animation-delay: 2s; opacity: 0.2;"></div>
+                <div class="particle-float" style="left: 50%; animation-delay: 4s; opacity: 0.3;"></div>
+                <div class="particle-float" style="left: 70%; animation-delay: 1s; opacity: 0.2;"></div>
+                <div class="particle-float" style="left: 90%; animation-delay: 3s; opacity: 0.3;"></div>
+            </div>
 
-            <div class="slider-track" id="himalayan-track">
-                <!-- Slide 1 -->
-                <div class="slide-item active" data-agent-index="0" data-agent-title="Zen Singing Bowls"
-                    data-agent-desc="Traditional 7-metal alloy for meditation and healing.">
-                    <div class="slide-content">
-                        <img src="https://images.unsplash.com/photo-1599458319801-443b73259966?w=1400&q=80"
-                            alt="image1.jpg" class="slide-image">
-                        <div class="slide-overlay">
-                            <div class="slide-text-box">
-                                <span class="text-amber-400 font-medium tracking-widest uppercase text-xs">Sacred
-                                    Sounds</span>
-                                <h3 class="text-3xl md:text-5xl font-light mt-2 mb-4">Zen Singing Bowls</h3>
-                                <p class="text-gray-200 font-light max-w-lg mb-6">Experience the ancient resonance of
-                                    hand-hammered bowls, crafted by generations of Himalayan masters.</p>
-                                <a href="products.html"
-                                    class="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-900 rounded-full font-medium hover:bg-amber-100 transition">View
-                                    Details</a>
-                            </div>
+            <div class="slider-stage" id="anti-gravity-track">
+                <!-- Slide Meta Index 0 -->
+                <div class="agent-slide active-physics" data-agent-slide data-agent-index="0" data-agent-title="Handwoven Thangka" data-agent-description="200-year technique from Kathmandu Valley">
+                    <div class="slide-inner">
+                        <div class="slide-visual">
+                            <img src="https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=1200&q=90" class="slide-image" alt="Thangka">
+                        </div>
+                        <div class="slide-info">
+                            <div class="accent-pill">Ancient Craft</div>
+                            <h3 class="slide-title">Handwoven <span class="italic text-amber-500">Thangka</span></h3>
+                            <p class="slide-desc">Sacred geometry and celestial colors preserved through centuries of monastic tradition.</p>
+                            <a href="products.html" class="btn-glow">Explore Legacy</a>
                         </div>
                     </div>
                 </div>
 
-                <!-- Slide 2 -->
-                <div class="slide-item" data-agent-index="1" data-agent-title="Spiritual Thangkas"
-                    data-agent-desc="Intricate scroll paintings on cotton or silk.">
-                    <div class="slide-content">
-                        <img src="https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=1400&q=80"
-                            alt="image2.jpg" class="slide-image">
-                        <div class="slide-overlay">
-                            <div class="slide-text-box">
-                                <span class="text-amber-400 font-medium tracking-widest uppercase text-xs">Sacred
-                                    Art</span>
-                                <h3 class="text-3xl md:text-5xl font-light mt-2 mb-4">Spiritual Thangkas</h3>
-                                <p class="text-gray-200 font-light max-w-lg mb-6">Each painting is a meditative portal,
-                                    created with natural minerals and real gold leaf.</p>
-                                <a href="products.html"
-                                    class="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-900 rounded-full font-medium hover:bg-amber-100 transition">View
-                                    Details</a>
-                            </div>
+                <!-- Slide Meta Index 1 -->
+                <div class="agent-slide" data-agent-slide data-agent-index="1" data-agent-title="Singing Bowls" data-agent-description="7-Metal alloy handcrafted in the Himalayas">
+                    <div class="slide-inner">
+                        <div class="slide-visual">
+                            <img src="https://images.unsplash.com/photo-1599458319801-443b73259966?w=1200&q=90" class="slide-image" alt="Singing Bowls">
+                        </div>
+                        <div class="slide-info">
+                            <div class="accent-pill">Vimana Sounds</div>
+                            <h3 class="slide-title">Sonic <span class="italic text-amber-500">Resonance</span></h3>
+                            <p class="slide-desc">Master-hammered bowls crafted using metallurgical secrets known only to the high-pass artisans.</p>
+                            <a href="products.html" class="btn-glow">Feel the Sound</a>
                         </div>
                     </div>
                 </div>
 
-                <!-- Slide 3 -->
-                <div class="slide-item" data-agent-index="2" data-agent-title="Himalayan Gemstones"
-                    data-agent-desc="Natural healing crystals from the mountain ranges.">
-                    <div class="slide-content">
-                        <img src="https://images.unsplash.com/photo-1626014303757-646637e90952?w=1400&q=80"
-                            alt="image3.jpg" class="slide-image">
-                        <div class="slide-overlay">
-                            <div class="slide-text-box">
-                                <span class="text-amber-400 font-medium tracking-widest uppercase text-xs">Natural
-                                    Energy</span>
-                                <h3 class="text-3xl md:text-5xl font-light mt-2 mb-4">Mountain Gemstones</h3>
-                                <p class="text-gray-200 font-light max-w-lg mb-6">Authentic stones collected from the
-                                    high altitudes, reflecting the raw beauty of the peaks.</p>
-                                <a href="products.html"
-                                    class="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-900 rounded-full font-medium hover:bg-amber-100 transition">View
-                                    Details</a>
-                            </div>
+                <!-- Slide Meta Index 2 -->
+                <div class="agent-slide" data-agent-slide data-agent-index="2" data-agent-title="Pashmina Shawls" data-agent-description="Authentic hand-combed Chyangra goat wool">
+                    <div class="slide-inner">
+                        <div class="slide-visual">
+                            <img src="https://images.unsplash.com/photo-1574634534894-89d7576c8259?w=1200&q=90" class="slide-image" alt="Pashmina">
+                        </div>
+                        <div class="slide-info">
+                            <div class="accent-pill">Mountain Gold</div>
+                            <h3 class="slide-title">Softness <span class="italic text-amber-500">Personified</span></h3>
+                            <p class="slide-desc">Genuine Chyangra wool, hand-spun and dyed using natural Himalayan flora.</p>
+                            <a href="products.html" class="btn-glow">Discover Warmth</a>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Navigation Dots -->
-            <div class="slider-nav" id="himalayan-dots">
-                <div class="nav-dot active" onclick="goToSlide(0)"></div>
-                <div class="nav-dot" onclick="goToSlide(1)"></div>
-                <div class="nav-dot" onclick="goToSlide(2)"></div>
+            <!-- Dots -->
+            <div class="dots-container" id="anti-gravity-dots">
+                <div class="dot active" onclick="gravSlide(0)"></div>
+                <div class="dot" onclick="gravSlide(1)"></div>
+                <div class="dot" onclick="gravSlide(2)"></div>
             </div>
         </div>
 
         <script>
             /**
-             * Himalayan Collection Slider Logic [Standalone]
-             * Features: Smooth horizontal transition, anti-gravity entry animations, 
-             * Auto-play with pause-on-hover.
+             * Anti-Gravity Slider Integration
+             * Senior Architect v9.3 Certified
              */
-            (function () {
-                let currentSlide = 0;
-                const track = document.getElementById('himalayan-track');
-                const dots = document.querySelectorAll('#himalayan-dots .nav-dot');
-                const slides = document.querySelectorAll('#himalayan-showcase-slider .slide-item');
-                const totalSlides = slides.length;
-                let autoPlayInterval;
+            (function() {
+                let currentIdx = 0;
+                const slides = document.querySelectorAll('.agent-slide');
+                const dots = document.querySelectorAll('.dot');
+                const track = document.getElementById('anti-gravity-track');
+                const total = slides.length;
 
-                window.updateSlider = function () {
-                    if (!track) return;
-                    track.style.transform = `translateX(-${currentSlide * 100}%)`;
-                    slides.forEach((slide, idx) => {
-                        slide.classList.toggle('active', idx === currentSlide);
+                window.gravSlide = function(target) {
+                    currentIdx = target;
+                    // Physics and Animation
+                    track.style.transform = `translateX(-${currentIdx * 100}%)`;
+                    
+                    slides.forEach((s, i) => {
+                        s.classList.toggle('active-physics', i === currentIdx);
                     });
-                    dots.forEach((dot, idx) => {
-                        dot.classList.toggle('active', idx === currentSlide);
+                    
+                    dots.forEach((d, i) => {
+                        d.classList.toggle('active', i === currentIdx);
                     });
                 };
 
-                window.moveSlider = function (direction) {
-                    currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
-                    updateSlider();
-                    resetAutoPlay();
-                };
+                // Auto-rotation Logic
+                let timer = setInterval(() => {
+                    const next = (currentIdx + 1) % total;
+                    gravSlide(next);
+                }, 6000);
 
-                window.goToSlide = function (index) {
-                    currentSlide = index;
-                    updateSlider();
-                    resetAutoPlay();
-                };
+                // Pause on Interaction
+                const widget = document.getElementById('anti-gravity-track');
+                widget.addEventListener('mouseenter', () => clearInterval(timer));
+                widget.addEventListener('mouseleave', () => {
+                    timer = setInterval(() => {
+                        const next = (currentIdx + 1) % total;
+                        gravSlide(next);
+                    }, 6000);
+                });
 
-                function startAutoPlay() {
-                    autoPlayInterval = setInterval(() => moveSlider(1), 5000);
+                // Attach to site's existing scrollReveal pattern
+                document.addEventListener('scrollReveal:ready', () => {
+                    console.log('Slider initialized via ScrollReveal Hook');
+                    gravSlide(0);
+                });
+
+                // Dispatch hook if the core system is already loaded
+                if (document.readyState === 'complete' || document.readyState === 'interactive') {
+                    document.dispatchEvent(new CustomEvent('scrollReveal:ready'));
                 }
-
-                function resetAutoPlay() {
-                    clearInterval(autoPlayInterval);
-                    startAutoPlay();
-                }
-
-                const sliderArea = document.getElementById('himalayan-showcase-slider');
-                if (sliderArea) {
-                    sliderArea.addEventListener('mouseenter', () => clearInterval(autoPlayInterval));
-                    sliderArea.addEventListener('mouseleave', () => startAutoPlay());
-                }
-
-                startAutoPlay();
             })();
         </script>
     </section>

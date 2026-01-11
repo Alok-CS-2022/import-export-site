@@ -113,25 +113,34 @@
                 </div>
                 <div class="p-6 space-y-4">
                     <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Hero Title</label>
-                        <input type="text" id="hero-title" maxlength="60"
+                        <label class="block text-gray-700 font-semibold mb-2">
+                            Hero Title <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="hero-title" maxlength="60" required
                             class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-amber-500 transition"
                             placeholder="Authentic Handicrafts from Nepal">
                         <p class="char-counter mt-1" id="hero-title-counter">0/60 characters</p>
+                        <p class="text-xs text-gray-500 mt-1">Create a compelling headline that captures attention and communicates your unique value</p>
                     </div>
                     <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Subtitle</label>
-                        <input type="text" id="hero-subtitle" maxlength="120"
+                        <label class="block text-gray-700 font-semibold mb-2">
+                            Subtitle <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="hero-subtitle" maxlength="120" required
                             class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-amber-500 transition"
                             placeholder="Handcrafted treasures from the Himalayas">
                         <p class="char-counter mt-1" id="hero-subtitle-counter">0/120 characters</p>
+                        <p class="text-xs text-gray-500 mt-1">Add a supporting line that builds interest and encourages action</p>
                     </div>
                     <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Button Text</label>
-                        <input type="text" id="hero-button" maxlength="30"
+                        <label class="block text-gray-700 font-semibold mb-2">
+                            Button Text <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="hero-button" maxlength="30" required
                             class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-amber-500 transition"
                             placeholder="Explore Collection">
                         <p class="char-counter mt-1" id="hero-button-counter">0/30 characters</p>
+                        <p class="text-xs text-gray-500 mt-1">Use action-oriented words like "Shop Now", "Discover", "Explore"</p>
                     </div>
                     <div>
                         <label class="block text-gray-700 font-semibold mb-2">Hero Image</label>
@@ -180,26 +189,31 @@
                 </div>
                 <div class="p-6 space-y-4">
                     <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Meta Title</label>
-                        <input type="text" id="seo-title" maxlength="60"
+                        <label class="block text-gray-700 font-semibold mb-2">
+                            Meta Title <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="seo-title" maxlength="60" required
                             class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 transition"
                             placeholder="Import From Nepal - Authentic Handicrafts">
                         <p class="char-counter mt-1" id="seo-title-counter">0/60 characters (optimal for Google)</p>
+                        <p class="text-xs text-gray-500 mt-1">Appears in browser tabs and search results. Include your brand and main keywords</p>
                     </div>
                     <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Meta Description</label>
-                        <textarea id="seo-description" maxlength="160" rows="3"
+                        <label class="block text-gray-700 font-semibold mb-2">
+                            Meta Description <span class="text-red-500">*</span>
+                        </label>
+                        <textarea id="seo-description" maxlength="160" rows="3" required
                             class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 transition resize-none"
                             placeholder="Discover authentic handcrafted treasures from Nepal..."></textarea>
-                        <p class="char-counter mt-1" id="seo-description-counter">0/160 characters (optimal for Google)
-                        </p>
+                        <p class="char-counter mt-1" id="seo-description-counter">0/160 characters (optimal for Google)</p>
+                        <p class="text-xs text-gray-500 mt-1">Compelling description that encourages clicks from search results</p>
                     </div>
                     <div>
                         <label class="block text-gray-700 font-semibold mb-2">Keywords</label>
                         <input type="text" id="seo-keywords"
                             class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 transition"
                             placeholder="nepal handicrafts, singing bowls, buddha statues">
-                        <p class="text-xs text-gray-500 mt-1">Separate with commas</p>
+                        <p class="text-xs text-gray-500 mt-1">Separate with commas. Focus on terms your customers actually search for</p>
                     </div>
                 </div>
             </div>
@@ -565,8 +579,16 @@
             const dropZone = document.getElementById(`${type}-drop-zone`);
             const loading = document.getElementById(`${type}-upload-loading`);
             const placeholder = document.getElementById(`${type}-upload-placeholder`);
-            const preview = document.getElementById(`${type}-preview` || `${type}-image-preview`);
-            const previewImg = document.getElementById(`${type}-preview-img` || `${type}-image-preview-img`);
+            
+            // Correct preview element selection logic
+            const previewId = type === 'hero' ? 'hero-image-preview' : `${type}-preview`;
+            const previewImgId = type === 'hero' ? 'hero-image-preview-img' : `${type}-preview-img`;
+            const urlInputId = type === 'hero' ? 'hero-image-url' : `${type}-url`;
+            
+            const preview = document.getElementById(previewId);
+            const previewImg = document.getElementById(previewImgId);
+
+            if (!placeholder || !loading || !dropZone) return;
 
             placeholder.classList.add('hidden');
             loading.classList.remove('hidden');
@@ -587,9 +609,12 @@
                     .from(bucket)
                     .getPublicUrl(fileName);
 
-                document.getElementById(`${type}-url` || `${type}-image-url`).value = publicUrl;
+                const urlInput = document.getElementById(urlInputId);
+                if (urlInput) {
+                    urlInput.value = publicUrl;
+                }
 
-                if (previewImg) {
+                if (previewImg && preview) {
                     previewImg.src = publicUrl;
                     preview.classList.remove('hidden');
                 }
@@ -685,8 +710,32 @@
 
                     // Trigger char counters
                     ['hero-title', 'hero-subtitle', 'hero-button', 'seo-title', 'seo-description'].forEach(id => {
-                        document.getElementById(id).dispatchEvent(new Event('input'));
+                        const element = document.getElementById(id);
+                        if (element) {
+                            element.dispatchEvent(new Event('input'));
+                        }
                     });
+
+                    // Display image previews if images exist
+                    const heroImageUrl = c.hero?.imageUrl;
+                    if (heroImageUrl) {
+                        const heroPreview = document.getElementById('hero-image-preview');
+                        const heroPreviewImg = document.getElementById('hero-image-preview-img');
+                        if (heroPreview && heroPreviewImg) {
+                            heroPreviewImg.src = heroImageUrl;
+                            heroPreview.classList.remove('hidden');
+                        }
+                    }
+
+                    const logoUrl = c.branding?.logoUrl;
+                    if (logoUrl) {
+                        const logoPreview = document.getElementById('logo-preview');
+                        const logoPreviewImg = document.getElementById('logo-preview-img');
+                        if (logoPreview && logoPreviewImg) {
+                            logoPreviewImg.src = logoUrl;
+                            logoPreview.classList.remove('hidden');
+                        }
+                    }
                 }
             } catch (error) {
                 console.error('Error loading content:', error)
@@ -740,6 +789,23 @@
 
         document.getElementById('content-form').addEventListener('submit', async (e) => {
             e.preventDefault()
+
+            // Client-side validation
+            const heroTitle = document.getElementById('hero-title').value.trim();
+            const heroSubtitle = document.getElementById('hero-subtitle').value.trim();
+            const heroButton = document.getElementById('hero-button').value.trim();
+            const seoTitle = document.getElementById('seo-title').value.trim();
+            const seoDescription = document.getElementById('seo-description').value.trim();
+
+            if (!heroTitle || !heroSubtitle || !heroButton) {
+                showError('Please fill in all required Hero section fields (marked with *)');
+                return;
+            }
+
+            if (!seoTitle || !seoDescription) {
+                showError('Please fill in all required SEO fields (Meta Title and Description)');
+                return;
+            }
 
             const saveBtn = document.getElementById('save-btn')
             saveBtn.textContent = '💾 Saving...'

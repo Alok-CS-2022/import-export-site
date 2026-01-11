@@ -2,6 +2,9 @@ import { supabase } from '../lib/supabase.js';
 import { loadSiteContent } from './content-loader.js';
 import { countries } from './countries.js';
 
+// Immediate population for any existing selects
+populateCountryCodes();
+
 // Global State
 let currentUser = null;
 let currentProduct = null;
@@ -370,6 +373,7 @@ window.openInquiryModal = function (productName, productId) {
 
     document.getElementById('inquiry-modal').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
+    populateCountryCodes();
 }
 
 window.closeInquiryModal = function () {
@@ -414,6 +418,7 @@ window.proceedToCheckout = function () {
 
     closeCart();
     modal.classList.remove('hidden');
+    populateCountryCodes();
 }
 
 // Inquiry Form Submit

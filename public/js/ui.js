@@ -1,15 +1,15 @@
 // Cart and Wishlist Management
-let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+if (!window.cart) window.cart = JSON.parse(localStorage.getItem('cart') || '[]');
+if (!window.wishlist) window.wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
 
 window.addToCart = function (productId, productName, price, imageUrl) {
-    const existingItem = cart.find(item => item.id === productId);
+    const existingItem = window.cart.find(item => item.id === productId);
 
     if (existingItem) {
         existingItem.quantity += 1;
         showNotification(`Increased quantity of "${productName}" in cart!`, 'success');
     } else {
-        cart.push({
+        window.cart.push({
             id: productId,
             name: productName,
             price: price,
@@ -19,18 +19,18 @@ window.addToCart = function (productId, productName, price, imageUrl) {
         showNotification(`"${productName}" added to cart!`, 'success');
     }
 
-    localStorage.setItem('cart', JSON.stringify(cart));
+    localStorage.setItem('cart', JSON.stringify(window.cart));
     updateCartCount();
 }
 
 window.toggleWishlist = function (productId, productName, imageUrl) {
-    const existingIndex = wishlist.findIndex(item => item.id === productId);
+    const existingIndex = window.wishlist.findIndex(item => item.id === productId);
 
     if (existingIndex > -1) {
-        wishlist.splice(existingIndex, 1);
+        window.wishlist.splice(existingIndex, 1);
         showNotification(`"${productName}" removed from wishlist`, 'info');
     } else {
-        wishlist.push({
+        window.wishlist.push({
             id: productId,
             name: productName,
             image: imageUrl
@@ -38,7 +38,7 @@ window.toggleWishlist = function (productId, productName, imageUrl) {
         showNotification(`"${productName}" added to wishlist!`, 'success');
     }
 
-    localStorage.setItem('wishlist', JSON.stringify(wishlist));
+    localStorage.setItem('wishlist', JSON.stringify(window.wishlist));
     updateWishlistCount();
     markWishlistItems();
 }
@@ -48,7 +48,7 @@ window.markWishlistItems = function () {
         const productId = btn.dataset.productId;
         const icon = btn.querySelector('.wishlist-icon');
 
-        if (wishlist.some(item => item.id === productId)) {
+        if (window.wishlist.some(item => item.id === productId)) {
             icon.classList.add('fill-red-500', 'text-red-500');
             icon.classList.remove('text-gray-400');
         } else {
@@ -93,7 +93,7 @@ window.toggleSearch = function () {
 }
 
 window.openCart = function () {
-    if (cart.length === 0) {
+    if (window.cart.length === 0) {
         showNotification('Your cart is empty', 'info');
         return;
     }
@@ -103,7 +103,7 @@ window.openCart = function () {
 
     modal.classList.remove('hidden');
     setTimeout(() => {
-        sidebar.classList.remove('translate-x-full');
+        if (sidebar) sidebar.classList.remove('translate-x-full');
     }, 10);
 
     renderCartItems();
@@ -114,7 +114,7 @@ window.closeCart = function () {
     const modal = document.getElementById('cart-modal');
     const sidebar = document.getElementById('cart-sidebar');
 
-    sidebar.classList.add('translate-x-full');
+    if (sidebar) sidebar.classList.add('translate-x-full');
     setTimeout(() => {
         modal.classList.add('hidden');
         document.body.style.overflow = 'auto';
@@ -125,16 +125,18 @@ function renderCartItems() {
     const container = document.getElementById('cart-items');
     const subtotalEl = document.getElementById('cart-subtotal');
 
-    if (cart.length === 0) {
+    if (!container || !subtotalEl) return;
+
+    if (window.cart.length === 0) {
         container.innerHTML = '<p class="text-center text-gray-500 py-8">Your cart is empty</p>';
         subtotalEl.textContent = '$0.00';
         return;
     }
 
-    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const subtotal = window.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
 
-    container.innerHTML = cart.map(item => `
+    container.innerHTML = window.cart.map(item => `
             <div class="flex gap-4 bg-gray-50 p-4 rounded-lg">
                 <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded-lg" onerror="this.src='https://via.placeholder.com/80x80'">
                 <div class="flex-1 min-w-0">
@@ -163,23 +165,23 @@ window.updateCartQuantity = function (productId, newQuantity) {
         return;
     }
 
-    const item = cart.find(i => i.id === productId);
+    const item = window.cart.find(i => i.id === productId);
     if (item) {
         item.quantity = newQuantity;
-        localStorage.setItem('cart', JSON.stringify(cart));
+        localStorage.setItem('cart', JSON.stringify(window.cart));
         renderCartItems();
         updateCartCount();
     }
 }
 
 window.removeFromCart = function (productId) {
-    cart = cart.filter(item => item.id !== productId);
-    localStorage.setItem('cart', JSON.stringify(cart));
+    window.cart = window.cart.filter(item => item.id !== productId);
+    localStorage.setItem('cart', JSON.stringify(window.cart));
     renderCartItems();
     updateCartCount();
     showNotification('Item removed from cart', 'info');
 
-    if (cart.length === 0) {
+    if (window.cart.length === 0) {
         closeCart();
     }
 }
@@ -233,7 +235,7 @@ window.searchProducts = function (query) {
 }
 
 function updateCartCount() {
-    const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const count = window.cart.reduce((sum, item) => sum + item.quantity, 0);
     const badge = document.getElementById('cart-count');
     if (count > 0) {
         badge.textContent = count;
@@ -244,7 +246,7 @@ function updateCartCount() {
 }
 
 function updateWishlistCount() {
-    const count = wishlist.length;
+    const count = window.cart ? window.wishlist.length : 0;
     const badge = document.getElementById('wishlist-count');
     const mobileBadge = document.getElementById('wishlist-count-mobile');
     if (count > 0) {

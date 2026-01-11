@@ -177,7 +177,7 @@ function renderProducts() {
 }
 
 // Primary Filter Function
-window.filterByCategory = (id, name) => {
+window.catalogFilterByCategory = (id, name) => {
     currentCategory = id
     const label = document.getElementById('active-filters');
     const nameLabel = document.getElementById('current-category-name');

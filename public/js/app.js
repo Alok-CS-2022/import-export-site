@@ -362,7 +362,7 @@ window.closeInquiryModal = function () {
 
 // CHECKOUT LOGIC (SECURED)
 window.proceedToCheckout = function () {
-    if (cart.length === 0) {
+    if (window.cart.length === 0) {
         showToast("Your cart is empty!", "error");
         return;
     }
@@ -380,13 +380,13 @@ window.proceedToCheckout = function () {
     const displayInput = document.getElementById('inquiry-product-display');
     const nameInput = document.getElementById('inquiry-product-name');
 
-    const itemsDescription = cart.map(item => `${item.name} (x${item.quantity})`).join(', ');
-    const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const itemsDescription = window.cart.map(item => `${item.name} (x${item.quantity})`).join(', ');
+    const totalAmount = window.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
-    displayInput.value = `Bulk Order: ${cart.length} items`;
+    displayInput.value = `Bulk Order: ${window.cart.length} items`;
     nameInput.value = JSON.stringify({
         summary: itemsDescription,
-        items: cart,
+        items: window.cart,
         total: totalAmount
     });
 
@@ -479,7 +479,7 @@ if (inquiryForm) {
 
             // Clear Cart if it was a bulk order
             if (document.getElementById('inquiry-product-display').value.includes('Bulk Order')) {
-                cart = [];
+                window.cart = [];
                 updateCartCount();
                 localStorage.removeItem('cart');
             }

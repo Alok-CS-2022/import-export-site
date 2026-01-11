@@ -302,7 +302,8 @@
     </section>
 
     <!-- Himalayan Anti-Gravity Collection Slider [ARCHITECT SPEC] -->
-    <section class="himalayan-slider py-24 bg-stone-50 overflow-hidden relative" data-agent-component="anti-gravity-slider">
+    <section class="himalayan-slider py-24 bg-stone-50 overflow-hidden relative"
+        data-agent-component="anti-gravity-slider">
         <!-- Scoped Component Styles -->
         <style>
             .himalayan-slider {
@@ -346,7 +347,7 @@
                 aspect-ratio: 16/7;
                 display: flex;
                 background: #1a1a1a;
-                box-shadow: 0 30px 60px -12px rgba(0,0,0,0.25);
+                box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.25);
             }
 
             .himalayan-slider .slide-visual {
@@ -413,7 +414,7 @@
                 align-items: center;
                 gap: 0.75rem;
                 background-color: transparent;
-                border: 1px solid rgba(255,255,255,0.2);
+                border: 1px solid rgba(255, 255, 255, 0.2);
                 color: white;
                 padding: 1rem 2.5rem;
                 border-radius: 1rem;
@@ -423,7 +424,7 @@
             .himalayan-slider .btn-glow:hover {
                 background: white;
                 color: black;
-                box-shadow: 0 0 20px rgba(255,255,255,0.3);
+                box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
             }
 
             /* Custom particles-overlay system re-use */
@@ -459,10 +460,25 @@
 
             /* Mobile Guardrails */
             @media (max-width: 768px) {
-                .himalayan-slider .slide-inner { flex-direction: column; aspect-ratio: auto; min-height: 600px; }
-                .himalayan-slider .slide-visual { width: 100%; height: 250px; }
-                .himalayan-slider .slide-info { width: 100%; padding: 2rem; }
-                .himalayan-slider .slide-title { font-size: 2.5rem; }
+                .himalayan-slider .slide-inner {
+                    flex-direction: column;
+                    aspect-ratio: auto;
+                    min-height: 600px;
+                }
+
+                .himalayan-slider .slide-visual {
+                    width: 100%;
+                    height: 250px;
+                }
+
+                .himalayan-slider .slide-info {
+                    width: 100%;
+                    padding: 2rem;
+                }
+
+                .himalayan-slider .slide-title {
+                    font-size: 2.5rem;
+                }
             }
         </style>
 
@@ -478,45 +494,55 @@
 
             <div class="slider-stage" id="anti-gravity-track">
                 <!-- Slide Meta Index 0 -->
-                <div class="agent-slide active-physics" data-agent-slide data-agent-index="0" data-agent-title="Handwoven Thangka" data-agent-description="200-year technique from Kathmandu Valley">
+                <div class="agent-slide active-physics" data-agent-slide data-agent-index="0"
+                    data-agent-title="Handwoven Thangka"
+                    data-agent-description="200-year technique from Kathmandu Valley">
                     <div class="slide-inner">
                         <div class="slide-visual">
-                            <img src="https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=1200&q=90" class="slide-image" alt="Thangka">
+                            <img src="https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=1200&q=90"
+                                class="slide-image" alt="Thangka">
                         </div>
                         <div class="slide-info">
                             <div class="accent-pill">Ancient Craft</div>
                             <h3 class="slide-title">Handwoven <span class="italic text-amber-500">Thangka</span></h3>
-                            <p class="slide-desc">Sacred geometry and celestial colors preserved through centuries of monastic tradition.</p>
+                            <p class="slide-desc">Sacred geometry and celestial colors preserved through centuries of
+                                monastic tradition.</p>
                             <a href="products.html" class="btn-glow">Explore Legacy</a>
                         </div>
                     </div>
                 </div>
 
                 <!-- Slide Meta Index 1 -->
-                <div class="agent-slide" data-agent-slide data-agent-index="1" data-agent-title="Singing Bowls" data-agent-description="7-Metal alloy handcrafted in the Himalayas">
+                <div class="agent-slide" data-agent-slide data-agent-index="1" data-agent-title="Singing Bowls"
+                    data-agent-description="7-Metal alloy handcrafted in the Himalayas">
                     <div class="slide-inner">
                         <div class="slide-visual">
-                            <img src="https://images.unsplash.com/photo-1599458319801-443b73259966?w=1200&q=90" class="slide-image" alt="Singing Bowls">
+                            <img src="https://images.unsplash.com/photo-1599458319801-443b73259966?w=1200&q=90"
+                                class="slide-image" alt="Singing Bowls">
                         </div>
                         <div class="slide-info">
                             <div class="accent-pill">Vimana Sounds</div>
                             <h3 class="slide-title">Sonic <span class="italic text-amber-500">Resonance</span></h3>
-                            <p class="slide-desc">Master-hammered bowls crafted using metallurgical secrets known only to the high-pass artisans.</p>
+                            <p class="slide-desc">Master-hammered bowls crafted using metallurgical secrets known only
+                                to the high-pass artisans.</p>
                             <a href="products.html" class="btn-glow">Feel the Sound</a>
                         </div>
                     </div>
                 </div>
 
                 <!-- Slide Meta Index 2 -->
-                <div class="agent-slide" data-agent-slide data-agent-index="2" data-agent-title="Pashmina Shawls" data-agent-description="Authentic hand-combed Chyangra goat wool">
+                <div class="agent-slide" data-agent-slide data-agent-index="2" data-agent-title="Pashmina Shawls"
+                    data-agent-description="Authentic hand-combed Chyangra goat wool">
                     <div class="slide-inner">
                         <div class="slide-visual">
-                            <img src="https://images.unsplash.com/photo-1574634534894-89d7576c8259?w=1200&q=90" class="slide-image" alt="Pashmina">
+                            <img src="https://images.unsplash.com/photo-1574634534894-89d7576c8259?w=1200&q=90"
+                                class="slide-image" alt="Pashmina">
                         </div>
                         <div class="slide-info">
                             <div class="accent-pill">Mountain Gold</div>
                             <h3 class="slide-title">Softness <span class="italic text-amber-500">Personified</span></h3>
-                            <p class="slide-desc">Genuine Chyangra wool, hand-spun and dyed using natural Himalayan flora.</p>
+                            <p class="slide-desc">Genuine Chyangra wool, hand-spun and dyed using natural Himalayan
+                                flora.</p>
                             <a href="products.html" class="btn-glow">Discover Warmth</a>
                         </div>
                     </div>
@@ -536,22 +562,22 @@
              * Anti-Gravity Slider Integration
              * Senior Architect v9.3 Certified
              */
-            (function() {
+            (function () {
                 let currentIdx = 0;
                 const slides = document.querySelectorAll('.agent-slide');
                 const dots = document.querySelectorAll('.dot');
                 const track = document.getElementById('anti-gravity-track');
                 const total = slides.length;
 
-                window.gravSlide = function(target) {
+                window.gravSlide = function (target) {
                     currentIdx = target;
                     // Physics and Animation
                     track.style.transform = `translateX(-${currentIdx * 100}%)`;
-                    
+
                     slides.forEach((s, i) => {
                         s.classList.toggle('active-physics', i === currentIdx);
                     });
-                    
+
                     dots.forEach((d, i) => {
                         d.classList.toggle('active', i === currentIdx);
                     });
@@ -834,7 +860,7 @@
                         craftsmanship.
                     </p>
                     <!-- Social Icons -->
-                    <div class="flex gap-3">
+                    <div id="footer-social-links" class="flex gap-3">
                         <a href="#" class="bg-gray-800 p-2.5 rounded-full hover:bg-amber-600 transition">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                                 <path
@@ -886,7 +912,8 @@
         <div class="border-t border-gray-800">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6">
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                    <p class="text-gray-400 text-sm">&copy; 2025 Import From Nepal. All rights reserved.</p>
+                    <p id="footer-copyright-text" class="text-gray-400 text-sm">&copy; 2025 Import From Nepal. All
+                        rights reserved.</p>
                 </div>
             </div>
         </div>

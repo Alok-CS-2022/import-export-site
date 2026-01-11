@@ -1,5 +1,6 @@
 import { supabase } from '../lib/supabase.js';
 import { loadSiteContent } from './content-loader.js';
+import { countries } from './countries.js';
 
 // Global State
 let currentUser = null;
@@ -43,9 +44,25 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 3. APP INITIALIZATION
     loadProducts();
-    updateCartCount(); // Defined in ui.js but accessible if ui.js loaded before
-    updateWishlistCount(); // Defined in ui.js
+    updateCartCount();
+    updateWishlistCount();
+    populateCountryCodes();
 });
+
+function populateCountryCodes() {
+    const selects = document.querySelectorAll('select[name="country_code"]');
+    if (selects.length === 0) return;
+
+    const optionsHtml = countries.map(c => `
+        <option value="${c.code}" ${c.code === '+977' ? 'selected' : ''}>
+            ${c.flag} ${c.code}
+        </option>
+    `).join('');
+
+    selects.forEach(select => {
+        select.innerHTML = optionsHtml;
+    });
+}
 
 // AUTH: Update Header
 function updateAuthUI() {

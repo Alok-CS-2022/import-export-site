@@ -480,8 +480,15 @@
         let editingProductId = null
 
         async function loadCategories() {
+            const defaultCategories = [
+                { id: 'singing-bowls', name: 'Singing Bowls' },
+                { id: 'thangkas', name: 'Thangka Art' },
+                { id: 'statues', name: 'Buddha Statues' },
+                { id: 'jewelry', name: 'Artisan Jewelry' }
+            ];
+
             try {
-                const { data, error } = await supabase
+                const { data: dbCategories, error } = await supabase
                     .from('categories')
                     .select('*')
                     .order('display_order', { ascending: true })
@@ -491,16 +498,24 @@
                 const select = document.getElementById('product-category')
                 select.innerHTML = '<option value="">Select a category...</option>'
 
-                if (data && data.length > 0) {
-                    data.forEach(cat => {
-                        const option = document.createElement('option')
-                        option.value = cat.id
-                        option.textContent = cat.name
-                        select.appendChild(option)
-                    })
-                }
+                const categories = (dbCategories && dbCategories.length > 0) ? dbCategories : defaultCategories;
+
+                categories.forEach(cat => {
+                    const option = document.createElement('option')
+                    option.value = cat.id
+                    option.textContent = cat.name
+                    select.appendChild(option)
+                })
             } catch (error) {
-                console.error('Error loading categories:', error)
+                console.warn('Supabase categories fetch failed, using fallbacks:', error)
+                const select = document.getElementById('product-category')
+                select.innerHTML = '<option value="">Select a category...</option>'
+                defaultCategories.forEach(cat => {
+                    const option = document.createElement('option')
+                    option.value = cat.id
+                    option.textContent = cat.name
+                    select.appendChild(option)
+                })
             }
         }
 

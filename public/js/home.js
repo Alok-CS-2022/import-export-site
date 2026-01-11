@@ -1,4 +1,4 @@
-import { supabase } from './lib/supabase.js'
+import { supabase } from '../lib/supabase.js'
 
 // Elements
 const featuredGrid = document.getElementById('featured-products-grid')
@@ -93,6 +93,36 @@ function renderHeritageSlides(products) {
 async function loadFeaturedProducts() {
     if (!featuredGrid) return
 
+    const defaultProducts = [
+        { id: '1', name: 'Masterpiece Mandala Thangka', price: 1200, image_url: 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80' },
+        { id: '2', name: 'Hand-Hammered Full Moon Singing Bowl', price: 450, image_url: 'https://images.unsplash.com/photo-1599458319801-443b73259966?w=800&q=80' },
+        { id: '3', name: 'Gilded Shakyamuni Buddha Statue', price: 2800, image_url: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&q=80' }
+    ];
+
+    const renderProducts = (products) => {
+        featuredGrid.innerHTML = products.map(product => `
+            <div class="product-card group bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col scroll-reveal hover:shadow-xl transition-all duration-500">
+                <div class="relative aspect-[4/5] overflow-hidden cursor-pointer" onclick="goToProduct('${product.id}')">
+                    <img src="${product.image_url}" alt="${product.name}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <span class="bg-white text-gray-900 px-6 py-2 rounded-full text-sm font-medium transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">View Masterpiece</span>
+                    </div>
+                </div>
+                <div class="p-6 flex-grow flex flex-col text-center">
+                    <h3 class="text-lg font-light text-gray-900 mb-2">${product.name}</h3>
+                    <div class="w-8 h-px bg-amber-200 mx-auto mb-4 transition-all duration-500 group-hover:w-16"></div>
+                    <p class="text-amber-800 font-semibold mb-5">$${product.price}</p>
+                    <button onclick="addToCart('${product.id}', '${product.name}', ${product.price}, '${product.image_url}')" 
+                        class="mt-auto w-full bg-gray-900 text-white py-3 rounded-xl hover:bg-amber-700 transition-all duration-300 active:scale-95 flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                        Add to Collection
+                    </button>
+                </div>
+            </div>
+        `).join('')
+        if (window.initScrollReveal) window.initScrollReveal()
+    }
+
     try {
         const { data: products, error } = await supabase
             .from('products')
@@ -103,33 +133,13 @@ async function loadFeaturedProducts() {
         if (error) throw error
 
         if (!products || products.length === 0) {
-            featuredGrid.innerHTML = '<p class="col-span-full text-center text-gray-400 py-10">No featured masterpieces at the moment.</p>'
-            return
+            renderProducts(defaultProducts)
+        } else {
+            renderProducts(products)
         }
-
-        featuredGrid.innerHTML = products.map(product => `
-            <div class="product-card group bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col scroll-reveal">
-                <div class="relative aspect-[4/5] overflow-hidden cursor-pointer" onclick="goToProduct('${product.id}')">
-                    <img src="${product.image_url}" alt="${product.name}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                    <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <span class="bg-white text-gray-900 px-6 py-2 rounded-full text-sm font-medium transform translate-y-4 group-hover:translate-y-0 transition-transform">View Masterpiece</span>
-                    </div>
-                </div>
-                <div class="p-6 flex-grow flex flex-col text-center">
-                    <h3 class="text-lg font-medium text-gray-900 mb-2">${product.name}</h3>
-                    <p class="text-amber-700 font-semibold mb-4">$${product.price}</p>
-                    <button onclick="addToCart('${product.id}', '${product.name}', ${product.price}, '${product.image_url}')" 
-                        class="mt-auto w-full bg-gray-900 text-white py-3 rounded-xl hover:bg-amber-700 transition active:scale-95">
-                        Add to Collection
-                    </button>
-                </div>
-            </div>
-        `).join('')
-
-        // Initialize reveal animations for new items
-        if (window.initScrollReveal) window.initScrollReveal()
     } catch (err) {
-        console.error('Error loading featured products:', err)
+        console.warn('Supabase fetch failed, using fallback products:', err)
+        renderProducts(defaultProducts)
     }
 }
 
@@ -137,8 +147,15 @@ async function loadFeaturedProducts() {
 async function loadCategoryShowcase() {
     if (!categoryShowcase) return
 
+    const defaultCategories = [
+        { id: 'singing-bowls', name: 'Singing Bowls', image_url: 'https://images.unsplash.com/photo-1599458319801-443b73259966?w=800&q=80' },
+        { id: 'thangkas', name: 'Thangka Art', image_url: 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80' },
+        { id: 'statues', name: 'Buddha Statues', image_url: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&q=80' },
+        { id: 'jewelry', name: 'Artisan Jewelry', image_url: 'https://images.unsplash.com/photo-1626014303757-646637e90952?w=800&q=80' }
+    ];
+
     try {
-        const { data: categories, error } = await supabase
+        let { data: categories, error } = await supabase
             .from('categories')
             .select('*')
             .order('display_order', { ascending: true })
@@ -146,20 +163,35 @@ async function loadCategoryShowcase() {
 
         if (error) throw error
 
-        categoryShowcase.innerHTML = categories.map(cat => `
-            <div class="group relative aspect-square rounded-3xl overflow-hidden cursor-pointer scroll-reveal" onclick="goToCategory('${cat.id}')">
-                <img src="${cat.image_url || 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80'}" alt="${cat.name}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    <h3 class="text-2xl font-light mb-2">${cat.name}</h3>
-                    <p class="text-sm text-gray-300 font-light">Explore Collection →</p>
+        // If DB is empty, use premium fallbacks
+        const displayCats = (categories && categories.length > 0) ? categories : defaultCategories;
+
+        categoryShowcase.innerHTML = displayCats.map(cat => `
+            <div class="group relative aspect-square rounded-3xl overflow-hidden cursor-pointer scroll-reveal shadow-md hover:shadow-2xl transition-all duration-500" onclick="goToCategory('${cat.id}')">
+                <img src="${cat.image_url}" alt="${cat.name}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-8 text-white">
+                    <h3 class="text-2xl font-light mb-1 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">${cat.name}</h3>
+                    <div class="h-px w-0 group-hover:w-full bg-amber-500 transition-all duration-700 mb-4"></div>
+                    <p class="text-sm text-amber-200 font-light opacity-0 group-hover:opacity-100 transition-opacity duration-700">Explore Collection →</p>
                 </div>
             </div>
         `).join('')
 
-        // Initialize reveal animations for new items
+        // Initialize reveal animations
         if (window.initScrollReveal) window.initScrollReveal()
     } catch (err) {
-        console.error('Error loading categories:', err)
+        console.warn('Supabase fetch failed, using fallback categories:', err)
+        categoryShowcase.innerHTML = defaultCategories.map(cat => `
+            <div class="group relative aspect-square rounded-3xl overflow-hidden cursor-pointer scroll-reveal shadow-md hover:shadow-2xl transition-all duration-500" onclick="goToCategory('${cat.id}')">
+                <img src="${cat.image_url}" alt="${cat.name}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-8 text-white">
+                    <h3 class="text-2xl font-light mb-1 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">${cat.name}</h3>
+                    <div class="h-px w-0 group-hover:w-full bg-amber-500 transition-all duration-700 mb-4"></div>
+                    <p class="text-sm text-amber-200 font-light opacity-0 group-hover:opacity-100 transition-opacity duration-700">Explore Collection →</p>
+                </div>
+            </div>
+        `).join('')
+        if (window.initScrollReveal) window.initScrollReveal()
     }
 }
 

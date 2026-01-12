@@ -154,6 +154,17 @@ async function loadCategoryShowcase() {
         { id: 'jewelry', name: 'Artisan Jewelry', image_url: 'https://images.unsplash.com/photo-1626014303757-646637e90952?w=800&q=80' }
     ];
 
+    // Check if categories are loaded from content management
+    if (window.contentCategories && window.contentCategories.length > 0) {
+        const displayCats = window.contentCategories.slice(0, 4).map(cat => ({
+            id: cat.id || cat.name.toLowerCase().replace(/\s+/g, '-'),
+            name: cat.name,
+            image_url: cat.imageUrl || defaultCategories[0].image_url
+        }));
+        renderCategoryGrid(displayCats);
+        return;
+    }
+
     try {
         let { data: categories, error } = await supabase
             .from('categories')
@@ -166,7 +177,17 @@ async function loadCategoryShowcase() {
         // If DB is empty, use premium fallbacks
         const displayCats = (categories && categories.length > 0) ? categories : defaultCategories;
 
-        categoryShowcase.innerHTML = displayCats.map(cat => `
+        renderCategoryGrid(displayCats);
+    } catch (err) {
+        console.warn('Supabase fetch failed, using fallback categories:', err)
+        renderCategoryGrid(defaultCategories);
+    }
+}
+
+function renderCategoryGrid(displayCats) {
+    if (!categoryShowcase) return;
+    
+    categoryShowcase.innerHTML = displayCats.map(cat => `
             <div class="group relative aspect-square rounded-3xl overflow-hidden cursor-pointer scroll-reveal shadow-md hover:shadow-2xl transition-all duration-500" onclick="goToCategory('${cat.id}')">
                 <img src="${cat.image_url}" alt="${cat.name}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-8 text-white">
@@ -177,28 +198,37 @@ async function loadCategoryShowcase() {
             </div>
         `).join('')
 
-        // Initialize reveal animations
-        if (window.initScrollReveal) window.initScrollReveal()
-    } catch (err) {
-        console.warn('Supabase fetch failed, using fallback categories:', err)
-        categoryShowcase.innerHTML = defaultCategories.map(cat => `
-            <div class="group relative aspect-square rounded-3xl overflow-hidden cursor-pointer scroll-reveal shadow-md hover:shadow-2xl transition-all duration-500" onclick="goToCategory('${cat.id}')">
-                <img src="${cat.image_url}" alt="${cat.name}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-8 text-white">
-                    <h3 class="text-2xl font-light mb-1 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">${cat.name}</h3>
-                    <div class="h-px w-0 group-hover:w-full bg-amber-500 transition-all duration-700 mb-4"></div>
-                    <p class="text-sm text-amber-200 font-light opacity-0 group-hover:opacity-100 transition-opacity duration-700">Explore Collection →</p>
-                </div>
-            </div>
-        `).join('')
-        if (window.initScrollReveal) window.initScrollReveal()
-    }
+    // Initialize reveal animations
+    if (window.initScrollReveal) window.initScrollReveal()
 }
 
 // Load featured testimonials
 async function loadFeaturedTestimonials() {
     const container = document.getElementById('testimonials-grid')
     if (!container) return
+
+    // Check if testimonials are loaded from content management
+    if (window.contentTestimonials && window.contentTestimonials.length > 0) {
+        container.innerHTML = window.contentTestimonials.map(t => `
+            <div class="p-8 bg-white rounded-3xl border border-stone-100 shadow-sm hover:shadow-xl transition-all duration-500 scroll-reveal">
+                <div class="flex text-amber-500 mb-4">
+                    ${'★'.repeat(t.rating || 5)}${'☆'.repeat(5 - (t.rating || 5))}
+                </div>
+                <p class="text-gray-700 italic mb-6 leading-relaxed">"${escapeHtml(t.reviewText || '')}"</p>
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full overflow-hidden bg-amber-50 flex items-center justify-center text-amber-800 font-bold border border-amber-100">
+                        ${t.customerPhotoUrl ? `<img src="${escapeHtml(t.customerPhotoUrl)}" alt="${escapeHtml(t.customerName)}" class="w-full h-full object-cover">` : (t.customerName || '').split(' ').map(n => n[0]).join('')}
+                    </div>
+                    <div>
+                        <h4 class="text-gray-900 font-medium">${escapeHtml(t.customerName || '')}</h4>
+                        <p class="text-amber-800 text-xs tracking-widest uppercase">Verified Collector</p>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        if (window.initScrollReveal) window.initScrollReveal();
+        return;
+    }
 
     try {
         const { data: testimonials, error } = await supabase
@@ -231,6 +261,13 @@ async function loadFeaturedTestimonials() {
     } catch (err) {
         console.error('Error loading testimonials:', err)
     }
+}
+
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
 }
 
 // Stats counter animation

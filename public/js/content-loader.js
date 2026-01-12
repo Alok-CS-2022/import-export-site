@@ -47,6 +47,20 @@ export async function loadSiteContent() {
             if (content.newsletter) {
                 updateNewsletterSection(content.newsletter);
             }
+
+            // Apply new dynamic sections
+            if (content.himalayanSlider) {
+                updateHimalayanSlider(content.himalayanSlider);
+            }
+            if (content.categories) {
+                updateCategories(content.categories);
+            }
+            if (content.testimonials) {
+                updateTestimonials(content.testimonials);
+            }
+            if (content.blogStories) {
+                updateBlogStories(content.blogStories);
+            }
         }
     } catch (error) {
         console.error('Error loading site content:', error);
@@ -212,4 +226,88 @@ function updateNewsletterSection(data) {
     if (titleEl && data.title) titleEl.textContent = data.title;
     if (subEl && data.subtitle) subEl.textContent = data.subtitle;
     if (btnEl && data.buttonText) btnEl.textContent = data.buttonText;
+}
+
+function updateHimalayanSlider(slider) {
+    const container = document.getElementById('anti-gravity-track');
+    if (!container || !slider.items || !Array.isArray(slider.items) || slider.items.length === 0) return;
+
+    const slides = slider.items.map((item, index) => `
+        <div class="agent-slide ${index === 0 ? 'active-physics' : ''}" data-agent-slide data-agent-index="${index}"
+            data-agent-title="${escapeHtml(item.title)}"
+            data-agent-description="${escapeHtml(item.description)}">
+            <div class="slide-inner">
+                <div class="slide-visual">
+                    <img src="${escapeHtml(item.imageUrl || 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=1200&q=90')}"
+                        class="slide-image" alt="${escapeHtml(item.title)}">
+                </div>
+                <div class="slide-info">
+                    <div class="accent-pill">${escapeHtml(item.accentPill || 'Featured')}</div>
+                    <h3 class="slide-title">${escapeHtml(item.title)}</h3>
+                    <p class="slide-desc">${escapeHtml(item.description)}</p>
+                    <a href="${escapeHtml(item.buttonLink || 'products.html')}" class="btn-glow">${escapeHtml(item.buttonText || 'Explore')}</a>
+                </div>
+            </div>
+        </div>
+    `).join('');
+
+    container.innerHTML = slides;
+
+    // Update dots
+    const dotsContainer = document.getElementById('anti-gravity-dots');
+    if (dotsContainer) {
+        dotsContainer.innerHTML = slider.items.map((_, i) => `
+            <div class="dot ${i === 0 ? 'active' : ''}" onclick="gravSlide(${i})"></div>
+        `).join('');
+    }
+
+    // Reinitialize slider if function exists
+    if (window.gravSlide && slider.items.length > 0) {
+        window.gravSlide(0);
+    }
+}
+
+function updateCategories(categories) {
+    if (!Array.isArray(categories) || categories.length === 0) return;
+    
+    // Store in window for home.js to use
+    window.contentCategories = categories.sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
+}
+
+function updateTestimonials(testimonials) {
+    if (!Array.isArray(testimonials) || testimonials.length === 0) return;
+    
+    // Store in window for home.js to use
+    window.contentTestimonials = testimonials.filter(t => t.isFeatured).slice(0, 2);
+}
+
+function updateBlogStories(stories) {
+    if (!Array.isArray(stories) || stories.length === 0) return;
+
+    // Find the blog section grid
+    const blogGrid = document.getElementById('blog-stories-grid');
+    if (!blogGrid) return;
+
+    blogGrid.innerHTML = stories.slice(0, 3).map(story => `
+        <article class="group">
+            <div class="aspect-[4/5] overflow-hidden rounded-2xl mb-6 shadow-md group-hover:shadow-xl transition-all duration-500">
+                <img src="${escapeHtml(story.imageUrl || 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=100')}"
+                    alt="${escapeHtml(story.title)}"
+                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    onerror="this.src='https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=100'">
+            </div>
+            <p class="text-xs tracking-widest uppercase text-gray-400 mb-2">${escapeHtml(story.category || 'Story')}</p>
+            <h3 class="text-2xl font-light text-gray-900 mb-3 group-hover:text-amber-800 transition-colors leading-tight">
+                ${escapeHtml(story.title)}
+            </h3>
+            <p class="text-gray-600 font-light text-sm line-clamp-2">${escapeHtml(story.description || '')}</p>
+        </article>
+    `).join('');
+}
+
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
 }

@@ -497,6 +497,82 @@
                 </div>
             </div>
 
+            <!-- Himalayan Slider -->
+            <div class="glass rounded-2xl shadow-xl border border-amber-100 overflow-hidden animate-fadeIn">
+                <div class="bg-gradient-to-r from-indigo-600 to-indigo-700 px-6 py-4">
+                    <h3 class="text-2xl font-light text-white flex items-center gap-2">
+                        <span>🏔️</span> Himalayan Slider
+                    </h3>
+                    <p class="text-indigo-100 text-sm font-light mt-1">Featured collection showcase</p>
+                </div>
+                <div class="p-6 space-y-6">
+                    <div id="slider-items-container">
+                        <!-- Slider items will be dynamically added here -->
+                    </div>
+                    <button type="button" onclick="addSliderItem()"
+                        class="w-full border-2 border-dashed border-indigo-300 text-indigo-700 py-4 rounded-xl hover:bg-indigo-50 transition font-medium">
+                        + Add New Slide
+                    </button>
+                </div>
+            </div>
+
+            <!-- Categories Management -->
+            <div class="glass rounded-2xl shadow-xl border border-amber-100 overflow-hidden animate-fadeIn">
+                <div class="bg-gradient-to-r from-teal-600 to-teal-700 px-6 py-4">
+                    <h3 class="text-2xl font-light text-white flex items-center gap-2">
+                        <span>📦</span> Categories
+                    </h3>
+                    <p class="text-teal-100 text-sm font-light mt-1">Manage product categories</p>
+                </div>
+                <div class="p-6 space-y-6">
+                    <div id="categories-container">
+                        <!-- Categories will be dynamically added here -->
+                    </div>
+                    <button type="button" onclick="addCategory()"
+                        class="w-full border-2 border-dashed border-teal-300 text-teal-700 py-4 rounded-xl hover:bg-teal-50 transition font-medium">
+                        + Add New Category
+                    </button>
+                </div>
+            </div>
+
+            <!-- Testimonials Management -->
+            <div class="glass rounded-2xl shadow-xl border border-amber-100 overflow-hidden animate-fadeIn">
+                <div class="bg-gradient-to-r from-violet-600 to-violet-700 px-6 py-4">
+                    <h3 class="text-2xl font-light text-white flex items-center gap-2">
+                        <span>💬</span> Testimonials
+                    </h3>
+                    <p class="text-violet-100 text-sm font-light mt-1">Customer reviews and feedback</p>
+                </div>
+                <div class="p-6 space-y-6">
+                    <div id="testimonials-container">
+                        <!-- Testimonials will be dynamically added here -->
+                    </div>
+                    <button type="button" onclick="addTestimonial()"
+                        class="w-full border-2 border-dashed border-violet-300 text-violet-700 py-4 rounded-xl hover:bg-violet-50 transition font-medium">
+                        + Add New Testimonial
+                    </button>
+                </div>
+            </div>
+
+            <!-- Blog/Stories Management -->
+            <div class="glass rounded-2xl shadow-xl border border-amber-100 overflow-hidden animate-fadeIn">
+                <div class="bg-gradient-to-r from-rose-600 to-rose-700 px-6 py-4">
+                    <h3 class="text-2xl font-light text-white flex items-center gap-2">
+                        <span>📝</span> Blog Stories
+                    </h3>
+                    <p class="text-rose-100 text-sm font-light mt-1">Latest stories and articles</p>
+                </div>
+                <div class="p-6 space-y-6">
+                    <div id="blog-stories-container">
+                        <!-- Blog stories will be dynamically added here -->
+                    </div>
+                    <button type="button" onclick="addBlogStory()"
+                        class="w-full border-2 border-dashed border-rose-300 text-rose-700 py-4 rounded-xl hover:bg-rose-50 transition font-medium">
+                        + Add New Story
+                    </button>
+                </div>
+            </div>
+
             <!-- Footer -->
             <div class="glass rounded-2xl shadow-xl border border-amber-100 overflow-hidden animate-fadeIn">
                 <div class="bg-gradient-to-r from-gray-700 to-gray-800 px-6 py-4">
@@ -721,6 +797,31 @@
                     document.getElementById('newsletter-subtitle').value = c.newsletter?.subtitle || ''
                     document.getElementById('newsletter-button').value = c.newsletter?.buttonText || ''
 
+                    // Load new sections
+                    if (c.himalayanSlider && Array.isArray(c.himalayanSlider.items)) {
+                        renderSliderItems(c.himalayanSlider.items)
+                    } else {
+                        renderSliderItems([])
+                    }
+
+                    if (c.categories && Array.isArray(c.categories)) {
+                        renderCategories(c.categories)
+                    } else {
+                        renderCategories([])
+                    }
+
+                    if (c.testimonials && Array.isArray(c.testimonials)) {
+                        renderTestimonials(c.testimonials)
+                    } else {
+                        renderTestimonials([])
+                    }
+
+                    if (c.blogStories && Array.isArray(c.blogStories)) {
+                        renderBlogStories(c.blogStories)
+                    } else {
+                        renderBlogStories([])
+                    }
+
                     // Trigger char counters
                     // #region agent log
                     const counterIds = ['hero-title', 'hero-subtitle', 'hero-button', 'seo-title', 'seo-description'];
@@ -808,6 +909,320 @@
             document.getElementById('newsletter-title').value = 'Get 10% Off Your First Order'
             document.getElementById('newsletter-subtitle').value = 'Plus exclusive deals and new arrivals'
             document.getElementById('newsletter-button').value = 'Subscribe'
+
+            // Initialize empty arrays for new sections
+            renderSliderItems([])
+            renderCategories([])
+            renderTestimonials([])
+            renderBlogStories([])
+        }
+
+        // Himalayan Slider Management
+        let sliderItems = []
+        window.addSliderItem = function() {
+            sliderItems.push({
+                accentPill: 'Ancient Craft',
+                title: 'New Slide Title',
+                description: 'Slide description here',
+                imageUrl: '',
+                buttonText: 'Explore Legacy',
+                buttonLink: 'products.html'
+            })
+            renderSliderItems(sliderItems)
+        }
+        window.removeSliderItem = function(index) {
+            sliderItems.splice(index, 1)
+            renderSliderItems(sliderItems)
+        }
+        function renderSliderItems(items) {
+            sliderItems = items
+            const container = document.getElementById('slider-items-container')
+            if (!container) return
+            if (items.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-sm">No slides added yet. Click "Add New Slide" to get started.</p>'
+                return
+            }
+            container.innerHTML = items.map((item, index) => `
+                <div class="border-2 border-indigo-200 rounded-xl p-4 space-y-3">
+                    <div class="flex justify-between items-center mb-3">
+                        <h4 class="font-semibold text-gray-900">Slide #${index + 1}</h4>
+                        <button type="button" onclick="removeSliderItem(${index})" class="text-red-600 hover:text-red-800 text-sm font-medium">Remove</button>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-semibold mb-1">Accent Pill Text</label>
+                        <input type="text" class="slider-accent-${index} w-full px-3 py-2 border rounded-lg" value="${(item.accentPill || '').replace(/"/g, '&quot;')}" placeholder="Ancient Craft">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-semibold mb-1">Title</label>
+                        <input type="text" class="slider-title-${index} w-full px-3 py-2 border rounded-lg" value="${(item.title || '').replace(/"/g, '&quot;')}" placeholder="Slide Title">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-semibold mb-1">Description</label>
+                        <textarea class="slider-desc-${index} w-full px-3 py-2 border rounded-lg" rows="2" placeholder="Slide description">${(item.description || '').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-semibold mb-1">Image URL</label>
+                        <input type="text" class="slider-image-${index} w-full px-3 py-2 border rounded-lg" value="${(item.imageUrl || '').replace(/"/g, '&quot;')}" placeholder="https://...">
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-gray-700 text-sm font-semibold mb-1">Button Text</label>
+                            <input type="text" class="slider-button-${index} w-full px-3 py-2 border rounded-lg" value="${(item.buttonText || '').replace(/"/g, '&quot;')}" placeholder="Explore Legacy">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-semibold mb-1">Button Link</label>
+                            <input type="text" class="slider-link-${index} w-full px-3 py-2 border rounded-lg" value="${(item.buttonLink || '').replace(/"/g, '&quot;')}" placeholder="products.html">
+                        </div>
+                    </div>
+                </div>
+            `).join('')
+        }
+
+        // Categories Management
+        let categories = []
+        window.addCategory = function() {
+            categories.push({
+                id: 'new-category-' + Date.now(),
+                name: 'New Category',
+                imageUrl: '',
+                displayOrder: categories.length + 1
+            })
+            renderCategories(categories)
+        }
+        window.removeCategory = function(index) {
+            categories.splice(index, 1)
+            renderCategories(categories)
+        }
+        function renderCategories(items) {
+            categories = items
+            const container = document.getElementById('categories-container')
+            if (!container) return
+            if (items.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-sm">No categories added yet. Click "Add New Category" to get started.</p>'
+                return
+            }
+            container.innerHTML = items.map((item, index) => `
+                <div class="border-2 border-teal-200 rounded-xl p-4 space-y-3">
+                    <div class="flex justify-between items-center mb-3">
+                        <h4 class="font-semibold text-gray-900">Category #${index + 1}</h4>
+                        <button type="button" onclick="removeCategory(${index})" class="text-red-600 hover:text-red-800 text-sm font-medium">Remove</button>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-semibold mb-1">Category Name</label>
+                        <input type="text" class="category-name-${index} w-full px-3 py-2 border rounded-lg" value="${(item.name || '').replace(/"/g, '&quot;')}" placeholder="Category Name">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-semibold mb-1">Image URL</label>
+                        <input type="text" class="category-image-${index} w-full px-3 py-2 border rounded-lg" value="${(item.imageUrl || '').replace(/"/g, '&quot;')}" placeholder="https://...">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-semibold mb-1">Display Order</label>
+                        <input type="number" class="category-order-${index} w-full px-3 py-2 border rounded-lg" value="${item.displayOrder || index + 1}" placeholder="1">
+                    </div>
+                </div>
+            `).join('')
+        }
+
+        // Testimonials Management
+        let testimonials = []
+        window.addTestimonial = function() {
+            testimonials.push({
+                customerName: 'Customer Name',
+                reviewText: 'Great product!',
+                rating: 5,
+                customerPhotoUrl: '',
+                isFeatured: true
+            })
+            renderTestimonials(testimonials)
+        }
+        window.removeTestimonial = function(index) {
+            testimonials.splice(index, 1)
+            renderTestimonials(testimonials)
+        }
+        function renderTestimonials(items) {
+            testimonials = items
+            const container = document.getElementById('testimonials-container')
+            if (!container) return
+            if (items.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-sm">No testimonials added yet. Click "Add New Testimonial" to get started.</p>'
+                return
+            }
+            container.innerHTML = items.map((item, index) => `
+                <div class="border-2 border-violet-200 rounded-xl p-4 space-y-3">
+                    <div class="flex justify-between items-center mb-3">
+                        <h4 class="font-semibold text-gray-900">Testimonial #${index + 1}</h4>
+                        <button type="button" onclick="removeTestimonial(${index})" class="text-red-600 hover:text-red-800 text-sm font-medium">Remove</button>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-semibold mb-1">Customer Name</label>
+                        <input type="text" class="testimonial-name-${index} w-full px-3 py-2 border rounded-lg" value="${(item.customerName || '').replace(/"/g, '&quot;')}" placeholder="Customer Name">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-semibold mb-1">Review Text</label>
+                        <textarea class="testimonial-text-${index} w-full px-3 py-2 border rounded-lg" rows="3" placeholder="Review text">${(item.reviewText || '').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-gray-700 text-sm font-semibold mb-1">Rating (1-5)</label>
+                            <input type="number" min="1" max="5" class="testimonial-rating-${index} w-full px-3 py-2 border rounded-lg" value="${item.rating || 5}">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-semibold mb-1">Photo URL</label>
+                            <input type="text" class="testimonial-photo-${index} w-full px-3 py-2 border rounded-lg" value="${(item.customerPhotoUrl || '').replace(/"/g, '&quot;')}" placeholder="https://...">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" class="testimonial-featured-${index}" ${item.isFeatured ? 'checked' : ''}>
+                            <span class="text-sm text-gray-700">Featured on homepage</span>
+                        </label>
+                    </div>
+                </div>
+            `).join('')
+        }
+
+        // Blog Stories Management
+        let blogStories = []
+        window.addBlogStory = function() {
+            blogStories.push({
+                title: 'Story Title',
+                category: 'Tradition',
+                description: 'Story description here',
+                imageUrl: '',
+                link: '#'
+            })
+            renderBlogStories(blogStories)
+        }
+        window.removeBlogStory = function(index) {
+            blogStories.splice(index, 1)
+            renderBlogStories(blogStories)
+        }
+        function renderBlogStories(items) {
+            blogStories = items
+            const container = document.getElementById('blog-stories-container')
+            if (!container) return
+            if (items.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-sm">No stories added yet. Click "Add New Story" to get started.</p>'
+                return
+            }
+            container.innerHTML = items.map((item, index) => `
+                <div class="border-2 border-rose-200 rounded-xl p-4 space-y-3">
+                    <div class="flex justify-between items-center mb-3">
+                        <h4 class="font-semibold text-gray-900">Story #${index + 1}</h4>
+                        <button type="button" onclick="removeBlogStory(${index})" class="text-red-600 hover:text-red-800 text-sm font-medium">Remove</button>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-semibold mb-1">Title</label>
+                        <input type="text" class="blog-title-${index} w-full px-3 py-2 border rounded-lg" value="${(item.title || '').replace(/"/g, '&quot;')}" placeholder="Story Title">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-semibold mb-1">Category/Tag</label>
+                        <input type="text" class="blog-category-${index} w-full px-3 py-2 border rounded-lg" value="${(item.category || '').replace(/"/g, '&quot;')}" placeholder="Tradition">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-semibold mb-1">Description</label>
+                        <textarea class="blog-desc-${index} w-full px-3 py-2 border rounded-lg" rows="2" placeholder="Story description">${(item.description || '').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-gray-700 text-sm font-semibold mb-1">Image URL</label>
+                            <input type="text" class="blog-image-${index} w-full px-3 py-2 border rounded-lg" value="${(item.imageUrl || '').replace(/"/g, '&quot;')}" placeholder="https://...">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-semibold mb-1">Link</label>
+                            <input type="text" class="blog-link-${index} w-full px-3 py-2 border rounded-lg" value="${(item.link || '').replace(/"/g, '&quot;')}" placeholder="#">
+                        </div>
+                    </div>
+                </div>
+            `).join('')
+        }
+
+        // Collection functions for dynamic sections
+        function collectSliderItems() {
+            const items = []
+            for (let i = 0; i < sliderItems.length; i++) {
+                const accentEl = document.querySelector(`.slider-accent-${i}`)
+                const titleEl = document.querySelector(`.slider-title-${i}`)
+                const descEl = document.querySelector(`.slider-desc-${i}`)
+                const imageEl = document.querySelector(`.slider-image-${i}`)
+                const buttonEl = document.querySelector(`.slider-button-${i}`)
+                const linkEl = document.querySelector(`.slider-link-${i}`)
+                
+                if (titleEl && titleEl.value.trim()) {
+                    items.push({
+                        accentPill: accentEl?.value || '',
+                        title: titleEl.value,
+                        description: descEl?.value || '',
+                        imageUrl: imageEl?.value || '',
+                        buttonText: buttonEl?.value || '',
+                        buttonLink: linkEl?.value || ''
+                    })
+                }
+            }
+            return items
+        }
+
+        function collectCategories() {
+            const items = []
+            for (let i = 0; i < categories.length; i++) {
+                const nameEl = document.querySelector(`.category-name-${i}`)
+                const imageEl = document.querySelector(`.category-image-${i}`)
+                const orderEl = document.querySelector(`.category-order-${i}`)
+                
+                if (nameEl && nameEl.value.trim()) {
+                    items.push({
+                        id: categories[i].id || `category-${i}`,
+                        name: nameEl.value,
+                        imageUrl: imageEl?.value || '',
+                        displayOrder: parseInt(orderEl?.value) || i + 1
+                    })
+                }
+            }
+            return items
+        }
+
+        function collectTestimonials() {
+            const items = []
+            for (let i = 0; i < testimonials.length; i++) {
+                const nameEl = document.querySelector(`.testimonial-name-${i}`)
+                const textEl = document.querySelector(`.testimonial-text-${i}`)
+                const ratingEl = document.querySelector(`.testimonial-rating-${i}`)
+                const photoEl = document.querySelector(`.testimonial-photo-${i}`)
+                const featuredEl = document.querySelector(`.testimonial-featured-${i}`)
+                
+                if (nameEl && nameEl.value.trim() && textEl && textEl.value.trim()) {
+                    items.push({
+                        customerName: nameEl.value,
+                        reviewText: textEl.value,
+                        rating: parseInt(ratingEl?.value) || 5,
+                        customerPhotoUrl: photoEl?.value || '',
+                        isFeatured: featuredEl?.checked || false
+                    })
+                }
+            }
+            return items
+        }
+
+        function collectBlogStories() {
+            const items = []
+            for (let i = 0; i < blogStories.length; i++) {
+                const titleEl = document.querySelector(`.blog-title-${i}`)
+                const categoryEl = document.querySelector(`.blog-category-${i}`)
+                const descEl = document.querySelector(`.blog-desc-${i}`)
+                const imageEl = document.querySelector(`.blog-image-${i}`)
+                const linkEl = document.querySelector(`.blog-link-${i}`)
+                
+                if (titleEl && titleEl.value.trim()) {
+                    items.push({
+                        title: titleEl.value,
+                        category: categoryEl?.value || '',
+                        description: descEl?.value || '',
+                        imageUrl: imageEl?.value || '',
+                        link: linkEl?.value || '#'
+                    })
+                }
+            }
+            return items
         }
 
         document.getElementById('content-form').addEventListener('submit', async (e) => {
@@ -899,7 +1314,13 @@
                     title: document.getElementById('newsletter-title').value,
                     subtitle: document.getElementById('newsletter-subtitle').value,
                     buttonText: document.getElementById('newsletter-button').value
-                }
+                },
+                himalayanSlider: {
+                    items: collectSliderItems()
+                },
+                categories: collectCategories(),
+                testimonials: collectTestimonials(),
+                blogStories: collectBlogStories()
             }
 
             try {

@@ -1,5 +1,8 @@
 import { supabase } from '../lib/supabase.js';
 
+// Global content data variable
+let contentData = {};
+
 // Load and apply site content from database
 export async function loadSiteContent() {
     try {
@@ -17,6 +20,7 @@ export async function loadSiteContent() {
         }
 
         if (data && data.content) {
+            contentData = data.content;
             const content = data.content;
 
             // Apply SEO Meta Tags
@@ -24,8 +28,6 @@ export async function loadSiteContent() {
 
             // Apply Hero Section
             if (content.hero) updateHeroSection(content.hero);
-
-
 
             // Apply Social Media Links
             if (content.social) updateSocialLinks(content.social);
@@ -41,9 +43,17 @@ export async function loadSiteContent() {
             updateStatsSection(content.stats || {});
             if (content.sectionTitles) updateSectionTitles(content.sectionTitles);
 
+            // Apply all new dynamic content updates
+            await updateHeroSection();
+            await updateCategoryShowcase();
+            await updateHimalayanSlider();
+            await updateWhyChooseUs();
+            await updateImpactStats();
+            await updateTestimonials();
+            await updateBlogStories();
+            await updateFooterContent();
 
-
-            // Apply new dynamic sections
+            // Apply legacy dynamic sections
             if (content.himalayanSlider) {
                 updateHimalayanSlider(content.himalayanSlider);
             }
@@ -232,6 +242,278 @@ function updateSectionTitles(titles) {
         if (blogTitle && titles.blogTitle) {
             blogTitle.innerHTML = titles.blogTitle;
         }
+    }
+}
+
+// FUNCTION 1: Update Category Showcase
+async function updateCategoryShowcase() {
+    const element = document.getElementById('category-showcase');
+    if (!element) return;
+    
+    if (!contentData.categories || !Array.isArray(contentData.categories) || contentData.categories.length === 0) {
+        return;
+    }
+    
+    element.innerHTML = '';
+    
+    contentData.categories.forEach(category => {
+        const div = document.createElement('div');
+        div.className = 'group relative overflow-hidden rounded-2xl bg-white shadow-md hover:shadow-2xl transition-all duration-500';
+        
+        div.innerHTML = `
+            <img src="${category.imageUrl || ''}" alt="${category.name || ''}" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+                <h3 class="text-2xl font-light mb-2">${category.name || ''}</h3>
+                <p class="text-sm text-gray-200">${category.description || ''}</p>
+                <a href="${category.link || '#'}" class="inline-block mt-4 text-amber-400 hover:text-amber-300 transition">Explore →</a>
+            </div>
+        `;
+        
+        element.appendChild(div);
+    });
+}
+
+// FUNCTION 2: Update Himalayan Slider (Enhanced version)
+async function updateHimalayanSlider() {
+    if (!contentData.himalayanSlider || !contentData.himalayanSlider.items) return;
+    
+    const element = document.getElementById('anti-gravity-track');
+    if (!element) return;
+    
+    element.innerHTML = '';
+    
+    contentData.himalayanSlider.items.forEach((slide, index) => {
+        const div = document.createElement('div');
+        div.className = `agent-slide${index === 0 ? ' active-physics' : ''}`;
+        div.setAttribute('data-agent-slide', '');
+        div.setAttribute('data-agent-index', index);
+        
+        div.innerHTML = `
+            <div class="slide-inner">
+                <div class="slide-visual">
+                    <img src="${slide.imageUrl || 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=1200&q=90'}" 
+                         alt="${slide.title || ''}" class="slide-image">
+                </div>
+                <div class="slide-info">
+                    <div class="accent-pill">${slide.accentPill || 'Featured'}</div>
+                    <h3 class="slide-title">
+                        ${slide.title || ''}${slide.titleItalic ? `<span class="italic">${slide.titleItalic}</span>` : ''}
+                    </h3>
+                    <p class="slide-desc">${slide.description || ''}</p>
+                    <a href="${slide.buttonLink || 'products.html'}" class="btn-glow">${slide.buttonText || 'Explore'}</a>
+                </div>
+            </div>
+        `;
+        
+        element.appendChild(div);
+    });
+}
+
+// FUNCTION 3: Update Why Choose Us Items
+async function updateWhyChooseUs() {
+    const element = document.getElementById('why-choose-us-items');
+    if (!element) return;
+    
+    if (!contentData.whyChooseUs || !contentData.whyChooseUs.items) return;
+    
+    element.innerHTML = '';
+    
+    contentData.whyChooseUs.items.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = 'group p-10 bg-white rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-2xl hover:border-amber-100 transition-all duration-500 hover:-translate-y-2 scroll-reveal';
+        div.style.transitionDelay = `${index * 100}ms`;
+        
+        div.innerHTML = `
+            <div class="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center text-3xl mb-8 group-hover:scale-110 group-hover:bg-amber-100 transition-all">
+                ${item.icon || ''}
+            </div>
+            <h3 class="text-2xl font-light text-gray-900 mb-4">${item.title || ''}</h3>
+            <p class="text-gray-600 font-light leading-relaxed">${item.description || ''}</p>
+        `;
+        
+        element.appendChild(div);
+    });
+}
+
+// FUNCTION 4: Update Impact Stats
+async function updateImpactStats() {
+    if (!contentData.stats) return;
+    
+    const statsElements = [
+        { id: 'stat-happy-customers', value: contentData.stats.happyCustomers },
+        { id: 'stat-products-sold', value: contentData.stats.productsSold },
+        { id: 'stat-years-business', value: contentData.stats.yearsInBusiness },
+        { id: 'stat-avg-rating', value: contentData.stats.averageRating }
+    ];
+    
+    statsElements.forEach(({ id, value }) => {
+        const element = document.getElementById(id);
+        if (element && value) {
+            element.textContent = value + '+';
+            element.setAttribute('data-target', value);
+        }
+    });
+}
+
+// FUNCTION 5: Update Testimonials (Enhanced version)
+async function updateTestimonials() {
+    const element = document.getElementById('testimonials-grid');
+    if (!element) return;
+    
+    if (!contentData.testimonials || !Array.isArray(contentData.testimonials) || contentData.testimonials.length === 0) {
+        return;
+    }
+    
+    element.innerHTML = '';
+    
+    contentData.testimonials.forEach(testimonial => {
+        const div = document.createElement('div');
+        div.className = 'p-8 bg-white rounded-3xl border border-stone-100 shadow-sm hover:shadow-xl transition-all duration-500';
+        
+        const stars = '★'.repeat(testimonial.rating || 5);
+        const customerInitials = testimonial.customerInitials || 
+                              (testimonial.customerName ? testimonial.customerName.slice(0, 2).toUpperCase() : 'CU');
+        
+        div.innerHTML = `
+            <div class="flex text-amber-500 mb-4">${stars}</div>
+            <p class="text-gray-700 italic mb-6 leading-relaxed">${testimonial.reviewText || ''}</p>
+            <div class="flex items-center gap-4">
+                ${testimonial.customerPhotoUrl ? 
+                    `<img src="${testimonial.customerPhotoUrl}" alt="${testimonial.customerName || ''}" class="w-12 h-12 rounded-full object-cover">` :
+                    `<div class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center text-amber-800 font-bold">${customerInitials}</div>`
+                }
+                <div>
+                    <h4 class="text-gray-900 font-medium">${testimonial.customerName || ''}</h4>
+                    <p class="text-amber-800 text-xs tracking-widest uppercase">${testimonial.customerTitle || 'Verified Customer'}</p>
+                </div>
+            </div>
+        `;
+        
+        element.appendChild(div);
+    });
+}
+
+// FUNCTION 6: Update Blog Stories (Enhanced version)
+async function updateBlogStories() {
+    const element = document.getElementById('blog-stories-grid');
+    if (!element) return;
+    
+    if (!contentData.blogStories || !Array.isArray(contentData.blogStories) || contentData.blogStories.length === 0) {
+        return;
+    }
+    
+    element.innerHTML = '';
+    
+    contentData.blogStories.slice(0, 3).forEach(story => {
+        const article = document.createElement('article');
+        article.className = 'group';
+        
+        const content = `
+            <div class="aspect-[4/5] overflow-hidden rounded-2xl mb-6 shadow-md group-hover:shadow-xl transition-all duration-500">
+                <img src="${story.imageUrl || 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=100'}" 
+                     alt="${story.title || ''}" 
+                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                     onerror="this.src='https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=100'">
+            </div>
+            <p class="text-xs tracking-widest uppercase text-gray-400 mb-2">${story.category || 'Story'}</p>
+            <h3 class="text-2xl font-light text-gray-900 mb-3 group-hover:text-amber-800 transition-colors leading-tight">
+                ${story.title || ''}
+            </h3>
+            <p class="text-gray-600 font-light text-sm line-clamp-2">${story.description || ''}</p>
+        `;
+        
+        if (story.link) {
+            const link = document.createElement('a');
+            link.href = story.link;
+            link.innerHTML = content;
+            article.appendChild(link);
+        } else {
+            article.innerHTML = content;
+        }
+        
+        element.appendChild(article);
+    });
+}
+
+// FUNCTION 7: Update Footer Content
+async function updateFooterContent() {
+    if (!contentData.footer) return;
+    
+    const copyrightElement = document.getElementById('footer-copyright-text');
+    if (copyrightElement && contentData.footer.copyright) {
+        copyrightElement.textContent = contentData.footer.copyright;
+    }
+    
+    const aboutElement = document.getElementById('footer-about-text');
+    if (aboutElement && contentData.footer.aboutText) {
+        aboutElement.textContent = contentData.footer.aboutText;
+    }
+    
+    if (contentData.social) {
+        const socialContainer = document.getElementById('footer-social-links');
+        if (socialContainer) {
+            const socialLinks = socialContainer.querySelectorAll('a');
+            socialLinks.forEach(link => {
+                const text = link.textContent.toLowerCase();
+                if (text.includes('fb') && contentData.social.facebook) {
+                    link.href = contentData.social.facebook;
+                } else if (text.includes('ig') && contentData.social.instagram) {
+                    link.href = contentData.social.instagram;
+                } else if (text.includes('tw') && contentData.social.twitter) {
+                    link.href = contentData.social.twitter;
+                } else if (text.includes('yt') && contentData.social.youtube) {
+                    link.href = contentData.social.youtube;
+                } else if (text.includes('li') && contentData.social.linkedin) {
+                    link.href = contentData.social.linkedin;
+                }
+            });
+        }
+    }
+}
+
+// FUNCTION 8: Update Hero Section
+async function updateHeroSection() {
+    if (!contentData.hero) return;
+    
+    const heroTitle = document.querySelector('.hero-title');
+    if (heroTitle && contentData.hero.title) {
+        heroTitle.innerHTML = contentData.hero.title;
+    }
+    
+    const heroSubtitle = document.querySelector('.hero-subtitle');
+    if (heroSubtitle && contentData.hero.subtitle) {
+        heroSubtitle.textContent = contentData.hero.subtitle;
+    }
+    
+    const heroImage = document.querySelector('.hero-image');
+    if (heroImage && contentData.hero.imageUrl) {
+        heroImage.src = contentData.hero.imageUrl;
+    }
+    
+    const heroButton = document.querySelector('.hero-button');
+    if (heroButton) {
+        if (contentData.hero.buttonText) {
+            heroButton.textContent = contentData.hero.buttonText;
+        }
+        if (contentData.hero.buttonLink) {
+            heroButton.href = contentData.hero.buttonLink;
+        }
+    }
+    
+    const secondaryButton = document.querySelector('.hero-secondary-button');
+    if (secondaryButton) {
+        if (contentData.hero.secondaryButtonText) {
+            secondaryButton.textContent = contentData.hero.secondaryButtonText;
+        }
+        if (contentData.hero.secondaryButtonLink) {
+            secondaryButton.href = contentData.hero.secondaryButtonLink;
+        }
+    }
+    
+    const badgeElement = document.querySelector('.hero-badge');
+    if (badgeElement && contentData.hero.badgeText) {
+        badgeElement.textContent = contentData.hero.badgeText;
     }
 }
 

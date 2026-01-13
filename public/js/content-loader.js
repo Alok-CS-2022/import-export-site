@@ -39,6 +39,7 @@ export async function loadSiteContent() {
             // Apply Homepage Specific Sections
             updateWhyChooseUs(content.whyChooseUs || {});
             updateStatsSection(content.stats || {});
+            if (content.sectionTitles) updateSectionTitles(content.sectionTitles);
 
 
 
@@ -185,6 +186,52 @@ function updateStatsSection(stats) {
         if (!value) continue;
         const el = document.getElementById(id);
         if (el) el.setAttribute('data-target', value);
+    }
+}
+
+function updateSectionTitles(titles) {
+    if (!titles) return;
+
+    // Featured Products Section
+    const featuredEyebrow = document.querySelector('#featured-products .text-sm.tracking-widest');
+    const featuredTitle = document.querySelector('#featured-products h2');
+    if (featuredEyebrow && titles.featuredEyebrow) {
+        featuredEyebrow.textContent = titles.featuredEyebrow;
+    }
+    if (featuredTitle && titles.featuredTitle) {
+        featuredTitle.innerHTML = titles.featuredTitle;
+    }
+
+    // Why Choose Us Section
+    const whyTitle = document.getElementById('why-choose-us-title');
+    if (whyTitle && titles.whyChooseUsTitle) {
+        whyTitle.innerHTML = titles.whyChooseUsTitle;
+    }
+
+    // Testimonials Section
+    const testimonialsSection = document.querySelector('section.py-24.bg-stone-50');
+    if (testimonialsSection) {
+        const testEyebrow = testimonialsSection.querySelector('.text-sm.tracking-widest');
+        const testTitle = testimonialsSection.querySelector('h2');
+        if (testEyebrow && titles.testimonialsEyebrow) {
+            testEyebrow.textContent = titles.testimonialsEyebrow;
+        }
+        if (testTitle && titles.testimonialsTitle) {
+            testTitle.innerHTML = titles.testimonialsTitle;
+        }
+    }
+
+    // Blog Stories Section
+    const blogSection = document.querySelector('section.py-24.bg-white.border-t');
+    if (blogSection) {
+        const blogEyebrow = blogSection.querySelector('.text-sm.tracking-widest');
+        const blogTitle = blogSection.querySelector('h2');
+        if (blogEyebrow && titles.blogEyebrow) {
+            blogEyebrow.textContent = titles.blogEyebrow;
+        }
+        if (blogTitle && titles.blogTitle) {
+            blogTitle.innerHTML = titles.blogTitle;
+        }
     }
 }
 

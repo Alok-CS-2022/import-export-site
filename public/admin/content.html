@@ -420,6 +420,64 @@
                 </div>
             </div>
 
+<!-- Section Titles Management -->
+<div class="glass rounded-2xl shadow-xl border border-amber-100 overflow-hidden animate-fadeIn">
+    <div class="bg-gradient-to-r from-purple-600 to-purple-700 px-6 py-4">
+        <h3 class="text-2xl font-light text-white flex items-center gap-2">
+            <span>📝</span> Section Titles
+        </h3>
+        <p class="text-purple-100 text-sm font-light mt-1">Customize all section headings</p>
+    </div>
+    <div class="p-6 space-y-4">
+        <div>
+            <label class="block text-gray-700 font-semibold mb-2">Featured Products - Small Text</label>
+            <input type="text" id="featured-eyebrow" maxlength="50"
+                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-500 transition"
+                placeholder="Curator's Selection">
+            <p class="text-xs text-gray-500 mt-1">The small text above "Featured Masterpieces"</p>
+        </div>
+        <div>
+            <label class="block text-gray-700 font-semibold mb-2">Featured Products - Main Title</label>
+            <input type="text" id="featured-title" maxlength="80"
+                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-500 transition"
+                placeholder="Featured Masterpieces">
+            <p class="text-xs text-gray-500 mt-1">Main heading for the featured products section</p>
+        </div>
+        <div>
+            <label class="block text-gray-700 font-semibold mb-2">Why Choose Us - Title</label>
+            <input type="text" id="why-section-title" maxlength="80"
+                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-500 transition"
+                placeholder="Why Collectors Choose Us">
+            <p class="text-xs text-gray-500 mt-1">Main heading for Why Choose Us section</p>
+        </div>
+        <div>
+            <label class="block text-gray-700 font-semibold mb-2">Testimonials - Small Text</label>
+            <input type="text" id="testimonials-eyebrow" maxlength="50"
+                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-500 transition"
+                placeholder="Patron Voices">
+        </div>
+        <div>
+            <label class="block text-gray-700 font-semibold mb-2">Testimonials - Main Title</label>
+            <input type="text" id="testimonials-title" maxlength="80"
+                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-500 transition"
+                placeholder="What the World Says">
+        </div>
+        <div>
+            <label class="block text-gray-700 font-semibold mb-2">Blog Stories - Small Text</label>
+            <input type="text" id="blog-eyebrow" maxlength="50"
+                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-500 transition"
+                placeholder="Craftsman Chronicles">
+        </div>
+        <div>
+            <label class="block text-gray-700 font-semibold mb-2">Blog Stories - Main Title</label>
+            <input type="text" id="blog-title" maxlength="80"
+                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-500 transition"
+                placeholder="Latest Stories">
+        </div>
+    </div>
+</div>
+
+
 
 
             <!-- Himalayan Slider -->
@@ -711,6 +769,15 @@
                     document.getElementById('stats-years').value = c.stats?.yearsInBusiness || ''
                     document.getElementById('stats-rating').value = c.stats?.averageRating || ''
 
+                    // Section Titles
+                    document.getElementById('featured-eyebrow').value = c.sectionTitles?.featuredEyebrow || 'Curator\'s Selection'
+                    document.getElementById('featured-title').value = c.sectionTitles?.featuredTitle || 'Featured Masterpieces'
+                    document.getElementById('why-section-title').value = c.sectionTitles?.whyChooseUsTitle || 'Why Collectors Choose Us'
+                    document.getElementById('testimonials-eyebrow').value = c.sectionTitles?.testimonialsEyebrow || 'Patron Voices'
+                    document.getElementById('testimonials-title').value = c.sectionTitles?.testimonialsTitle || 'What the World Says'
+                    document.getElementById('blog-eyebrow').value = c.sectionTitles?.blogEyebrow || 'Craftsman Chronicles'
+                    document.getElementById('blog-title').value = c.sectionTitles?.blogTitle || 'Latest Stories'
+
 
 
                     // Load new sections
@@ -817,7 +884,14 @@
             document.getElementById('stats-years').value = '15'
             document.getElementById('stats-rating').value = '4.9'
 
-
+            // Section Titles
+            document.getElementById('featured-eyebrow').value = 'Curator\'s Selection'
+            document.getElementById('featured-title').value = 'Featured Masterpieces'
+            document.getElementById('why-section-title').value = 'Why Collectors Choose Us'
+            document.getElementById('testimonials-eyebrow').value = 'Patron Voices'
+            document.getElementById('testimonials-title').value = 'What the World Says'
+            document.getElementById('blog-eyebrow').value = 'Craftsman Chronicles'
+            document.getElementById('blog-title').value = 'Latest Stories'
 
             // Initialize empty arrays for new sections
             renderSliderItems([])
@@ -1210,6 +1284,16 @@
                     yearsInBusiness: parseInt(document.getElementById('stats-years').value) || 0,
                     averageRating: parseFloat(document.getElementById('stats-rating').value) || 0
                 },
+
+    sectionTitles: {
+        featuredEyebrow: document.getElementById('featured-eyebrow').value || 'Curator\'s Selection',
+        featuredTitle: document.getElementById('featured-title').value || 'Featured Masterpieces',
+        whyChooseUsTitle: document.getElementById('why-section-title').value || 'Why Collectors Choose Us',
+        testimonialsEyebrow: document.getElementById('testimonials-eyebrow').value || 'Patron Voices',
+        testimonialsTitle: document.getElementById('testimonials-title').value || 'What the World Says',
+        blogEyebrow: document.getElementById('blog-eyebrow').value || 'Craftsman Chronicles',
+        blogTitle: document.getElementById('blog-title').value || 'Latest Stories'
+    },
 
                 himalayanSlider: {
                     items: collectSliderItems()

@@ -25,11 +25,7 @@ export async function loadSiteContent() {
             // Apply Hero Section
             if (content.hero) updateHeroSection(content.hero);
 
-            // Apply About Section
-            if (content.about) updateAboutSection(content.about);
 
-            // Apply Contact Information
-            if (content.contact) updateContactSection(content.contact);
 
             // Apply Social Media Links
             if (content.social) updateSocialLinks(content.social);
@@ -44,9 +40,7 @@ export async function loadSiteContent() {
             updateWhyChooseUs(content.whyChooseUs || {});
             updateStatsSection(content.stats || {});
 
-            if (content.newsletter) {
-                updateNewsletterSection(content.newsletter);
-            }
+
 
             // Apply new dynamic sections
             if (content.himalayanSlider) {
@@ -107,31 +101,7 @@ function updateHeroSection(hero) {
     if (imageEl && hero.imageUrl) imageEl.src = hero.imageUrl;
 }
 
-function updateAboutSection(about) {
-    const titleEl = document.querySelector('.about-title');
-    const descEl = document.querySelector('.about-description');
 
-    if (titleEl && about.title) titleEl.textContent = about.title;
-    if (descEl && about.description) descEl.textContent = about.description;
-}
-
-function updateContactSection(contact) {
-    const emailEl = document.querySelector('.contact-email') || document.getElementById('contact-email-link');
-    const phoneEl = document.querySelector('.contact-phone');
-    const addressEl = document.querySelector('.contact-address') || document.getElementById('contact-address-text');
-    const hoursEl = document.querySelector('.contact-hours') || document.getElementById('contact-hours-text');
-
-    if (emailEl && contact.email) {
-        emailEl.textContent = contact.email;
-        emailEl.href = `mailto:${contact.email}`;
-    }
-    if (phoneEl && contact.phone) {
-        phoneEl.textContent = contact.phone;
-        phoneEl.href = `tel:${contact.phone}`;
-    }
-    if (addressEl && contact.address) addressEl.textContent = contact.address;
-    if (hoursEl && contact.businessHours) hoursEl.textContent = contact.businessHours;
-}
 
 function updateSocialLinks(social) {
     const facebookEl = document.querySelector('.social-facebook');
@@ -218,15 +188,7 @@ function updateStatsSection(stats) {
     }
 }
 
-function updateNewsletterSection(data) {
-    const titleEl = document.getElementById('newsletter-title');
-    const subEl = document.getElementById('newsletter-subtitle');
-    const btnEl = document.getElementById('newsletter-btn');
 
-    if (titleEl && data.title) titleEl.textContent = data.title;
-    if (subEl && data.subtitle) subEl.textContent = data.subtitle;
-    if (btnEl && data.buttonText) btnEl.textContent = data.buttonText;
-}
 
 function updateHimalayanSlider(slider) {
     const container = document.getElementById('anti-gravity-track');

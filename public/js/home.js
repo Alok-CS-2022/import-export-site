@@ -7,8 +7,8 @@ const testimonialsContainer = document.getElementById('testimonials-slider')
 
 async function initHome() {
     loadFeaturedProducts()
-    loadCategoryShowcase()
     loadHeritageSlider()
+    loadCategoryShowcase()  // ADD THIS LINE
     loadFeaturedTestimonials()
     initStatsCounter()
 }
@@ -89,6 +89,58 @@ function renderHeritageSlides(products) {
     }
 }
 
+// Load categories from content management
+async function loadCategoryShowcase() {
+    const container = document.getElementById('category-showcase');
+    if (!container) return;
+
+    // Check if categories are loaded from content management
+    if (window.contentCategories && window.contentCategories.length > 0) {
+        const categories = window.contentCategories.slice(0, 4); // Max 4 categories
+        container.innerHTML = categories.map(cat => `
+            <div class="group cursor-pointer scroll-reveal" onclick="goToCategory('${escapeHtml(cat.id || '')}')">
+                <div class="aspect-square rounded-3xl overflow-hidden mb-6 shadow-md group-hover:shadow-2xl transition-all duration-500">
+                    <img src="${escapeHtml(cat.imageUrl || 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=600&q=90')}" 
+                        alt="${escapeHtml(cat.name || '')}"
+                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        onerror="this.src='https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=600&q=90'">
+                </div>
+                <h3 class="text-xl font-light text-gray-900 group-hover:text-amber-800 transition-colors text-center">${escapeHtml(cat.name || '')}</h3>
+            </div>
+        `).join('');
+        if (window.initScrollReveal) window.initScrollReveal();
+        return;
+    }
+
+    // Fallback: try to load from database
+    try {
+        const { data: categories, error } = await supabase
+            .from('categories')
+            .select('*')
+            .order('display_order')
+            .limit(4);
+
+        if (error) throw error;
+
+        if (categories && categories.length > 0) {
+            container.innerHTML = categories.map(cat => `
+                <div class="group cursor-pointer scroll-reveal" onclick="goToCategory('${cat.id}')">
+                    <div class="aspect-square rounded-3xl overflow-hidden mb-6 shadow-md group-hover:shadow-2xl transition-all duration-500">
+                        <img src="${cat.image_url || 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=600&q=90'}" 
+                            alt="${cat.name}"
+                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                            onerror="this.src='https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=600&q=90'">
+                    </div>
+                    <h3 class="text-xl font-light text-gray-900 group-hover:text-amber-800 transition-colors text-center">${cat.name}</h3>
+                </div>
+            `).join('');
+            if (window.initScrollReveal) window.initScrollReveal();
+        }
+    } catch (err) {
+        console.error('Error loading categories:', err);
+    }
+}
+
 // Load products marked as featured
 async function loadFeaturedProducts() {
     if (!featuredGrid) return
@@ -141,65 +193,6 @@ async function loadFeaturedProducts() {
         console.warn('Supabase fetch failed, using fallback products:', err)
         renderProducts(defaultProducts)
     }
-}
-
-// Load categories for visual grid
-async function loadCategoryShowcase() {
-    if (!categoryShowcase) return
-
-    const defaultCategories = [
-        { id: 'singing-bowls', name: 'Singing Bowls', image_url: 'https://images.unsplash.com/photo-1599458319801-443b73259966?w=800&q=80' },
-        { id: 'thangkas', name: 'Thangka Art', image_url: 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80' },
-        { id: 'statues', name: 'Buddha Statues', image_url: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&q=80' },
-        { id: 'jewelry', name: 'Artisan Jewelry', image_url: 'https://images.unsplash.com/photo-1626014303757-646637e90952?w=800&q=80' }
-    ];
-
-    // Check if categories are loaded from content management
-    if (window.contentCategories && window.contentCategories.length > 0) {
-        const displayCats = window.contentCategories.slice(0, 4).map(cat => ({
-            id: cat.id || cat.name.toLowerCase().replace(/\s+/g, '-'),
-            name: cat.name,
-            image_url: cat.imageUrl || defaultCategories[0].image_url
-        }));
-        renderCategoryGrid(displayCats);
-        return;
-    }
-
-    try {
-        let { data: categories, error } = await supabase
-            .from('categories')
-            .select('*')
-            .order('display_order', { ascending: true })
-            .limit(4)
-
-        if (error) throw error
-
-        // If DB is empty, use premium fallbacks
-        const displayCats = (categories && categories.length > 0) ? categories : defaultCategories;
-
-        renderCategoryGrid(displayCats);
-    } catch (err) {
-        console.warn('Supabase fetch failed, using fallback categories:', err)
-        renderCategoryGrid(defaultCategories);
-    }
-}
-
-function renderCategoryGrid(displayCats) {
-    if (!categoryShowcase) return;
-    
-    categoryShowcase.innerHTML = displayCats.map(cat => `
-            <div class="group relative aspect-square rounded-3xl overflow-hidden cursor-pointer scroll-reveal shadow-md hover:shadow-2xl transition-all duration-500" onclick="goToCategory('${cat.id}')">
-                <img src="${cat.image_url}" alt="${cat.name}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-8 text-white">
-                    <h3 class="text-2xl font-light mb-1 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">${cat.name}</h3>
-                    <div class="h-px w-0 group-hover:w-full bg-amber-500 transition-all duration-700 mb-4"></div>
-                    <p class="text-sm text-amber-200 font-light opacity-0 group-hover:opacity-100 transition-opacity duration-700">Explore Collection →</p>
-                </div>
-            </div>
-        `).join('')
-
-    // Initialize reveal animations
-    if (window.initScrollReveal) window.initScrollReveal()
 }
 
 // Load featured testimonials

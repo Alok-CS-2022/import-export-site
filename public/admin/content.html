@@ -218,55 +218,7 @@
                 </div>
             </div>
 
-            <!-- Business Information -->
-            <div class="glass rounded-2xl shadow-xl border border-amber-100 overflow-hidden animate-fadeIn">
-                <div class="bg-gradient-to-r from-green-600 to-green-700 px-6 py-4">
-                    <h3 class="text-2xl font-light text-white flex items-center gap-2">
-                        <span>🏢</span> Business Information
-                    </h3>
-                    <p class="text-green-100 text-sm font-light mt-1">About your company</p>
-                </div>
-                <div class="p-6 space-y-4">
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2">About Title</label>
-                        <input type="text" id="about-title"
-                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-green-500 transition"
-                            placeholder="About Us">
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2">About Description</label>
-                        <textarea id="about-description" rows="5"
-                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-green-500 transition resize-none"
-                            placeholder="Tell your story..."></textarea>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-gray-700 font-semibold mb-2">Contact Email</label>
-                            <input type="email" id="contact-email"
-                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-green-500 transition"
-                                placeholder="info@example.com">
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 font-semibold mb-2">Contact Phone</label>
-                            <input type="tel" id="contact-phone"
-                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-green-500 transition"
-                                placeholder="+977 1234567890">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Address</label>
-                        <input type="text" id="contact-address"
-                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-green-500 transition"
-                            placeholder="Kathmandu, Nepal">
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Business Hours</label>
-                        <input type="text" id="contact-hours"
-                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-green-500 transition"
-                            placeholder="Mon-Fri: 9AM-6PM NPT">
-                    </div>
-                </div>
-            </div>
+
 
             <!-- Social Media Hub -->
             <div class="glass rounded-2xl shadow-xl border border-amber-100 overflow-hidden animate-fadeIn">
@@ -468,34 +420,7 @@
                 </div>
             </div>
 
-            <!-- Newsletter -->
-            <div class="glass rounded-2xl shadow-xl border border-amber-100 overflow-hidden animate-fadeIn">
-                <div class="bg-gradient-to-r from-rose-600 to-rose-700 px-6 py-4">
-                    <h3 class="text-2xl font-light text-white flex items-center gap-2">
-                        <span>📧</span> Newsletter Signup
-                    </h3>
-                    <p class="text-rose-100 text-sm font-light mt-1">Email capture form configuration</p>
-                </div>
-                <div class="p-6 space-y-4">
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Headline</label>
-                        <input type="text" id="newsletter-title"
-                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl"
-                            placeholder="Get 10% Off Your First Order">
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Subtitle</label>
-                        <input type="text" id="newsletter-subtitle"
-                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl"
-                            placeholder="Plus exclusive deals and new arrivals">
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Button Text</label>
-                        <input type="text" id="newsletter-button"
-                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl" placeholder="Subscribe">
-                    </div>
-                </div>
-            </div>
+
 
             <!-- Himalayan Slider -->
             <div class="glass rounded-2xl shadow-xl border border-amber-100 overflow-hidden animate-fadeIn">
@@ -756,13 +681,7 @@
                     document.getElementById('seo-description').value = c.seo?.metaDescription || ''
                     document.getElementById('seo-keywords').value = c.seo?.keywords || ''
 
-                    document.getElementById('about-title').value = c.about?.title || ''
-                    document.getElementById('about-description').value = c.about?.description || ''
 
-                    document.getElementById('contact-email').value = c.contact?.email || ''
-                    document.getElementById('contact-phone').value = c.contact?.phone || ''
-                    document.getElementById('contact-address').value = c.contact?.address || ''
-                    document.getElementById('contact-hours').value = c.contact?.businessHours || ''
 
                     document.getElementById('social-facebook').value = c.social?.facebook || ''
                     document.getElementById('social-instagram').value = c.social?.instagram || ''
@@ -792,10 +711,7 @@
                     document.getElementById('stats-years').value = c.stats?.yearsInBusiness || ''
                     document.getElementById('stats-rating').value = c.stats?.averageRating || ''
 
-                    // Newsletter
-                    document.getElementById('newsletter-title').value = c.newsletter?.title || ''
-                    document.getElementById('newsletter-subtitle').value = c.newsletter?.subtitle || ''
-                    document.getElementById('newsletter-button').value = c.newsletter?.buttonText || ''
+
 
                     // Load new sections
                     if (c.himalayanSlider && Array.isArray(c.himalayanSlider.items)) {
@@ -876,13 +792,9 @@
             document.getElementById('seo-description').value = 'Discover authentic handcrafted treasures from Nepal. Shop statues, singing bowls, thangkas, and more.'
             document.getElementById('seo-keywords').value = 'nepal handicrafts, singing bowls, buddha statues'
 
-            document.getElementById('about-title').value = 'About Us'
-            document.getElementById('about-description').value = 'We bring authentic Nepalese handicrafts to the world...'
 
-            document.getElementById('contact-email').value = 'info@example.com'
-            document.getElementById('contact-phone').value = '+977 1234567890'
-            document.getElementById('contact-address').value = 'Kathmandu, Nepal'
-            document.getElementById('contact-hours').value = 'Mon-Fri: 9AM-6PM NPT'
+
+
 
             document.getElementById('footer-copyright').value = '© 2024 Import From Nepal. All rights reserved.'
 
@@ -905,10 +817,7 @@
             document.getElementById('stats-years').value = '15'
             document.getElementById('stats-rating').value = '4.9'
 
-            // Newsletter
-            document.getElementById('newsletter-title').value = 'Get 10% Off Your First Order'
-            document.getElementById('newsletter-subtitle').value = 'Plus exclusive deals and new arrivals'
-            document.getElementById('newsletter-button').value = 'Subscribe'
+
 
             // Initialize empty arrays for new sections
             renderSliderItems([])
@@ -1262,16 +1171,7 @@
                     metaDescription: document.getElementById('seo-description').value,
                     keywords: document.getElementById('seo-keywords').value
                 },
-                about: {
-                    title: document.getElementById('about-title').value,
-                    description: document.getElementById('about-description').value
-                },
-                contact: {
-                    email: document.getElementById('contact-email').value,
-                    phone: document.getElementById('contact-phone').value,
-                    address: document.getElementById('contact-address').value,
-                    businessHours: document.getElementById('contact-hours').value
-                },
+
                 social: {
                     facebook: document.getElementById('social-facebook').value,
                     instagram: document.getElementById('social-instagram').value,
@@ -1310,11 +1210,7 @@
                     yearsInBusiness: parseInt(document.getElementById('stats-years').value) || 0,
                     averageRating: parseFloat(document.getElementById('stats-rating').value) || 0
                 },
-                newsletter: {
-                    title: document.getElementById('newsletter-title').value,
-                    subtitle: document.getElementById('newsletter-subtitle').value,
-                    buttonText: document.getElementById('newsletter-button').value
-                },
+
                 himalayanSlider: {
                     items: collectSliderItems()
                 },

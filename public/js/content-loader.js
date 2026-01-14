@@ -21,7 +21,17 @@ export async function loadSiteContent() {
             console.log('localStorage data:', localData);
             if (localData) {
                 content = JSON.parse(localData);
-                console.log('Loaded content from localStorage:', content);
+
+                // CLEAN: Remove prototype pollution
+                const cleanContent = {};
+                Object.keys(content).forEach(key => {
+                    if (content.hasOwnProperty(key)) {
+                        cleanContent[key] = content[key];
+                    }
+                });
+                content = cleanContent;
+
+                console.log('Cleaned content object:', JSON.stringify(content));
 
                 // CRITICAL FIX: Actually call the update functions!
                 console.log('Now applying loaded content...');
@@ -47,6 +57,17 @@ export async function loadSiteContent() {
         } else {
             content = data.content;
             console.log('Loaded content from database:', content);
+
+            // CLEAN: Remove prototype pollution
+            const cleanContent = {};
+            Object.keys(content).forEach(key => {
+                if (content.hasOwnProperty(key)) {
+                    cleanContent[key] = content[key];
+                }
+            });
+            content = cleanContent;
+
+            console.log('Cleaned content object:', JSON.stringify(content));
 
             // CRITICAL FIX: Actually call the update functions!
             console.log('Now applying loaded content...');
@@ -228,59 +249,55 @@ function updateStatsSection(stats) {
         stats = { happyCustomers: 20, productsSold: 500, yearsInBusiness: 15, averageRating: '4.8' };
     }
 
-    // Get all elements - check for BOTH possible IDs
-    const el1_correct = document.getElementById('stat-happy-customers'); // correct ID
-    const el1_typo = document.getElementById('stat-happy-customers'); // typo ID
-    const el2 = document.getElementById('stat-products-sold');
-    const el3 = document.getElementById('stat-years-business');
-    const el4 = document.getElementById('stat-avg-rating');
+    // Define update function
+    const updateStat = (elementId, value) => {
+        let el = document.getElementById(elementId);
 
-    console.log('DOM elements found:', {
-        'stat-happy-customers (correct)': !!el1_correct,
-        'stat-happy-customers (typo)': !!el1_typo,
-        'stat-products-sold': !!el2,
-        'stat-years-business': !!el3,
-        'stat-avg-rating': !!el4
-    });
+        // Retry if element not found (might be loading)
+        let retries = 0;
+        const maxRetries = 5;
+        const retryInterval = 100;
 
-    // Update each element directly with FORCE refresh
-    if (el1_correct) {
-        const suffix = el1_correct.getAttribute('data-suffix') || '+';
-        el1_correct.textContent = stats.happyCustomers + suffix;
-        el1_correct.setAttribute('data-target', stats.happyCustomers);
-        // Force reflow
-        el1_correct.style.display = 'none';
-        el1_correct.offsetHeight; // trigger reflow
-        el1_correct.style.display = '';
-        console.log('✅ Updated stat-happy-customers to:', el1_correct.textContent);
-    }
-    if (el2) {
-        const suffix = el2.getAttribute('data-suffix') || '+';
-        el2.textContent = stats.productsSold + suffix;
-        el2.setAttribute('data-target', stats.productsSold);
-        el2.style.display = 'none';
-        el2.offsetHeight;
-        el2.style.display = '';
-        console.log('✅ Updated stat-products-sold to:', el2.textContent);
-    }
-    if (el3) {
-        const suffix = el3.getAttribute('data-suffix') || '+';
-        el3.textContent = stats.yearsInBusiness + suffix;
-        el3.setAttribute('data-target', stats.yearsInBusiness);
-        el3.style.display = 'none';
-        el3.offsetHeight;
-        el3.style.display = '';
-        console.log('✅ Updated stat-years-business to:', el3.textContent);
-    }
-    if (el4) {
-        const suffix = el4.getAttribute('data-suffix') || '+';
-        el4.textContent = stats.averageRating + suffix;
-        el4.setAttribute('data-target', stats.averageRating);
-        el4.style.display = 'none';
-        el4.offsetHeight;
-        el4.style.display = '';
-        console.log('✅ Updated stat-avg-rating to:', el4.textContent);
-    }
+        const attemptUpdate = () => {
+            el = document.getElementById(elementId);
+            if (!el) {
+                retries++;
+                console.warn(`Attempt ${retries}/${maxRetries}: Element ${elementId} not found, retrying...`);
+                if (retries < maxRetries) {
+                    setTimeout(attemptUpdate, retryInterval);
+                    return;
+                } else {
+                    console.error(`Element ${elementId} not found after ${maxRetries} attempts`);
+                    return;
+                }
+            }
+
+            const suffix = el.getAttribute('data-suffix') || '+';
+            el.textContent = value + suffix;
+            el.setAttribute('data-target', value);
+
+            // Force reflow
+            el.style.display = 'none';
+            el.offsetHeight; // trigger reflow
+            el.style.display = '';
+
+            console.log(`✅ Updated ${elementId} to:`, el.textContent);
+
+            // Add visual indicator
+            el.style.backgroundColor = '#fef08a'; // yellow highlight
+            setTimeout(() => {
+                el.style.backgroundColor = '';
+            }, 1000);
+        };
+
+        attemptUpdate();
+    };
+
+    // Update all stats
+    updateStat('stat-happy-customers', stats.happyCustomers);
+    updateStat('stat-products-sold', stats.productsSold);
+    updateStat('stat-years-business', stats.yearsInBusiness);
+    updateStat('stat-avg-rating', stats.averageRating);
 
     console.log('=== updateStatsSection END ===');
 }

@@ -179,6 +179,9 @@
                             <button onclick="openHomepage()" class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg text-sm font-medium">
                                 🏠 Test Homepage
                             </button>
+                            <button onclick="runDirectTest()" class="px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg text-sm font-medium">
+                                ⚡ Direct Test
+                            </button>
                         </div>
                         <div class="text-center mt-4">
                             <div class="text-sm text-gray-600 mb-2">Need Help?</div>
@@ -840,6 +843,28 @@
         window.openHomepage = function() {
             // Open homepage in new tab with cache-busting
             window.open('../index.html?t=' + Date.now(), '_blank')
+        }
+
+        // Direct test function
+        window.runDirectTest = function() {
+            // Step 1: Save test data to localStorage
+            const testData = {
+                stats: {
+                    happyCustomers: 77,
+                    productsSold: 888,
+                    yearsInBusiness: 25,
+                    averageRating: '4.9'
+                }
+            };
+            localStorage.setItem('site_content', JSON.stringify(testData));
+
+            // Step 2: Verify saved
+            const saved = localStorage.getItem('site_content');
+            alert('Step 1: Data saved to localStorage:\n' + saved);
+
+            // Step 3: Open homepage
+            alert('Step 2: Opening homepage in new tab.\n\nPress F12 to open console and look for:\n"=== updateStatsSection START ==="');
+            window.open('../index.html?t=' + Date.now(), '_blank');
         }
 
         // Initialize

@@ -209,46 +209,63 @@ function updateStatsSection(stats) {
     console.log('stats received:', stats);
 
     if (!stats) {
-        console.log('No stats provided, using defaults');
-        stats = { happyCustomers: 20, productsSold: 500, yearsInBusiness: 15, averageRating: '4.8' };
+        console.log('No stats provided');
+        return;
     }
 
-    // Check if elements exist in DOM
+    // Get all elements
     const el1 = document.getElementById('stat-happy-customers');
     const el2 = document.getElementById('stat-products-sold');
     const el3 = document.getElementById('stat-years-business');
     const el4 = document.getElementById('stat-avg-rating');
 
-    console.log('DOM elements found:', {
-        'stat-happy-customers': !!el1,
-        'stat-products-sold': !!el2,
-        'stat-years-business': !!el3,
-        'stat-avg-rating': !!el4
+    console.log('Looking for elements:', {
+        'stat-happy-customers': el1 ? 'FOUND' : 'NOT FOUND',
+        'stat-products-sold': el2 ? 'FOUND' : 'NOT FOUND',
+        'stat-years-business': el3 ? 'FOUND' : 'NOT FOUND',
+        'stat-avg-rating': el4 ? 'FOUND' : 'NOT FOUND'
     });
 
+    // Update each element directly
     if (el1) {
-        el1.textContent = stats.happyCustomers + '+';
+        const suffix = el1.getAttribute('data-suffix') || '+';
+        el1.textContent = stats.happyCustomers + suffix;
         el1.setAttribute('data-target', stats.happyCustomers);
         console.log('✅ Updated stat-happy-customers to:', el1.textContent);
     }
     if (el2) {
-        el2.textContent = stats.productsSold + '+';
+        const suffix = el2.getAttribute('data-suffix') || '+';
+        el2.textContent = stats.productsSold + suffix;
         el2.setAttribute('data-target', stats.productsSold);
         console.log('✅ Updated stat-products-sold to:', el2.textContent);
     }
     if (el3) {
-        el3.textContent = stats.yearsInBusiness + '+';
+        const suffix = el3.getAttribute('data-suffix') || '+';
+        el3.textContent = stats.yearsInBusiness + suffix;
         el3.setAttribute('data-target', stats.yearsInBusiness);
         console.log('✅ Updated stat-years-business to:', el3.textContent);
     }
     if (el4) {
-        el4.textContent = stats.averageRating + '+';
+        const suffix = el4.getAttribute('data-suffix') || '+';
+        el4.textContent = stats.averageRating + suffix;
         el4.setAttribute('data-target', stats.averageRating);
         console.log('✅ Updated stat-avg-rating to:', el4.textContent);
     }
 
     console.log('=== updateStatsSection END ===');
 }
+
+// Make it globally accessible for debugging
+window.manualUpdateStats = function() {
+    const data = localStorage.getItem('site_content');
+    if (data) {
+        const content = JSON.parse(data);
+        console.log('Manually updating stats with:', content.stats);
+        updateStatsSection(content.stats);
+    } else {
+        console.log('No data in localStorage');
+    }
+};
 
 function updateSectionTitles(titles) {
     if (!titles) return;

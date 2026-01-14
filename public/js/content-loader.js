@@ -18,9 +18,10 @@ export async function loadSiteContent() {
             console.log('Database not available, checking localStorage:', error.message);
             // Fall back to localStorage
             const localData = localStorage.getItem('site_content');
+            console.log('localStorage data:', localData);
             if (localData) {
                 content = JSON.parse(localData);
-                console.log('Loaded content from localStorage');
+                console.log('Loaded content from localStorage:', content);
             } else {
                 console.log('No custom content found, using defaults');
                 // Still call these to apply hardcoded fallbacks
@@ -30,7 +31,7 @@ export async function loadSiteContent() {
             }
         } else {
             content = data.content;
-            console.log('Loaded content from database');
+            console.log('Loaded content from database:', content);
         }
 
         if (content) {
@@ -52,15 +53,21 @@ export async function loadSiteContent() {
             if (content.footer) updateFooter(content.footer);
 
             // Apply Homepage Specific Sections
-            updateWhyChooseUs(content.whyChooseUs || {});
-            updateStatsSection(content.stats || {});
-            if (content.sectionTitles) updateSectionTitles(content.sectionTitles);
+            console.log('About to apply content updates...');
 
-            console.log('Applied content updates:', {
-                hero: content.hero,
-                stats: content.stats,
-                whyChooseUs: content.whyChooseUs
-            });
+            // Wait for DOM to be fully ready
+            setTimeout(() => {
+                console.log('Applying content updates now...');
+                updateWhyChooseUs(content.whyChooseUs || {});
+                updateStatsSection(content.stats || {});
+                if (content.sectionTitles) updateSectionTitles(content.sectionTitles);
+
+                console.log('Applied content updates:', {
+                    hero: content.hero,
+                    stats: content.stats,
+                    whyChooseUs: content.whyChooseUs
+                });
+            }, 100);
 
             // Apply legacy dynamic sections
             if (content.himalayanSlider) {

@@ -4,1360 +4,438 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Content Studio - Artisan Vault</title>
-    <script defer src="https://cloud.umami.is/script.js"
-        data-website-id="ac82397e-0bc4-4fe6-bac5-42f6b962b391"></script>
+    <title>Content Management - Import From Nepal Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-30N5XW6E4C"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-        gtag('config', 'G-30N5XW6E4C');
-    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        @keyframes fadeIn {
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes slideIn {
             from {
                 opacity: 0;
                 transform: translateY(20px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
 
-        .animate-fadeIn {
-            animation: fadeIn 0.6s ease-out;
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
-        .premium-gradient {
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        .spinner {
+            animation: spin 1s linear infinite;
         }
 
-        .gold-gradient {
-            background: linear-gradient(135deg, #D97706 0%, #F59E0B 100%);
-        }
-
-        .glass {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-        }
-
-        .char-counter {
-            font-size: 0.75rem;
-            color: #9CA3AF;
-        }
-
-        .char-counter.warning {
-            color: #F59E0B;
-        }
-
-        .char-counter.error {
-            color: #EF4444;
-        }
+        .char-count-ok { color: #4b5563; } /* gray-600 */
+        .char-count-warning { color: #f97316; } /* orange-500 */
+        .char-count-danger { color: #ef4444; } /* red-500 */
     </style>
 </head>
 
-<body class="bg-gradient-to-br from-stone-50 to-amber-50 min-h-screen">
-    <!-- Premium Header -->
-    <nav class="premium-gradient text-white shadow-2xl sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 py-4">
-            <div class="flex justify-between items-center">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 gold-gradient rounded-lg flex items-center justify-center shadow-lg">
-                        <span class="text-2xl">✨</span>
-                    </div>
-                    <div>
-                        <h1 class="text-2xl font-light tracking-tight">Content Studio</h1>
-                        <p class="text-xs text-gray-400 font-light">Manage your website content</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-6">
-                    <a href="dashboard.html" class="text-gray-300 hover:text-white transition font-light">Dashboard</a>
-                    <a href="products.html" class="text-gray-300 hover:text-white transition font-light">Products</a>
-                    <a href="order.html" class="text-gray-300 hover:text-white transition font-light">Orders</a>
-                    <a href="../index.html" target="_blank"
-                        class="gold-gradient px-5 py-2.5 rounded-lg font-medium text-white hover:shadow-lg transition">
-                        Preview Site
-                    </a>
-                    <button onclick="logout()"
-                        class="bg-red-600 hover:bg-red-700 px-5 py-2.5 rounded-lg font-medium transition">
-                        Sign Out
-                    </button>
-                </div>
+<body class="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 overflow-hidden">
+    <!-- Floating Orbs -->
+    <div class="absolute top-0 left-0 w-96 h-96 bg-amber-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20" style="animation: float 10s ease-in-out infinite;"></div>
+    <div class="absolute top-0 right-0 w-96 h-96 bg-orange-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20" style="animation: float 12s ease-in-out infinite 2s;"></div>
+    <div class="absolute bottom-0 left-1/4 w-96 h-96 bg-red-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20" style="animation: float 14s ease-in-out infinite 4s;"></div>
+
+    <div id="alertBox" class="hidden fixed top-5 right-5 z-50"></div>
+
+    <div class="max-w-6xl mx-auto px-4 py-8 relative z-10">
+        <!-- Header Card -->
+        <header
+            class="mb-8 p-6 bg-white/95 backdrop-blur-20 rounded-3xl shadow-2xl border border-amber-100 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <span class="text-3xl">🏔️</span>
+                <h1 class="text-3xl font-light text-gray-800">
+                    Content Management
+                    <span class="italic text-amber-800 font-normal">System</span>
+                </h1>
             </div>
-        </div>
-    </nav>
+            <div class="flex items-center gap-4">
+                <span class="bg-amber-100 text-amber-800 text-xs font-semibold px-3 py-1 rounded-full">Admin</span>
+                <button onclick="logout()" class="text-sm text-gray-600 hover:text-amber-800 transition">Logout</button>
+            </div>
+        </header>
 
-    <div class="max-w-5xl mx-auto px-6 py-12">
-        <!-- Success/Error Messages -->
-        <div id="success-message"
-            class="hidden bg-green-50 border-l-4 border-green-500 text-green-800 px-6 py-4 rounded-lg mb-6 shadow-md animate-fadeIn">
-        </div>
-        <div id="error-message"
-            class="hidden bg-red-50 border-l-4 border-red-500 text-red-800 px-6 py-4 rounded-lg mb-6 shadow-md animate-fadeIn">
-        </div>
+        <!-- Main Form -->
+        <form id="content-form" class="glass-card p-8 rounded-3xl shadow-2xl space-y-12 border border-white/90">
 
-        <form id="content-form" class="space-y-6">
-
-            <!-- Hero Studio -->
-            <div class="glass rounded-2xl shadow-xl border border-amber-100 overflow-hidden animate-fadeIn">
-                <div class="gold-gradient px-6 py-4">
-                    <h3 class="text-2xl font-light text-white flex items-center gap-2">
-                        <span>🎨</span> Hero Studio
-                    </h3>
-                    <p class="text-amber-100 text-sm font-light mt-1">Your homepage's first impression</p>
-                </div>
-                <div class="p-6 space-y-4">
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2">
-                            Hero Title <span class="text-red-500">*</span>
-                        </label>
-                        <input type="text" id="hero-title" maxlength="60" required
-                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-amber-500 transition"
-                            placeholder="Authentic Handicrafts from Nepal">
-                        <p class="char-counter mt-1" id="hero-title-counter">0/60 characters</p>
-                        <p class="text-xs text-gray-500 mt-1">Create a compelling headline that captures attention and communicates your unique value</p>
+            <!-- Section 1: Hero Content -->
+            <div class="pb-8 border-b border-amber-200/60">
+                <h2 class="text-2xl font-light text-gray-800 mb-6 flex items-center gap-3"><span class="text-xl">✨</span> Hero Section</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-8">
+                    <div class="md:col-span-2">
+                        <label for="hero_title" class="block text-sm font-medium text-gray-700 mb-2">Hero Title</label>
+                        <input type="text" id="hero_title" required maxlength="200" placeholder="Handcrafted in the Himalayas" class="w-full px-4 py-3 bg-white/80 border-2 border-gray-200 rounded-xl focus:border-amber-500 focus:ring-4 focus:ring-amber-100 outline-none transition-all duration-300">
+                        <p class="text-xs mt-2 text-right"><span id="hero_title_count" class="char-count-ok">0 / 200</span></p>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="hero_subtitle" class="block text-sm font-medium text-gray-700 mb-2">Hero Subtitle</label>
+                        <textarea id="hero_subtitle" required maxlength="500" rows="3" class="w-full px-4 py-3 bg-white/80 border-2 border-gray-200 rounded-xl focus:border-amber-500 focus:ring-4 focus:ring-amber-100 outline-none transition-all duration-300"></textarea>
+                        <p class="text-xs mt-2 text-right"><span id="hero_subtitle_count" class="char-count-ok">0 / 500</span></p>
                     </div>
                     <div>
-                        <label class="block text-gray-700 font-semibold mb-2">
-                            Subtitle <span class="text-red-500">*</span>
-                        </label>
-                        <input type="text" id="hero-subtitle" maxlength="120" required
-                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-amber-500 transition"
-                            placeholder="Handcrafted treasures from the Himalayas">
-                        <p class="char-counter mt-1" id="hero-subtitle-counter">0/120 characters</p>
-                        <p class="text-xs text-gray-500 mt-1">Add a supporting line that builds interest and encourages action</p>
+                        <label for="hero_cta_text" class="block text-sm font-medium text-gray-700 mb-2">CTA Button Text</label>
+                        <input type="text" id="hero_cta_text" required maxlength="50" class="w-full px-4 py-3 bg-white/80 border-2 border-gray-200 rounded-xl focus:border-amber-500 focus:ring-4 focus:ring-amber-100 outline-none transition-all duration-300">
                     </div>
                     <div>
-                        <label class="block text-gray-700 font-semibold mb-2">
-                            Button Text <span class="text-red-500">*</span>
-                        </label>
-                        <input type="text" id="hero-button" maxlength="30" required
-                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-amber-500 transition"
-                            placeholder="Explore Collection">
-                        <p class="char-counter mt-1" id="hero-button-counter">0/30 characters</p>
-                        <p class="text-xs text-gray-500 mt-1">Use action-oriented words like "Shop Now", "Discover", "Explore"</p>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Hero Image</label>
-                        <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 hover:border-amber-500 transition-colors text-center cursor-pointer"
-                            onclick="document.getElementById('hero-image-upload').click()" id="hero-drop-zone">
-                            <div id="hero-upload-placeholder">
-                                <svg class="w-12 h-12 text-gray-400 mx-auto" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                    </path>
-                                </svg>
-                                <p class="text-gray-600 mt-2">Click to upload hero image</p>
-                                <p class="text-xs text-gray-400">PNG, JPG, WEBP up to 2MB</p>
-                            </div>
-                            <div id="hero-upload-loading" class="hidden">
-                                <svg class="animate-spin h-8 w-8 text-amber-600 mx-auto"
-                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                        stroke-width="4"></circle>
-                                    <path class="opacity-75" fill="currentColor"
-                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                    </path>
-                                </svg>
-                                <p class="text-amber-800 mt-2 text-sm font-medium">Uploading...</p>
-                            </div>
-                        </div>
-                        <input type="file" id="hero-image-upload" class="hidden" accept="image/*"
-                            onchange="handleImageUpload(this, 'hero')">
-                        <input type="hidden" id="hero-image-url">
-                        <div id="hero-image-preview" class="hidden mt-4">
-                            <img id="hero-image-preview-img" src="" alt="Preview"
-                                class="w-full h-48 object-cover rounded-xl">
-                        </div>
+                        <label for="hero_cta_link" class="block text-sm font-medium text-gray-700 mb-2">CTA Button Link</label>
+                        <input type="url" id="hero_cta_link" required class="w-full px-4 py-3 bg-white/80 border-2 border-gray-200 rounded-xl focus:border-amber-500 focus:ring-4 focus:ring-amber-100 outline-none transition-all duration-300">
                     </div>
                 </div>
             </div>
 
-            <!-- SEO Vault -->
-            <div class="glass rounded-2xl shadow-xl border border-amber-100 overflow-hidden animate-fadeIn">
-                <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
-                    <h3 class="text-2xl font-light text-white flex items-center gap-2">
-                        <span>🔍</span> SEO Vault
-                    </h3>
-                    <p class="text-blue-100 text-sm font-light mt-1">Optimize for search engines</p>
+            <!-- Section 2: Testimonials -->
+            <div>
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-light text-gray-800 flex items-center gap-3"><span class="text-xl">💬</span> Testimonials</h2>
+                    <button type="button" onclick="addTestimonial()" class="bg-gradient-to-r from-amber-700 to-amber-800 text-white font-semibold px-6 py-2 rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transform transition-all duration-300">Add Testimonial</button>
                 </div>
-                <div class="p-6 space-y-4">
+                <div id="testimonialsContainer" class="space-y-6"></div>
+                <p id="noTestimonials" class="hidden text-center text-gray-400 py-8">No testimonials yet. Click Add Testimonial to begin.</p>
+            </div>
+
+            <!-- Section 3: Social Media Links -->
+            <div class="pb-8 border-b border-amber-200/60">
+                <h2 class="text-2xl font-light text-gray-800 mb-6 flex items-center gap-3"><span class="text-xl">🌐</span> Social Media Links</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label class="block text-gray-700 font-semibold mb-2">
-                            Meta Title <span class="text-red-500">*</span>
-                        </label>
-                        <input type="text" id="seo-title" maxlength="60" required
-                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 transition"
-                            placeholder="Import From Nepal - Authentic Handicrafts">
-                        <p class="char-counter mt-1" id="seo-title-counter">0/60 characters (optimal for Google)</p>
-                        <p class="text-xs text-gray-500 mt-1">Appears in browser tabs and search results. Include your brand and main keywords</p>
+                        <label for="social_facebook" class="block text-sm font-medium text-gray-700 mb-2">Facebook URL</label>
+                        <input type="url" id="social_facebook" placeholder="https://facebook.com/yourpage" class="w-full px-4 py-3 bg-white/80 border-2 border-gray-200 rounded-xl focus:border-amber-500 focus:ring-4 focus:ring-amber-100 outline-none transition-all duration-300">
                     </div>
                     <div>
-                        <label class="block text-gray-700 font-semibold mb-2">
-                            Meta Description <span class="text-red-500">*</span>
-                        </label>
-                        <textarea id="seo-description" maxlength="160" rows="3" required
-                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 transition resize-none"
-                            placeholder="Discover authentic handcrafted treasures from Nepal..."></textarea>
-                        <p class="char-counter mt-1" id="seo-description-counter">0/160 characters (optimal for Google)</p>
-                        <p class="text-xs text-gray-500 mt-1">Compelling description that encourages clicks from search results</p>
+                        <label for="social_twitter" class="block text-sm font-medium text-gray-700 mb-2">Twitter URL</label>
+                        <input type="url" id="social_twitter" placeholder="https://twitter.com/yourhandle" class="w-full px-4 py-3 bg-white/80 border-2 border-gray-200 rounded-xl focus:border-amber-500 focus:ring-4 focus:ring-amber-100 outline-none transition-all duration-300">
                     </div>
                     <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Keywords</label>
-                        <input type="text" id="seo-keywords"
-                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 transition"
-                            placeholder="nepal handicrafts, singing bowls, buddha statues">
-                        <p class="text-xs text-gray-500 mt-1">Separate with commas. Focus on terms your customers actually search for</p>
+                        <label for="social_instagram" class="block text-sm font-medium text-gray-700 mb-2">Instagram URL</label>
+                        <input type="url" id="social_instagram" placeholder="https://instagram.com/yourhandle" class="w-full px-4 py-3 bg-white/80 border-2 border-gray-200 rounded-xl focus:border-amber-500 focus:ring-4 focus:ring-amber-100 outline-none transition-all duration-300">
+                    </div>
+                    <div>
+                        <label for="social_linkedin" class="block text-sm font-medium text-gray-700 mb-2">LinkedIn URL</label>
+                        <input type="url" id="social_linkedin" placeholder="https://linkedin.com/in/yourprofile" class="w-full px-4 py-3 bg-white/80 border-2 border-gray-200 rounded-xl focus:border-amber-500 focus:ring-4 focus:ring-amber-100 outline-none transition-all duration-300">
                     </div>
                 </div>
             </div>
 
-
-
-            <!-- Social Media Hub -->
-            <div class="glass rounded-2xl shadow-xl border border-amber-100 overflow-hidden animate-fadeIn">
-                <div class="bg-gradient-to-r from-purple-600 to-purple-700 px-6 py-4">
-                    <h3 class="text-2xl font-light text-white flex items-center gap-2">
-                        <span>📱</span> Social Media Hub
-                    </h3>
-                    <p class="text-purple-100 text-sm font-light mt-1">Connect with your customers</p>
-                </div>
-                <div class="p-6 space-y-4">
+            <!-- Section 4: SEO Settings -->
+            <div>
+                <h2 class="text-2xl font-light text-gray-800 mb-6 flex items-center gap-3"><span class="text-xl">🔍</span> SEO Settings</h2>
+                <div class="space-y-6">
                     <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Facebook Page URL</label>
-                        <input type="url" id="social-facebook"
-                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-500 transition"
-                            placeholder="https://facebook.com/yourpage">
+                        <label for="seo_title" class="block text-sm font-medium text-gray-700 mb-2">Page Title</label>
+                        <input type="text" id="seo_title" required maxlength="60" class="w-full px-4 py-3 bg-white/80 border-2 border-gray-200 rounded-xl focus:border-amber-500 focus:ring-4 focus:ring-amber-100 outline-none transition-all duration-300">
+                        <p class="text-xs mt-2">Appears in the browser tab and search results. (<span id="seo_title_count" class="char-count-ok">0 / 60</span>)</p>
                     </div>
                     <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Instagram Profile URL</label>
-                        <input type="url" id="social-instagram"
-                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-500 transition"
-                            placeholder="https://instagram.com/yourprofile">
+                        <label for="seo_description" class="block text-sm font-medium text-gray-700 mb-2">Meta Description</label>
+                        <textarea id="seo_description" required maxlength="160" rows="3" class="w-full px-4 py-3 bg-white/80 border-2 border-gray-200 rounded-xl focus:border-amber-500 focus:ring-4 focus:ring-amber-100 outline-none transition-all duration-300"></textarea>
+                        <p class="text-xs mt-2">Appears in search results. (<span id="seo_description_count" class="char-count-ok">0 / 160</span>)</p>
                     </div>
                     <div>
-                        <label class="block text-gray-700 font-semibold mb-2">WhatsApp Business Number</label>
-                        <input type="tel" id="social-whatsapp"
-                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-500 transition"
-                            placeholder="+977 9812345678">
-                        <p class="text-xs text-gray-500 mt-1">Include country code</p>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Twitter/X Profile URL</label>
-                        <input type="url" id="social-twitter"
-                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-500 transition"
-                            placeholder="https://twitter.com/yourprofile">
+                        <label for="seo_keywords" class="block text-sm font-medium text-gray-700 mb-2">Meta Keywords</label>
+                        <input type="text" id="seo_keywords" maxlength="500" class="w-full px-4 py-3 bg-white/80 border-2 border-gray-200 rounded-xl focus:border-amber-500 focus:ring-4 focus:ring-amber-100 outline-none transition-all duration-300">
+                        <p class="text-xs mt-2">Optional, comma-separated. (<span id="seo_keywords_count" class="char-count-ok">0 / 500</span>)</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Branding -->
-            <div class="glass rounded-2xl shadow-xl border border-amber-100 overflow-hidden animate-fadeIn">
-                <div class="bg-gradient-to-r from-pink-600 to-pink-700 px-6 py-4">
-                    <h3 class="text-2xl font-light text-white flex items-center gap-2">
-                        <span>🎨</span> Branding
-                    </h3>
-                    <p class="text-pink-100 text-sm font-light mt-1">Your visual identity</p>
-                </div>
-                <div class="p-6 space-y-4">
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Logo</label>
-                        <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 hover:border-pink-500 transition-colors text-center cursor-pointer"
-                            onclick="document.getElementById('logo-upload').click()" id="logo-drop-zone">
-                            <div id="logo-upload-placeholder">
-                                <svg class="w-12 h-12 text-gray-400 mx-auto" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                    </path>
-                                </svg>
-                                <p class="text-gray-600 mt-2">Click to upload your logo</p>
-                                <p class="text-xs text-gray-400">PNG with transparent background recommended</p>
-                            </div>
-                            <div id="logo-upload-loading" class="hidden">
-                                <svg class="animate-spin h-8 w-8 text-pink-600 mx-auto"
-                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                        stroke-width="4"></circle>
-                                    <path class="opacity-75" fill="currentColor"
-                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                    </path>
-                                </svg>
-                                <p class="text-pink-800 mt-2 text-sm font-medium">Uploading...</p>
-                            </div>
-                        </div>
-                        <input type="file" id="logo-upload" class="hidden" accept="image/*"
-                            onchange="handleImageUpload(this, 'logo')">
-                        <input type="hidden" id="logo-url">
-                        <div id="logo-preview" class="hidden mt-4">
-                            <img id="logo-preview-img" src="" alt="Logo Preview" class="h-16 mx-auto">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Why Choose Us -->
-            <div class="glass rounded-2xl shadow-xl border border-amber-100 overflow-hidden animate-fadeIn">
-                <div class="bg-gradient-to-r from-emerald-600 to-emerald-700 px-6 py-4">
-                    <h3 class="text-2xl font-light text-white flex items-center gap-2">
-                        <span>✨</span> Why Choose Us
-                    </h3>
-                    <p class="text-emerald-100 text-sm font-light mt-1">Value propositions for your customers</p>
-                </div>
-                <div class="p-6 space-y-6">
-                    <!-- Value Prop 1 -->
-                    <div class="border-2 border-gray-200 rounded-xl p-4">
-                        <h4 class="font-semibold text-gray-900 mb-3">Value Proposition #1</h4>
-                        <div class="space-y-3">
-                            <div>
-                                <label class="block text-gray-700 text-sm font-semibold mb-1">Icon/Emoji</label>
-                                <input type="text" id="why-icon-1" maxlength="2"
-                                    class="w-20 px-3 py-2 border-2 border-gray-200 rounded-lg text-center text-2xl"
-                                    placeholder="✓">
-                            </div>
-                            <div>
-                                <label class="block text-gray-700 text-sm font-semibold mb-1">Title</label>
-                                <input type="text" id="why-title-1"
-                                    class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg"
-                                    placeholder="100% Authentic">
-                            </div>
-                            <div>
-                                <label class="block text-gray-700 text-sm font-semibold mb-1">Description</label>
-                                <input type="text" id="why-desc-1"
-                                    class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg"
-                                    placeholder="Handcrafted by skilled artisans">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Value Prop 2 -->
-                    <div class="border-2 border-gray-200 rounded-xl p-4">
-                        <h4 class="font-semibold text-gray-900 mb-3">Value Proposition #2</h4>
-                        <div class="space-y-3">
-                            <div>
-                                <label class="block text-gray-700 text-sm font-semibold mb-1">Icon/Emoji</label>
-                                <input type="text" id="why-icon-2" maxlength="2"
-                                    class="w-20 px-3 py-2 border-2 border-gray-200 rounded-lg text-center text-2xl"
-                                    placeholder="🇳🇵">
-                            </div>
-                            <div>
-                                <label class="block text-gray-700 text-sm font-semibold mb-1">Title</label>
-                                <input type="text" id="why-title-2"
-                                    class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg"
-                                    placeholder="Direct from Nepal">
-                            </div>
-                            <div>
-                                <label class="block text-gray-700 text-sm font-semibold mb-1">Description</label>
-                                <input type="text" id="why-desc-2"
-                                    class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg"
-                                    placeholder="No middlemen, fair prices">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Value Prop 3 -->
-                    <div class="border-2 border-gray-200 rounded-xl p-4">
-                        <h4 class="font-semibold text-gray-900 mb-3">Value Proposition #3</h4>
-                        <div class="space-y-3">
-                            <div>
-                                <label class="block text-gray-700 text-sm font-semibold mb-1">Icon/Emoji</label>
-                                <input type="text" id="why-icon-3" maxlength="2"
-                                    class="w-20 px-3 py-2 border-2 border-gray-200 rounded-lg text-center text-2xl"
-                                    placeholder="🔒">
-                            </div>
-                            <div>
-                                <label class="block text-gray-700 text-sm font-semibold mb-1">Title</label>
-                                <input type="text" id="why-title-3"
-                                    class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg"
-                                    placeholder="Secure Payment">
-                            </div>
-                            <div>
-                                <label class="block text-gray-700 text-sm font-semibold mb-1">Description</label>
-                                <input type="text" id="why-desc-3"
-                                    class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg"
-                                    placeholder="Safe and encrypted checkout">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Stats Counter -->
-            <div class="glass rounded-2xl shadow-xl border border-amber-100 overflow-hidden animate-fadeIn">
-                <div class="bg-gradient-to-r from-indigo-600 to-indigo-700 px-6 py-4">
-                    <h3 class="text-2xl font-light text-white flex items-center gap-2">
-                        <span>📊</span> Stats Counter
-                    </h3>
-                    <p class="text-indigo-100 text-sm font-light mt-1">Animated numbers to build credibility</p>
-                </div>
-                <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Happy Customers</label>
-                        <input type="number" id="stats-customers"
-                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl" placeholder="500">
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Products Sold</label>
-                        <input type="number" id="stats-products"
-                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl" placeholder="1200">
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Years in Business</label>
-                        <input type="number" id="stats-years"
-                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl" placeholder="15">
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Average Rating (out of 5)</label>
-                        <input type="number" id="stats-rating" step="0.1" max="5"
-                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl" placeholder="4.9">
-                    </div>
-                </div>
-            </div>
-
-<!-- Section Titles Management -->
-<div class="glass rounded-2xl shadow-xl border border-amber-100 overflow-hidden animate-fadeIn">
-    <div class="bg-gradient-to-r from-purple-600 to-purple-700 px-6 py-4">
-        <h3 class="text-2xl font-light text-white flex items-center gap-2">
-            <span>📝</span> Section Titles
-        </h3>
-        <p class="text-purple-100 text-sm font-light mt-1">Customize all section headings</p>
-    </div>
-    <div class="p-6 space-y-4">
-        <div>
-            <label class="block text-gray-700 font-semibold mb-2">Featured Products - Small Text</label>
-            <input type="text" id="featured-eyebrow" maxlength="50"
-                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-500 transition"
-                placeholder="Curator's Selection">
-            <p class="text-xs text-gray-500 mt-1">The small text above "Featured Masterpieces"</p>
-        </div>
-        <div>
-            <label class="block text-gray-700 font-semibold mb-2">Featured Products - Main Title</label>
-            <input type="text" id="featured-title" maxlength="80"
-                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-500 transition"
-                placeholder="Featured Masterpieces">
-            <p class="text-xs text-gray-500 mt-1">Main heading for the featured products section</p>
-        </div>
-        <div>
-            <label class="block text-gray-700 font-semibold mb-2">Why Choose Us - Title</label>
-            <input type="text" id="why-section-title" maxlength="80"
-                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-500 transition"
-                placeholder="Why Collectors Choose Us">
-            <p class="text-xs text-gray-500 mt-1">Main heading for Why Choose Us section</p>
-        </div>
-        <div>
-            <label class="block text-gray-700 font-semibold mb-2">Testimonials - Small Text</label>
-            <input type="text" id="testimonials-eyebrow" maxlength="50"
-                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-500 transition"
-                placeholder="Patron Voices">
-        </div>
-        <div>
-            <label class="block text-gray-700 font-semibold mb-2">Testimonials - Main Title</label>
-            <input type="text" id="testimonials-title" maxlength="80"
-                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-500 transition"
-                placeholder="What the World Says">
-        </div>
-        <div>
-            <label class="block text-gray-700 font-semibold mb-2">Blog Stories - Small Text</label>
-            <input type="text" id="blog-eyebrow" maxlength="50"
-                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-500 transition"
-                placeholder="Craftsman Chronicles">
-        </div>
-        <div>
-            <label class="block text-gray-700 font-semibold mb-2">Blog Stories - Main Title</label>
-            <input type="text" id="blog-title" maxlength="80"
-                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-500 transition"
-                placeholder="Latest Stories">
-        </div>
-    </div>
-</div>
-
-
-
-
-            <!-- Himalayan Slider -->
-            <div class="glass rounded-2xl shadow-xl border border-amber-100 overflow-hidden animate-fadeIn">
-                <div class="bg-gradient-to-r from-indigo-600 to-indigo-700 px-6 py-4">
-                    <h3 class="text-2xl font-light text-white flex items-center gap-2">
-                        <span>🏔️</span> Himalayan Slider
-                    </h3>
-                    <p class="text-indigo-100 text-sm font-light mt-1">Featured collection showcase</p>
-                </div>
-                <div class="p-6 space-y-6">
-                    <div id="slider-items-container">
-                        <!-- Slider items will be dynamically added here -->
-                    </div>
-                    <button type="button" onclick="addSliderItem()"
-                        class="w-full border-2 border-dashed border-indigo-300 text-indigo-700 py-4 rounded-xl hover:bg-indigo-50 transition font-medium">
-                        + Add New Slide
-                    </button>
-                </div>
-            </div>
-
-            <!-- Categories Management -->
-            <div class="glass rounded-2xl shadow-xl border border-amber-100 overflow-hidden animate-fadeIn">
-                <div class="bg-gradient-to-r from-teal-600 to-teal-700 px-6 py-4">
-                    <h3 class="text-2xl font-light text-white flex items-center gap-2">
-                        <span>📦</span> Masterpieces by Category
-                    </h3>
-                    <p class="text-teal-100 text-sm font-light mt-1">Manage product categories</p>
-                </div>
-                <div class="p-6 space-y-6">
-                    <div id="categories-container">
-                        <!-- Categories will be dynamically added here -->
-                    </div>
-                    <button type="button" onclick="addCategory()"
-                        class="w-full border-2 border-dashed border-teal-300 text-teal-700 py-4 rounded-xl hover:bg-teal-50 transition font-medium">
-                        + Add New Category
-                    </button>
-                </div>
-            </div>
-
-            <!-- Testimonials Management -->
-            <div class="glass rounded-2xl shadow-xl border border-amber-100 overflow-hidden animate-fadeIn">
-                <div class="bg-gradient-to-r from-violet-600 to-violet-700 px-6 py-4">
-                    <h3 class="text-2xl font-light text-white flex items-center gap-2">
-                        <span>💬</span> Testimonials
-                    </h3>
-                    <p class="text-violet-100 text-sm font-light mt-1">Customer reviews and feedback</p>
-                </div>
-                <div class="p-6 space-y-6">
-                    <div id="testimonials-container">
-                        <!-- Testimonials will be dynamically added here -->
-                    </div>
-                    <button type="button" onclick="addTestimonial()"
-                        class="w-full border-2 border-dashed border-violet-300 text-violet-700 py-4 rounded-xl hover:bg-violet-50 transition font-medium">
-                        + Add New Testimonial
-                    </button>
-                </div>
-            </div>
-
-            <!-- Blog/Stories Management -->
-            <div class="glass rounded-2xl shadow-xl border border-amber-100 overflow-hidden animate-fadeIn">
-                <div class="bg-gradient-to-r from-rose-600 to-rose-700 px-6 py-4">
-                    <h3 class="text-2xl font-light text-white flex items-center gap-2">
-                        <span>📝</span> Blog Stories
-                    </h3>
-                    <p class="text-rose-100 text-sm font-light mt-1">Latest stories and articles</p>
-                </div>
-                <div class="p-6 space-y-6">
-                    <div id="blog-stories-container">
-                        <!-- Blog stories will be dynamically added here -->
-                    </div>
-                    <button type="button" onclick="addBlogStory()"
-                        class="w-full border-2 border-dashed border-rose-300 text-rose-700 py-4 rounded-xl hover:bg-rose-50 transition font-medium">
-                        + Add New Story
-                    </button>
-                </div>
-            </div>
-
-            <!-- Footer -->
-            <div class="glass rounded-2xl shadow-xl border border-amber-100 overflow-hidden animate-fadeIn">
-                <div class="bg-gradient-to-r from-gray-700 to-gray-800 px-6 py-4">
-                    <h3 class="text-2xl font-light text-white flex items-center gap-2">
-                        <span>📄</span> Footer
-                    </h3>
-                    <p class="text-gray-300 text-sm font-light mt-1">Bottom of your website</p>
-                </div>
-                <div class="p-6">
-                    <label class="block text-gray-700 font-semibold mb-2">Copyright Text</label>
-                    <input type="text" id="footer-copyright"
-                        class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-gray-500 transition"
-                        placeholder="© 2024 Your Company. All rights reserved.">
-                </div>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="flex gap-4 pt-6">
-                <button type="submit" id="save-btn"
-                    class="flex-1 gold-gradient text-white py-4 rounded-xl font-semibold shadow-xl hover:shadow-2xl transition-all transform hover:scale-105">
-                    💾 Save All Changes
+            <!-- Submit Section -->
+            <div class="flex items-center gap-4 pt-8 mt-8 border-t border-amber-200/60">
+                <button type="submit" id="submitBtn" class="flex-1 flex items-center justify-center gap-3 bg-gradient-to-r from-amber-700 to-amber-800 text-white font-bold rounded-xl px-8 py-4 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 disabled:opacity-70 disabled:cursor-not-allowed">
+                    <span id="submitBtnText">
+                        <span class="flex items-center gap-3">💾 Save All Changes</span>
+                    </span>
                 </button>
-                <button type="button" onclick="loadContent()"
-                    class="px-8 py-4 border-2 border-gray-300 rounded-xl hover:bg-gray-50 transition font-semibold">
-                    Reset
+                <button type="button" onclick="previewChanges()" class="flex items-center justify-center gap-2 bg-white border-2 border-amber-200 text-amber-900 font-bold rounded-xl px-8 py-4 transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5">
+                    👁️ Preview
                 </button>
             </div>
         </form>
-
-        <div class="mt-6 bg-blue-50 border border-blue-200 rounded-xl p-4">
-            <p class="text-sm text-blue-800">
-                <strong>💡 Tip:</strong> Changes will be reflected immediately on your website. Click "Preview Site" to
-                see your updates live!
-            </p>
-        </div>
     </div>
 
-    <script type="module">
-        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/+esm'
+    <script>
+        // --- CORE APPLICATION LOGIC ---
 
-        const supabase = createClient(
-            'https://tpvqolkzcbbzlqlzchwc.supabase.co',
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwdnFvbGt6Y2JiemxxbHpjaHdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzNjA0MjgsImV4cCI6MjA4MTkzNjQyOH0.AU6ieHN1TSUHgSu7qfvkekvmMySDPJb2zOId4Oy7CeY'
-        )
+        // 1. GLOBAL STATE
+        let testimonials = [];
+        let currentContent = {};
+        let isSubmitting = false;
 
-        // Character counters
-        function setupCharCounter(inputId, counterId, maxLength) {
-            const input = document.getElementById(inputId);
-            const counter = document.getElementById(counterId);
+        // 2. HELPER FUNCTIONS
+        const getValue = (id) => document.getElementById(id)?.value || '';
+        const setValue = (id, value) => {
+            const el = document.getElementById(id);
+            if (el) el.value = value || '';
+        };
 
-            input.addEventListener('input', () => {
-                const length = input.value.length;
-                counter.textContent = `${length}/${maxLength} characters`;
+        // 3. PAGE INITIALIZATION
+        async function init() {
+            // In a real app, a loading overlay would be shown here
+            await checkAuth();
+            await loadContent();
+            setupEventListeners();
+            initCharCounters();
+        }
 
-                if (length > maxLength * 0.9) {
-                    counter.classList.add('warning');
-                } else {
-                    counter.classList.remove('warning');
+        // 4. AUTHENTICATION
+        async function checkAuth() {
+            // In a real implementation, you'd get this from a secure cookie or local storage
+            const token = localStorage.getItem('supabase.auth.token'); // As specified
+            if (!token) {
+                window.location.href = '/admin/login.html';
+                return;
+            }
+            // Optional: Validate token with a lightweight API endpoint
+        }
+
+        function logout() {
+            localStorage.removeItem('supabase.auth.token');
+            window.location.href = '/admin/login.html';
+        }
+
+        // 5. API INTERACTIONS
+        async function loadContent() {
+            const token = localStorage.getItem('supabase.auth.token');
+            try {
+                // In a real app, you would show a full-page loader here
+                const response = await fetch('/api/admin/content', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    if (response.status === 401 || response.status === 403) {
+                        logout();
+                    }
+                    throw new Error(`API Error: ${response.statusText}`);
                 }
 
-                if (length >= maxLength) {
-                    counter.classList.add('error');
-                } else {
-                    counter.classList.remove('error');
-                }
+                const result = await response.json();
+                currentContent = result.data;
+                populateForm(currentContent);
+
+            } catch (error) {
+                showAlert('Failed to load page content: ' + error.message, 'error');
+            } finally {
+                // Hide full-page loader
+            }
+        }
+
+        async function handleSubmit(e) {
+            e.preventDefault();
+            if (isSubmitting) return;
+            isSubmitting = true;
+
+            const btn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('submitBtnText');
+
+            btn.disabled = true;
+            btnText.innerHTML = `<div class="w-6 h-6 border-2 border-white border-t-transparent rounded-full spinner mx-auto"></div>`;
+
+            try {
+                const data = collectFormData();
+                const token = localStorage.getItem('supabase.auth.token');
+
+                const response = await fetch('/api/admin/content', {
+                    method: 'PUT',
+                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.message || 'Save failed');
+
+                showAlert('Content saved successfully!', 'success');
+                currentContent = result.data; // Update local state with saved data
+                populateForm(currentContent); // Re-populate to ensure consistency
+
+            } catch (error) {
+                showAlert('Error: ' + error.message, 'error');
+            } finally {
+                isSubmitting = false;
+                btn.disabled = false;
+                btnText.innerHTML = `<span class="flex items-center gap-3">💾 Save All Changes</span>`;
+            }
+        }
+
+        // 6. FORM & UI MANAGEMENT
+        function populateForm(data) {
+            if (!data) return;
+            // Hero
+            setValue('hero_title', data.hero_title);
+            setValue('hero_subtitle', data.hero_subtitle);
+            setValue('hero_cta_text', data.hero_cta_text);
+            setValue('hero_cta_link', data.hero_cta_link);
+            // Social
+            setValue('social_facebook', data.social_links?.facebook);
+            setValue('social_twitter', data.social_links?.twitter);
+            setValue('social_instagram', data.social_links?.instagram);
+            setValue('social_linkedin', data.social_links?.linkedin);
+            // SEO
+            setValue('seo_title', data.seo_title);
+            setValue('seo_description', data.seo_description);
+            setValue('seo_keywords', data.seo_keywords);
+            
+            // Testimonials
+            testimonials = data.testimonials || [];
+            renderTestimonials();
+            
+            // Update all counters
+            initCharCounters();
+        }
+
+        function collectFormData() {
+            // Testimonials are collected from the DOM to ensure a single source of truth
+            const testimonialInputs = [];
+            document.querySelectorAll('.testimonial-card').forEach((card, i) => {
+                testimonialInputs.push({
+                    name: card.querySelector('.testimonial-name').value,
+                    role: card.querySelector('.testimonial-role').value,
+                    content: card.querySelector('.testimonial-content').value,
+                    rating: parseInt(card.querySelector('.testimonial-rating').value, 10) || 5
+                });
             });
+
+            return {
+                hero_title: getValue('hero_title'),
+                hero_subtitle: getValue('hero_subtitle'),
+                hero_cta_text: getValue('hero_cta_text'),
+                hero_cta_link: getValue('hero_cta_link'),
+                testimonials: testimonialInputs,
+                social_links: {
+                    facebook: getValue('social_facebook'),
+                    twitter: getValue('social_twitter'),
+                    instagram: getValue('social_instagram'),
+                    linkedin: getValue('social_linkedin')
+                },
+                seo_title: getValue('seo_title'),
+                seo_description: getValue('seo_description'),
+                seo_keywords: getValue('seo_keywords')
+            };
         }
 
-        setupCharCounter('hero-title', 'hero-title-counter', 60);
-        setupCharCounter('hero-subtitle', 'hero-subtitle-counter', 120);
-        setupCharCounter('hero-button', 'hero-button-counter', 30);
-        setupCharCounter('seo-title', 'seo-title-counter', 60);
-        setupCharCounter('seo-description', 'seo-description-counter', 160);
+        function previewChanges() {
+            // In a real scenario, this might save to a 'draft' and open a preview URL
+            showAlert('Opening site homepage in new tab.', 'success');
+            window.open('/', '_blank');
+        }
 
-        // Image upload handler
-        window.handleImageUpload = async function (input, type) {
-            if (!input.files || input.files.length === 0) return;
+        // 7. EVENT LISTENERS & INITIALIZERS
+        function setupEventListeners() {
+            document.getElementById('content-form').addEventListener('submit', handleSubmit);
+        }
 
-            const file = input.files[0];
-            const dropZone = document.getElementById(`${type}-drop-zone`);
-            const loading = document.getElementById(`${type}-upload-loading`);
-            const placeholder = document.getElementById(`${type}-upload-placeholder`);
+        function initCharCounters() {
+            updateCharCount('hero_title');
+            updateCharCount('hero_subtitle');
+            updateCharCount('seo_title');
+            updateCharCount('seo_description');
+            updateCharCount('seo_keywords');
+        }
+
+        function updateCharCount(fieldId) {
+            const input = document.getElementById(fieldId);
+            if (!input) return;
+            const counterSpan = document.getElementById(fieldId + '_count');
+            if(!counterSpan) return;
+
+            const maxLength = input.maxLength;
+            if (maxLength < 0) return; // Don't run on fields without maxlength
             
-            // Correct preview element selection logic
-            const previewId = type === 'hero' ? 'hero-image-preview' : `${type}-preview`;
-            const previewImgId = type === 'hero' ? 'hero-image-preview-img' : `${type}-preview-img`;
-            const urlInputId = type === 'hero' ? 'hero-image-url' : `${type}-url`;
-            
-            const preview = document.getElementById(previewId);
-            const previewImg = document.getElementById(previewImgId);
+            const current = input.value.length;
+            counterSpan.textContent = `${current} / ${maxLength}`;
+            const ratio = current / maxLength;
 
-            if (!placeholder || !loading || !dropZone) return;
+            counterSpan.className = 'char-count-ok';
+            if (ratio > 0.95) {
+                counterSpan.className = 'char-count-danger';
+            } else if (ratio > 0.8) {
+                counterSpan.className = 'char-count-warning';
+            }
+        }
+        
+        // 8. DYNAMIC UI (TESTIMONIALS & ALERTS)
+        function addTestimonial() {
+            testimonials.push({ name: '', role: '', content: '', rating: 5 });
+            renderTestimonials();
+        }
 
-            placeholder.classList.add('hidden');
-            loading.classList.remove('hidden');
-            dropZone.classList.add('border-amber-500', 'bg-amber-50');
-
-            try {
-                const fileExt = file.name.split('.').pop();
-                const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
-                const bucket = type === 'logo' ? 'logos' : 'hero-images';
-
-                const { data, error } = await supabase.storage
-                    .from(bucket)
-                    .upload(fileName, file);
-
-                if (error) throw error;
-
-                const { data: { publicUrl } } = supabase.storage
-                    .from(bucket)
-                    .getPublicUrl(fileName);
-
-                const urlInput = document.getElementById(urlInputId);
-                if (urlInput) {
-                    urlInput.value = publicUrl;
-                }
-
-                if (previewImg && preview) {
-                    previewImg.src = publicUrl;
-                    preview.classList.remove('hidden');
-                }
-
-                showSuccess('Image uploaded successfully!');
-            } catch (error) {
-                console.error('Upload error:', error);
-                showError('Upload failed: ' + error.message);
-                placeholder.classList.remove('hidden');
-            } finally {
-                loading.classList.add('hidden');
-                dropZone.classList.remove('border-amber-500', 'bg-amber-50');
+        function removeTestimonial(index) {
+            if (confirm('Are you sure you want to remove this testimonial?')) {
+                testimonials.splice(index, 1);
+                renderTestimonials();
             }
         }
 
-        async function verifyAuth() {
-            const { data: { session } } = await supabase.auth.getSession()
-            if (!session) {
-                window.location.href = 'login.html'
-                return false
-            }
-            loadContent()
-            return true
-        }
+        function renderTestimonials() {
+            const container = document.getElementById('testimonialsContainer');
+            const empty = document.getElementById('noTestimonials');
+            if (!container || !empty) return;
 
-        window.loadContent = async function () {
-            // #region agent log
-            fetch('http://127.0.0.1:7242/ingest/4248bcae-602d-4474-ad8d-6c38cec2ec1',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'content.html:643',message:'loadContent entry',data:{timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
-            // #endregion
-            try {
-                const { data, error } = await supabase
-                    .from('site_content')
-                    .select('*')
-                    .single()
-
-                // #region agent log
-                fetch('http://127.0.0.1:7242/ingest/4248bcae-602d-4474-ad8d-6c38cec2ec1',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'content.html:648',message:'after supabase query',data:{hasData:!!data,hasError:!!error,errorCode:error?.code,dataType:typeof data,contentType:typeof data?.content},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B,E'})}).catch(()=>{});
-                // #endregion
-
-                if (error) {
-                    if (error.code === 'PGRST116') {
-                        // #region agent log
-                        fetch('http://127.0.0.1:7242/ingest/4248bcae-602d-4474-ad8d-6c38cec2ec1',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'content.html:652',message:'calling setDefaultContent',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-                        // #endregion
-                        setDefaultContent()
-                        return
-                    }
-                    throw error
-                }
-
-                if (data && data.content) {
-                    const c = data.content
-                    // #region agent log
-                    fetch('http://127.0.0.1:7242/ingest/4248bcae-602d-4474-ad8d-6c38cec2ec1',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'content.html:659',message:'content extracted',data:{hasWhyChooseUs:!!c.whyChooseUs,hasItems:!!c.whyChooseUs?.items,itemsType:Array.isArray(c.whyChooseUs?.items)?'array':typeof c.whyChooseUs?.items,itemsLength:c.whyChooseUs?.items?.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-                    // #endregion
-
-                    document.getElementById('hero-title').value = c.hero?.title || ''
-                    document.getElementById('hero-subtitle').value = c.hero?.subtitle || ''
-                    document.getElementById('hero-button').value = c.hero?.buttonText || ''
-                    document.getElementById('hero-image-url').value = c.hero?.imageUrl || ''
-
-                    document.getElementById('seo-title').value = c.seo?.metaTitle || ''
-                    document.getElementById('seo-description').value = c.seo?.metaDescription || ''
-                    document.getElementById('seo-keywords').value = c.seo?.keywords || ''
-
-
-
-                    document.getElementById('social-facebook').value = c.social?.facebook || ''
-                    document.getElementById('social-instagram').value = c.social?.instagram || ''
-                    document.getElementById('social-whatsapp').value = c.social?.whatsapp || ''
-                    document.getElementById('social-twitter').value = c.social?.twitter || ''
-
-                    document.getElementById('logo-url').value = c.branding?.logoUrl || ''
-
-                    document.getElementById('footer-copyright').value = c.footer?.copyright || ''
-
-                    // Why Choose Us
-                    document.getElementById('why-icon-1').value = c.whyChooseUs?.items?.[0]?.icon || '✓'
-                    document.getElementById('why-title-1').value = c.whyChooseUs?.items?.[0]?.title || ''
-                    document.getElementById('why-desc-1').value = c.whyChooseUs?.items?.[0]?.description || ''
-
-                    document.getElementById('why-icon-2').value = c.whyChooseUs?.items?.[1]?.icon || '🇳🇵'
-                    document.getElementById('why-title-2').value = c.whyChooseUs?.items?.[1]?.title || ''
-                    document.getElementById('why-desc-2').value = c.whyChooseUs?.items?.[1]?.description || ''
-
-                    document.getElementById('why-icon-3').value = c.whyChooseUs?.items?.[2]?.icon || '🔒'
-                    document.getElementById('why-title-3').value = c.whyChooseUs?.items?.[2]?.title || ''
-                    document.getElementById('why-desc-3').value = c.whyChooseUs?.items?.[2]?.description || ''
-
-                    // Stats Counter
-                    document.getElementById('stats-customers').value = c.stats?.happyCustomers || ''
-                    document.getElementById('stats-products').value = c.stats?.productsSold || ''
-                    document.getElementById('stats-years').value = c.stats?.yearsInBusiness || ''
-                    document.getElementById('stats-rating').value = c.stats?.averageRating || ''
-
-                    // Section Titles
-                    document.getElementById('featured-eyebrow').value = c.sectionTitles?.featuredEyebrow || 'Curator\'s Selection'
-                    document.getElementById('featured-title').value = c.sectionTitles?.featuredTitle || 'Featured Masterpieces'
-                    document.getElementById('why-section-title').value = c.sectionTitles?.whyChooseUsTitle || 'Why Collectors Choose Us'
-                    document.getElementById('testimonials-eyebrow').value = c.sectionTitles?.testimonialsEyebrow || 'Patron Voices'
-                    document.getElementById('testimonials-title').value = c.sectionTitles?.testimonialsTitle || 'What the World Says'
-                    document.getElementById('blog-eyebrow').value = c.sectionTitles?.blogEyebrow || 'Craftsman Chronicles'
-                    document.getElementById('blog-title').value = c.sectionTitles?.blogTitle || 'Latest Stories'
-
-
-
-                    // Load new sections
-                    if (c.himalayanSlider && Array.isArray(c.himalayanSlider.items)) {
-                        renderSliderItems(c.himalayanSlider.items)
-                    } else {
-                        renderSliderItems([])
-                    }
-
-                    if (c.categories && Array.isArray(c.categories)) {
-                        renderCategories(c.categories)
-                    } else {
-                        renderCategories([])
-                    }
-
-                    if (c.testimonials && Array.isArray(c.testimonials)) {
-                        renderTestimonials(c.testimonials)
-                    } else {
-                        renderTestimonials([])
-                    }
-
-                    if (c.blogStories && Array.isArray(c.blogStories)) {
-                        renderBlogStories(c.blogStories)
-                    } else {
-                        renderBlogStories([])
-                    }
-
-                    // Trigger char counters
-                    // #region agent log
-                    const counterIds = ['hero-title', 'hero-subtitle', 'hero-button', 'seo-title', 'seo-description'];
-                    fetch('http://127.0.0.1:7242/ingest/4248bcae-602d-4474-ad8d-6c38cec2ec1',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'content.html:712',message:'before forEach char counters',data:{counterIdsType:typeof counterIds,isArray:Array.isArray(counterIds),length:counterIds?.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-                    // #endregion
-                    counterIds.forEach(id => {
-                        // #region agent log
-                        fetch('http://127.0.0.1:7242/ingest/4248bcae-602d-4474-ad8d-6c38cec2ec1',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'content.html:715',message:'forEach iteration',data:{id,hasElement:!!document.getElementById(id)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-                        // #endregion
-                        const element = document.getElementById(id);
-                        if (element) {
-                            element.dispatchEvent(new Event('input'));
-                        }
-                    });
-
-                    // Display image previews if images exist
-                    const heroImageUrl = c.hero?.imageUrl;
-                    if (heroImageUrl) {
-                        const heroPreview = document.getElementById('hero-image-preview');
-                        const heroPreviewImg = document.getElementById('hero-image-preview-img');
-                        if (heroPreview && heroPreviewImg) {
-                            heroPreviewImg.src = heroImageUrl;
-                            heroPreview.classList.remove('hidden');
-                        }
-                    }
-
-                    const logoUrl = c.branding?.logoUrl;
-                    if (logoUrl) {
-                        const logoPreview = document.getElementById('logo-preview');
-                        const logoPreviewImg = document.getElementById('logo-preview-img');
-                        if (logoPreview && logoPreviewImg) {
-                            logoPreviewImg.src = logoUrl;
-                            logoPreview.classList.remove('hidden');
-                        }
-                    }
-                }
-            } catch (error) {
-                // #region agent log
-                fetch('http://127.0.0.1:7242/ingest/4248bcae-602d-4474-ad8d-6c38cec2ec1',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'content.html:740',message:'catch block error',data:{errorMessage:error?.message,errorStack:error?.stack,errorName:error?.name},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A,B,C,D,E'})}).catch(()=>{});
-                // #endregion
-                console.error('Error loading content:', error)
-                showError('Failed to load content: ' + error.message)
-            }
-        }
-
-        function setDefaultContent() {
-            document.getElementById('hero-title').value = 'Authentic Handicrafts from Nepal'
-            document.getElementById('hero-subtitle').value = 'Handcrafted treasures from the Himalayas'
-            document.getElementById('hero-button').value = 'Explore Collection'
-
-            document.getElementById('seo-title').value = 'Import From Nepal - Authentic Handicrafts'
-            document.getElementById('seo-description').value = 'Discover authentic handcrafted treasures from Nepal. Shop statues, singing bowls, thangkas, and more.'
-            document.getElementById('seo-keywords').value = 'nepal handicrafts, singing bowls, buddha statues'
-
-
-
-
-
-            document.getElementById('footer-copyright').value = '© 2024 Import From Nepal. All rights reserved.'
-
-            // Why Choose Us
-            document.getElementById('why-icon-1').value = '✓'
-            document.getElementById('why-title-1').value = '100% Authentic'
-            document.getElementById('why-desc-1').value = 'Handcrafted by skilled artisans'
-
-            document.getElementById('why-icon-2').value = '🇳🇵'
-            document.getElementById('why-title-2').value = 'Direct from Nepal'
-            document.getElementById('why-desc-2').value = 'No middlemen, fair prices'
-
-            document.getElementById('why-icon-3').value = '🔒'
-            document.getElementById('why-title-3').value = 'Secure Payment'
-            document.getElementById('why-desc-3').value = 'Safe and encrypted checkout'
-
-            // Stats Counter
-            document.getElementById('stats-customers').value = '500'
-            document.getElementById('stats-products').value = '1200'
-            document.getElementById('stats-years').value = '15'
-            document.getElementById('stats-rating').value = '4.9'
-
-            // Section Titles
-            document.getElementById('featured-eyebrow').value = 'Curator\'s Selection'
-            document.getElementById('featured-title').value = 'Featured Masterpieces'
-            document.getElementById('why-section-title').value = 'Why Collectors Choose Us'
-            document.getElementById('testimonials-eyebrow').value = 'Patron Voices'
-            document.getElementById('testimonials-title').value = 'What the World Says'
-            document.getElementById('blog-eyebrow').value = 'Craftsman Chronicles'
-            document.getElementById('blog-title').value = 'Latest Stories'
-
-            // Initialize empty arrays for new sections
-            renderSliderItems([])
-            renderCategories([])
-            renderTestimonials([])
-            renderBlogStories([])
-        }
-
-        // Himalayan Slider Management
-        let sliderItems = []
-        window.addSliderItem = function() {
-            sliderItems.push({
-                accentPill: 'Ancient Craft',
-                title: 'New Slide Title',
-                description: 'Slide description here',
-                imageUrl: '',
-                buttonText: 'Explore Legacy',
-                buttonLink: 'products.html'
-            })
-            renderSliderItems(sliderItems)
-        }
-        window.removeSliderItem = function(index) {
-            sliderItems.splice(index, 1)
-            renderSliderItems(sliderItems)
-        }
-        function renderSliderItems(items) {
-            sliderItems = items
-            const container = document.getElementById('slider-items-container')
-            if (!container) return
-            if (items.length === 0) {
-                container.innerHTML = '<p class="text-gray-500 text-sm">No slides added yet. Click "Add New Slide" to get started.</p>'
-                return
-            }
-            container.innerHTML = items.map((item, index) => `
-                <div class="border-2 border-indigo-200 rounded-xl p-4 space-y-3">
-                    <div class="flex justify-between items-center mb-3">
-                        <h4 class="font-semibold text-gray-900">Slide #${index + 1}</h4>
-                        <button type="button" onclick="removeSliderItem(${index})" class="text-red-600 hover:text-red-800 text-sm font-medium">Remove</button>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 text-sm font-semibold mb-1">Accent Pill Text</label>
-                        <input type="text" class="slider-accent-${index} w-full px-3 py-2 border rounded-lg" value="${(item.accentPill || '').replace(/"/g, '&quot;')}" placeholder="Ancient Craft">
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 text-sm font-semibold mb-1">Title</label>
-                        <input type="text" class="slider-title-${index} w-full px-3 py-2 border rounded-lg" value="${(item.title || '').replace(/"/g, '&quot;')}" placeholder="Slide Title">
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 text-sm font-semibold mb-1">Description</label>
-                        <textarea class="slider-desc-${index} w-full px-3 py-2 border rounded-lg" rows="2" placeholder="Slide description">${(item.description || '').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 text-sm font-semibold mb-1">Image URL</label>
-                        <input type="text" class="slider-image-${index} w-full px-3 py-2 border rounded-lg" value="${(item.imageUrl || '').replace(/"/g, '&quot;')}" placeholder="https://...">
-                    </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-gray-700 text-sm font-semibold mb-1">Button Text</label>
-                            <input type="text" class="slider-button-${index} w-full px-3 py-2 border rounded-lg" value="${(item.buttonText || '').replace(/"/g, '&quot;')}" placeholder="Explore Legacy">
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 text-sm font-semibold mb-1">Button Link</label>
-                            <input type="text" class="slider-link-${index} w-full px-3 py-2 border rounded-lg" value="${(item.buttonLink || '').replace(/"/g, '&quot;')}" placeholder="products.html">
-                        </div>
-                    </div>
-                </div>
-            `).join('')
-        }
-
-        // Categories Management
-        let categories = []
-        window.addCategory = function() {
-            categories.push({
-                id: 'new-category-' + Date.now(),
-                name: 'New Category',
-                imageUrl: '',
-                displayOrder: categories.length + 1
-            })
-            renderCategories(categories)
-        }
-        window.removeCategory = function(index) {
-            categories.splice(index, 1)
-            renderCategories(categories)
-        }
-        function renderCategories(items) {
-            categories = items
-            const container = document.getElementById('categories-container')
-            if (!container) return
-            if (items.length === 0) {
-                container.innerHTML = '<p class="text-gray-500 text-sm">No categories added yet. Click "Add New Category" to get started.</p>'
-                return
-            }
-            container.innerHTML = items.map((item, index) => `
-                <div class="border-2 border-teal-200 rounded-xl p-4 space-y-3">
-                    <div class="flex justify-between items-center mb-3">
-                        <h4 class="font-semibold text-gray-900">Category #${index + 1}</h4>
-                        <button type="button" onclick="removeCategory(${index})" class="text-red-600 hover:text-red-800 text-sm font-medium">Remove</button>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 text-sm font-semibold mb-1">Category Name</label>
-                        <input type="text" class="category-name-${index} w-full px-3 py-2 border rounded-lg" value="${(item.name || '').replace(/"/g, '&quot;')}" placeholder="Category Name">
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 text-sm font-semibold mb-1">Image URL</label>
-                        <input type="text" class="category-image-${index} w-full px-3 py-2 border rounded-lg" value="${(item.imageUrl || '').replace(/"/g, '&quot;')}" placeholder="Enter image URL (e.g., https://example.com/image.jpg)">
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 text-sm font-semibold mb-1">Display Order</label>
-                        <input type="number" class="category-order-${index} w-full px-3 py-2 border rounded-lg" value="${item.displayOrder || index + 1}" placeholder="1">
-                    </div>
-                </div>
-            `).join('')
-        }
-
-        // Testimonials Management
-        let testimonials = []
-        window.addTestimonial = function() {
-            testimonials.push({
-                customerName: 'Customer Name',
-                reviewText: 'Great product!',
-                rating: 5,
-                customerPhotoUrl: '',
-                isFeatured: true
-            })
-            renderTestimonials(testimonials)
-        }
-        window.removeTestimonial = function(index) {
-            testimonials.splice(index, 1)
-            renderTestimonials(testimonials)
-        }
-        function renderTestimonials(items) {
-            testimonials = items
-            const container = document.getElementById('testimonials-container')
-            if (!container) return
-            if (items.length === 0) {
-                container.innerHTML = '<p class="text-gray-500 text-sm">No testimonials added yet. Click "Add New Testimonial" to get started.</p>'
-                return
-            }
-            container.innerHTML = items.map((item, index) => `
-                <div class="border-2 border-violet-200 rounded-xl p-4 space-y-3">
-                    <div class="flex justify-between items-center mb-3">
-                        <h4 class="font-semibold text-gray-900">Testimonial #${index + 1}</h4>
-                        <button type="button" onclick="removeTestimonial(${index})" class="text-red-600 hover:text-red-800 text-sm font-medium">Remove</button>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 text-sm font-semibold mb-1">Customer Name</label>
-                        <input type="text" class="testimonial-name-${index} w-full px-3 py-2 border rounded-lg" value="${(item.customerName || '').replace(/"/g, '&quot;')}" placeholder="Customer Name">
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 text-sm font-semibold mb-1">Review Text</label>
-                        <textarea class="testimonial-text-${index} w-full px-3 py-2 border rounded-lg" rows="3" placeholder="Review text">${(item.reviewText || '').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-gray-700 text-sm font-semibold mb-1">Rating (1-5)</label>
-                            <input type="number" min="1" max="5" class="testimonial-rating-${index} w-full px-3 py-2 border rounded-lg" value="${item.rating || 5}">
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 text-sm font-semibold mb-1">Photo URL</label>
-                            <input type="text" class="testimonial-photo-${index} w-full px-3 py-2 border rounded-lg" value="${(item.customerPhotoUrl || '').replace(/"/g, '&quot;')}" placeholder="https://...">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="flex items-center gap-2">
-                            <input type="checkbox" class="testimonial-featured-${index}" ${item.isFeatured ? 'checked' : ''}>
-                            <span class="text-sm text-gray-700">Featured on homepage</span>
-                        </label>
-                    </div>
-                </div>
-            `).join('')
-        }
-
-        // Blog Stories Management
-        let blogStories = []
-        window.addBlogStory = function() {
-            blogStories.push({
-                title: 'Story Title',
-                category: 'Tradition',
-                description: 'Story description here',
-                imageUrl: '',
-                link: '#'
-            })
-            renderBlogStories(blogStories)
-        }
-        window.removeBlogStory = function(index) {
-            blogStories.splice(index, 1)
-            renderBlogStories(blogStories)
-        }
-        function renderBlogStories(items) {
-            blogStories = items
-            const container = document.getElementById('blog-stories-container')
-            if (!container) return
-            if (items.length === 0) {
-                container.innerHTML = '<p class="text-gray-500 text-sm">No stories added yet. Click "Add New Story" to get started.</p>'
-                return
-            }
-            container.innerHTML = items.map((item, index) => `
-                <div class="border-2 border-rose-200 rounded-xl p-4 space-y-3">
-                    <div class="flex justify-between items-center mb-3">
-                        <h4 class="font-semibold text-gray-900">Story #${index + 1}</h4>
-                        <button type="button" onclick="removeBlogStory(${index})" class="text-red-600 hover:text-red-800 text-sm font-medium">Remove</button>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 text-sm font-semibold mb-1">Title</label>
-                        <input type="text" class="blog-title-${index} w-full px-3 py-2 border rounded-lg" value="${(item.title || '').replace(/"/g, '&quot;')}" placeholder="Story Title">
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 text-sm font-semibold mb-1">Category/Tag</label>
-                        <input type="text" class="blog-category-${index} w-full px-3 py-2 border rounded-lg" value="${(item.category || '').replace(/"/g, '&quot;')}" placeholder="Tradition">
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 text-sm font-semibold mb-1">Description</label>
-                        <textarea class="blog-desc-${index} w-full px-3 py-2 border rounded-lg" rows="2" placeholder="Story description">${(item.description || '').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-gray-700 text-sm font-semibold mb-1">Image URL</label>
-                            <input type="text" class="blog-image-${index} w-full px-3 py-2 border rounded-lg" value="${(item.imageUrl || '').replace(/"/g, '&quot;')}" placeholder="https://...">
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 text-sm font-semibold mb-1">Link</label>
-                            <input type="text" class="blog-link-${index} w-full px-3 py-2 border rounded-lg" value="${(item.link || '').replace(/"/g, '&quot;')}" placeholder="#">
-                        </div>
-                    </div>
-                </div>
-            `).join('')
-        }
-
-        // Collection functions for dynamic sections
-        function collectSliderItems() {
-            const items = []
-            for (let i = 0; i < sliderItems.length; i++) {
-                const accentEl = document.querySelector(`.slider-accent-${i}`)
-                const titleEl = document.querySelector(`.slider-title-${i}`)
-                const descEl = document.querySelector(`.slider-desc-${i}`)
-                const imageEl = document.querySelector(`.slider-image-${i}`)
-                const buttonEl = document.querySelector(`.slider-button-${i}`)
-                const linkEl = document.querySelector(`.slider-link-${i}`)
-                
-                if (titleEl && titleEl.value.trim()) {
-                    items.push({
-                        accentPill: accentEl?.value || '',
-                        title: titleEl.value,
-                        description: descEl?.value || '',
-                        imageUrl: imageEl?.value || '',
-                        buttonText: buttonEl?.value || '',
-                        buttonLink: linkEl?.value || ''
-                    })
-                }
-            }
-            return items
-        }
-
-        function collectCategories() {
-            const items = []
-            for (let i = 0; i < categories.length; i++) {
-                const nameEl = document.querySelector(`.category-name-${i}`)
-                const imageEl = document.querySelector(`.category-image-${i}`)
-                const orderEl = document.querySelector(`.category-order-${i}`)
-                
-                if (nameEl && nameEl.value.trim()) {
-                    items.push({
-                        id: categories[i].id || `category-${i}`,
-                        name: nameEl.value,
-                        imageUrl: imageEl?.value || '',
-                        displayOrder: parseInt(orderEl?.value) || i + 1
-                    })
-                }
-            }
-            return items
-        }
-
-        function collectTestimonials() {
-            const items = []
-            for (let i = 0; i < testimonials.length; i++) {
-                const nameEl = document.querySelector(`.testimonial-name-${i}`)
-                const textEl = document.querySelector(`.testimonial-text-${i}`)
-                const ratingEl = document.querySelector(`.testimonial-rating-${i}`)
-                const photoEl = document.querySelector(`.testimonial-photo-${i}`)
-                const featuredEl = document.querySelector(`.testimonial-featured-${i}`)
-                
-                if (nameEl && nameEl.value.trim() && textEl && textEl.value.trim()) {
-                    items.push({
-                        customerName: nameEl.value,
-                        reviewText: textEl.value,
-                        rating: parseInt(ratingEl?.value) || 5,
-                        customerPhotoUrl: photoEl?.value || '',
-                        isFeatured: featuredEl?.checked || false
-                    })
-                }
-            }
-            return items
-        }
-
-        function collectBlogStories() {
-            const items = []
-            for (let i = 0; i < blogStories.length; i++) {
-                const titleEl = document.querySelector(`.blog-title-${i}`)
-                const categoryEl = document.querySelector(`.blog-category-${i}`)
-                const descEl = document.querySelector(`.blog-desc-${i}`)
-                const imageEl = document.querySelector(`.blog-image-${i}`)
-                const linkEl = document.querySelector(`.blog-link-${i}`)
-                
-                if (titleEl && titleEl.value.trim()) {
-                    items.push({
-                        title: titleEl.value,
-                        category: categoryEl?.value || '',
-                        description: descEl?.value || '',
-                        imageUrl: imageEl?.value || '',
-                        link: linkEl?.value || '#'
-                    })
-                }
-            }
-            return items
-        }
-
-        document.getElementById('content-form').addEventListener('submit', async (e) => {
-            e.preventDefault()
-
-            // Client-side validation
-            const heroTitle = document.getElementById('hero-title').value.trim();
-            const heroSubtitle = document.getElementById('hero-subtitle').value.trim();
-            const heroButton = document.getElementById('hero-button').value.trim();
-            const seoTitle = document.getElementById('seo-title').value.trim();
-            const seoDescription = document.getElementById('seo-description').value.trim();
-
-            if (!heroTitle || !heroSubtitle || !heroButton) {
-                showError('Please fill in all required Hero section fields (marked with *)');
+            if (testimonials.length === 0) {
+                container.innerHTML = '';
+                empty.classList.remove('hidden');
                 return;
             }
 
-            if (!seoTitle || !seoDescription) {
-                showError('Please fill in all required SEO fields (Meta Title and Description)');
-                return;
-            }
+            empty.classList.add('hidden');
+            container.innerHTML = testimonials.map((t, i) => `
+                <div class="testimonial-card bg-amber-50/70 rounded-2xl p-6 space-y-4 border border-amber-100/80">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-lg text-amber-900">Testimonial #${i + 1}</h3>
+                        <button type="button" onclick="removeTestimonial(${i})" class="bg-red-100 text-red-700 px-3 py-1 rounded-lg text-sm font-semibold hover:bg-red-200 transition">Remove</button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="text" placeholder="Name" value="${t.name || ''}" class="testimonial-name w-full px-4 py-3 bg-white/80 border-2 border-gray-200 rounded-xl outline-none" data-index="${i}" required>
+                        <input type="text" placeholder="Role" value="${t.role || ''}" class="testimonial-role w-full px-4 py-3 bg-white/80 border-2 border-gray-200 rounded-xl outline-none" data-index="${i}" required>
+                        <textarea placeholder="Content" class="col-span-2 testimonial-content w-full px-4 py-3 bg-white/80 border-2 border-gray-200 rounded-xl outline-none" data-index="${i}" rows="3" required>${t.content || ''}</textarea>
+                        <input type="number" placeholder="Rating (1-5)" min="1" max="5" value="${t.rating || 5}" class="testimonial-rating w-full px-4 py-3 bg-white/80 border-2 border-gray-200 rounded-xl outline-none" data-index="${i}" required>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function showAlert(message, type) {
+            const alert = document.getElementById('alertBox');
+            if(!alert) return;
 
-            const saveBtn = document.getElementById('save-btn')
-            saveBtn.textContent = '💾 Saving...'
-            saveBtn.disabled = true
-            hideMessages()
+            alert.className = `glass-card rounded-2xl p-4 mb-6 border-2 animate-slide-in ${
+                type === 'success' ? 'bg-green-50/80 border-green-500 text-green-900' : 'bg-red-50/80 border-red-500 text-red-900'
+            }`;
+            alert.textContent = message;
+            alert.classList.remove('hidden');
 
-            const contentData = {
-                hero: {
-                    title: document.getElementById('hero-title').value,
-                    subtitle: document.getElementById('hero-subtitle').value,
-                    buttonText: document.getElementById('hero-button').value,
-                    imageUrl: document.getElementById('hero-image-url').value
-                },
-                seo: {
-                    metaTitle: document.getElementById('seo-title').value,
-                    metaDescription: document.getElementById('seo-description').value,
-                    keywords: document.getElementById('seo-keywords').value
-                },
-
-                social: {
-                    facebook: document.getElementById('social-facebook').value,
-                    instagram: document.getElementById('social-instagram').value,
-                    whatsapp: document.getElementById('social-whatsapp').value,
-                    twitter: document.getElementById('social-twitter').value
-                },
-                branding: {
-                    logoUrl: document.getElementById('logo-url').value
-                },
-                footer: {
-                    copyright: document.getElementById('footer-copyright').value
-                },
-                whyChooseUs: {
-                    title: "Why Shop With Us?",
-                    items: [
-                        {
-                            icon: document.getElementById('why-icon-1').value,
-                            title: document.getElementById('why-title-1').value,
-                            description: document.getElementById('why-desc-1').value
-                        },
-                        {
-                            icon: document.getElementById('why-icon-2').value,
-                            title: document.getElementById('why-title-2').value,
-                            description: document.getElementById('why-desc-2').value
-                        },
-                        {
-                            icon: document.getElementById('why-icon-3').value,
-                            title: document.getElementById('why-title-3').value,
-                            description: document.getElementById('why-desc-3').value
-                        }
-                    ]
-                },
-                stats: {
-                    happyCustomers: parseInt(document.getElementById('stats-customers').value) || 0,
-                    productsSold: parseInt(document.getElementById('stats-products').value) || 0,
-                    yearsInBusiness: parseInt(document.getElementById('stats-years').value) || 0,
-                    averageRating: parseFloat(document.getElementById('stats-rating').value) || 0
-                },
-
-    sectionTitles: {
-        featuredEyebrow: document.getElementById('featured-eyebrow').value || 'Curator\'s Selection',
-        featuredTitle: document.getElementById('featured-title').value || 'Featured Masterpieces',
-        whyChooseUsTitle: document.getElementById('why-section-title').value || 'Why Collectors Choose Us',
-        testimonialsEyebrow: document.getElementById('testimonials-eyebrow').value || 'Patron Voices',
-        testimonialsTitle: document.getElementById('testimonials-title').value || 'What the World Says',
-        blogEyebrow: document.getElementById('blog-eyebrow').value || 'Craftsman Chronicles',
-        blogTitle: document.getElementById('blog-title').value || 'Latest Stories'
-    },
-
-                himalayanSlider: {
-                    items: collectSliderItems()
-                },
-                categories: collectCategories(),
-                testimonials: collectTestimonials(),
-                blogStories: collectBlogStories()
-            }
-
-            try {
-                const { data: existing } = await supabase
-                    .from('site_content')
-                    .select('id')
-                    .single()
-
-                let result
-                if (existing) {
-                    result = await supabase
-                        .from('site_content')
-                        .update({ content: contentData, updated_at: new Date().toISOString() })
-                        .eq('id', existing.id)
-                } else {
-                    result = await supabase
-                        .from('site_content')
-                        .insert([{ content: contentData }])
-                }
-
-                if (result.error) throw result.error
-
-                showSuccess('✅ Content updated successfully! Your changes are now live.')
-                window.scrollTo({ top: 0, behavior: 'smooth' })
-            } catch (error) {
-                console.error('Error saving content:', error)
-                showError('Failed to save content: ' + error.message)
-            } finally {
-                saveBtn.textContent = '💾 Save All Changes'
-                saveBtn.disabled = false
-            }
-        })
-
-        function showSuccess(message) {
-            const successMsg = document.getElementById('success-message')
-            successMsg.textContent = message
-            successMsg.classList.remove('hidden')
-            setTimeout(() => successMsg.classList.add('hidden'), 5000)
+            setTimeout(() => {
+                alert.classList.add('hidden');
+            }, 5000);
         }
 
-        function showError(message) {
-            const errorMsg = document.getElementById('error-message')
-            errorMsg.textContent = message
-            errorMsg.classList.remove('hidden')
-        }
-
-        function hideMessages() {
-            document.getElementById('success-message').classList.add('hidden')
-            document.getElementById('error-message').classList.add('hidden')
-        }
-
-        window.logout = async function () {
-            await supabase.auth.signOut()
-            window.location.href = 'login.html'
-        }
-
-        verifyAuth()
+        // 9. INITIALIZE ON LOAD
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 

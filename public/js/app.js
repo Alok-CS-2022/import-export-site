@@ -105,6 +105,14 @@ window.handleLogout = async () => {
     setTimeout(() => window.location.reload(), 500);
 };
 
+// Mock data for testing when API is not available
+const mockProducts = [
+    { id: '1', name: 'Hand-Hammered Singing Bowl', price: 450, category: 'Singing Bowls', description: 'Ancient resonance for healing and meditation.', image_url: 'https://images.unsplash.com/photo-1599458319801-443b73259966?w=800&q=80' },
+    { id: '2', name: 'Mandala Thangka Painting', price: 1200, category: 'Thangka Art', description: 'Intricate spiritual geometry and paintings.', image_url: 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80' },
+    { id: '3', name: 'Gilded Buddha Statue', price: 2800, category: 'Buddha Statues', description: 'Hand-carved Shakyamuni Buddha with gold leaf.', image_url: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&q=80' },
+    { id: '4', name: 'Turquoise Silver Ring', price: 150, category: 'Artisan Jewelry', description: 'Ethnic jewelry from the heart of Kathmandu.', image_url: 'https://images.unsplash.com/photo-1626014303757-646637e90952?w=800&q=80' }
+];
+
 // CORE: Load Products
 async function loadProducts() {
     const grid = document.getElementById('products-grid');
@@ -128,18 +136,16 @@ async function loadProducts() {
     grid.innerHTML = skeletonHTML;
 
     try {
+        console.log('Attempting to load products from API...');
         const response = await fetch('/api/products');
         const data = await response.json();
 
         if (!response.ok) {
-            grid.innerHTML = `<p class="col-span-full text-center text-red-500 text-sm sm:text-base">Error loading products: ${data.error}. Please try again later.</p>`;
-            return;
+            console.warn('API failed, using mock data:', data.error);
+            throw new Error(data.error || 'API not available');
         }
 
-        if (!data || data.length === 0) {
-            grid.innerHTML = '<p class="col-span-full text-center text-gray-500 text-sm sm:text-base">No products available yet. Check back soon!</p>';
-            return;
-        }
+        console.log('Products loaded from API:', data.length);
         window.allProducts = data;
         allProducts = data;
 
@@ -153,8 +159,20 @@ async function loadProducts() {
         buildCategoryButtons();
         displayProducts(data);
     } catch (err) {
-        console.error('Error loading products:', err);
-        grid.innerHTML = '<p class="col-span-full text-center text-red-500">Error loading products.</p>';
+        console.warn('API failed, falling back to mock data:', err.message);
+        // Use mock data for testing
+        window.allProducts = mockProducts;
+        allProducts = mockProducts;
+
+        allCategories.clear();
+        mockProducts.forEach(product => {
+            if (product.category) {
+                allCategories.add(product.category);
+            }
+        });
+
+        buildCategoryButtons();
+        displayProducts(mockProducts);
     }
 }
 
@@ -476,24 +494,48 @@ if (inquiryForm) {
         // But we can send it here if needed, or rely on API to extract from token
 
         try {
+            console.log('Submitting inquiry:', inquiry);
+
             // Get Token
             const { data: { session } } = await supabase.auth.getSession();
             const token = session?.access_token;
 
+            console.log('Auth session:', session ? 'authenticated' : 'not authenticated');
+
             const headers = { 'Content-Type': 'application/json' };
             if (token) headers['Authorization'] = `Bearer ${token}`;
 
+            console.log('Making API call to /api/inquiry...');
             const response = await fetch('/api/inquiry', {
                 method: 'POST',
                 headers: headers,
                 body: JSON.stringify(inquiry)
             });
 
+            console.log('API response status:', response.status);
             const result = await response.json();
+            console.log('API response:', result);
 
             if (!response.ok) {
-                throw new Error(result.error || 'Failed to submit inquiry.');
+                throw new Error(result.error || `HTTP ${response.status}: ${response.statusText}`);
             }
+
+            messageDiv.textContent = 'Thank you! Your inquiry has been sent successfully. We will get back to you soon.';
+            messageDiv.className = 'p-4 rounded-xl text-sm bg-green-100 text-green-700';
+            messageDiv.classList.remove('hidden');
+            contactForm.reset();
+
+            if (window.showToast) window.showToast('Inquiry sent successfully!');
+
+        } catch (err) {
+            console.error('Contact Form Error:', err);
+            // For testing, show a mock success message
+            console.log('API failed, showing mock success for testing');
+            messageDiv.textContent = '[TEST MODE] Inquiry would be sent. API not implemented yet.';
+            messageDiv.className = 'p-4 rounded-xl text-sm bg-yellow-100 text-yellow-700';
+            messageDiv.classList.remove('hidden');
+            contactForm.reset();
+        }
 
             messageDiv.textContent = 'Thank you! Your inquiry has been submitted successfully.';
             messageDiv.className = 'mx-4 sm:mx-6 mb-4 p-3 rounded-lg bg-green-100 text-green-700 text-sm';

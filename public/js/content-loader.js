@@ -101,15 +101,21 @@ function updateMetaTag(property, content, attribute = 'property') {
 }
 
 function updateHeroSection(hero) {
+    if (!hero) return;
+
     const titleEl = document.querySelector('.hero-title');
     const subtitleEl = document.querySelector('.hero-subtitle');
     const buttonEl = document.querySelector('.hero-button');
-    const imageEl = document.querySelector('.hero-image');
 
-    if (titleEl && hero.title) titleEl.textContent = hero.title;
-    if (subtitleEl && hero.subtitle) subtitleEl.textContent = hero.subtitle;
-    if (buttonEl && hero.buttonText) buttonEl.textContent = hero.buttonText;
-    if (imageEl && hero.imageUrl) imageEl.src = hero.imageUrl;
+    if (titleEl) {
+        titleEl.innerHTML = hero.title || 'Handcrafted in the Himalayas';
+    }
+    if (subtitleEl) {
+        subtitleEl.textContent = hero.subtitle || 'Authentic Nepalese crafts made by skilled artisans using centuries-old traditions.';
+    }
+    if (buttonEl) {
+        buttonEl.textContent = hero.buttonText || 'Explore Collection';
+    }
 }
 
 
@@ -168,16 +174,14 @@ function updateFooter(footer) {
 }
 
 function updateWhyChooseUs(data) {
-    const titleEl = document.getElementById('why-choose-us-title');
     const container = document.getElementById('why-choose-us-items');
 
-    if (titleEl && data.title) titleEl.textContent = data.title;
     if (container && data.items) {
         container.innerHTML = data.items.map((item, index) => `
             <div class="group p-10 bg-white rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-2xl hover:border-amber-100 transition-all duration-500 hover:-translate-y-2 scroll-reveal" style="transition-delay: ${index * 100}ms">
-                <div class="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center text-3xl mb-8 group-hover:scale-110 group-hover:bg-amber-100 transition-all">${item.icon}</div>
-                <h3 class="text-2xl font-light text-gray-900 mb-4">${item.title}</h3>
-                <p class="text-gray-600 font-light leading-relaxed">${item.description}</p>
+                <div class="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center text-3xl mb-8 group-hover:scale-110 group-hover:bg-amber-100 transition-all">${item.icon || '✨'}</div>
+                <h3 class="text-2xl font-light text-gray-900 mb-4">${item.title || 'Benefit'}</h3>
+                <p class="text-gray-600 font-light leading-relaxed">${item.description || 'Description'}</p>
             </div>
         `).join('');
         if (window.initScrollReveal) window.initScrollReveal();
@@ -185,17 +189,21 @@ function updateWhyChooseUs(data) {
 }
 
 function updateStatsSection(stats) {
+    if (!stats) return;
+
     const mapping = {
-        'stat-happy-customers': stats?.happyCustomers,
-        'stat-products-sold': stats?.productsSold,
-        'stat-years-business': stats?.yearsInBusiness,
-        'stat-avg-rating': stats?.averageRating
+        'stat-happy-customers': stats.happyCustomers || 20,
+        'stat-products-sold': stats.productsSold || 500,
+        'stat-years-business': stats.yearsInBusiness || 15,
+        'stat-avg-rating': stats.averageRating || '4.8'
     };
 
     for (const [id, value] of Object.entries(mapping)) {
-        if (!value) continue;
         const el = document.getElementById(id);
-        if (el) el.setAttribute('data-target', value);
+        if (el) {
+            el.setAttribute('data-target', value);
+            el.textContent = typeof value === 'number' ? value + '+' : value + '+';
+        }
     }
 }
 

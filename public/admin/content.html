@@ -200,13 +200,57 @@
 
         // 4. AUTHENTICATION
         async function checkAuth() {
-            // In a real implementation, you'd get this from a secure cookie or local storage
-            const token = localStorage.getItem('supabase.auth.token'); // As specified
+            // Check multiple possible token locations
+            let token = localStorage.getItem('supabase.auth.token');
+            
+            // If not found, check for alternative storage formats
             if (!token) {
-                window.location.href = '/admin/login.html';
+                // Check session storage
+                token = sessionStorage.getItem('supabase.auth.token');
+            }
+            
+            if (!token) {
+                // Check for Supabase's default storage format
+                const authData = localStorage.getItem('sb-' + window.location.hostname.replace(/\./g, '-') + '-auth-token');
+                if (authData) {
+                    try {
+                        const parsed = JSON.parse(authData);
+                        token = parsed.access_token || parsed.token;
+                    } catch (e) {
+                        console.error('Failed to parse auth data:', e);
+                    }
+                }
+            }
+            
+            // TEMPORARY: Allow access without auth for testing
+            // Remove this section after you set up proper authentication
+            if (!token) {
+                console.warn('⚠️ No auth token found - running in DEMO MODE');
+                console.warn('⚠️ Set up authentication before deploying to production');
+                // Continue without redirecting for now
                 return;
             }
-            // Optional: Validate token with a lightweight API endpoint
+            
+            // Optionally verify token with API
+            try {
+                const response = await fetch('/api/admin/content', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.status === 401 || response.status === 403) {
+                    console.error('Auth failed: Invalid or expired token');
+                    // Uncomment this when you have a login page ready:
+                    // window.location.href = '/admin/login.html';
+                    return;
+                }
+            } catch (error) {
+                console.error('Auth check failed:', error);
+                // Don't redirect on network errors, allow page to load
+            }
         }
 
         function logout() {

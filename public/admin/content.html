@@ -182,6 +182,20 @@
                             <button onclick="runDirectTest()" class="px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg text-sm font-medium">
                                 ⚡ Direct Test
                             </button>
+                            <button onclick="forceRefreshHomepage()" class="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg text-sm font-medium">
+                                🔄 Force Refresh
+                            </button>
+                        </div>
+                        <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded mt-4">
+                            <div class="text-sm font-semibold text-amber-900 mb-2">
+                                💡 IMPORTANT: After Saving Changes
+                            </div>
+                            <p class="text-amber-800 text-sm mb-2">
+                                <strong>YOU MUST REFRESH THE HOMEPAGE (F5 or Cmd+R)</strong>
+                            </p>
+                            <p class="text-amber-700 text-sm">
+                                Click <strong>🔄 Force Refresh</strong> button to reload homepage with new content
+                            </p>
                         </div>
                         <div class="text-center mt-4">
                             <div class="text-sm text-gray-600 mb-2">Need Help?</div>
@@ -845,6 +859,12 @@
             window.open('../index.html?t=' + Date.now(), '_blank')
         }
 
+        // Force homepage reload with new content
+        window.forceRefreshHomepage = function() {
+            const homepage = window.open('../index.html?forceRefresh=' + Date.now(), '_blank');
+            alert('✅ Homepage should reload with latest content!\n\nIf you\'re on the homepage, press F5 to refresh.');
+        }
+
         // Direct test function
         window.runDirectTest = function() {
             // Step 1: Save test data to localStorage
@@ -862,9 +882,13 @@
             const saved = localStorage.getItem('site_content');
             alert('Step 1: Data saved to localStorage:\n' + saved);
 
-            // Step 3: Open homepage
-            alert('Step 2: Opening homepage in new tab.\n\nPress F12 to open console and look for:\n"=== updateStatsSection START ==="');
-            window.open('../index.html?t=' + Date.now(), '_blank');
+            // Step 3: Ask to refresh
+            alert('Step 2: Now please REFRESH THE HOMEPAGE (F5 or Cmd+R)\n\nStats should show: 77+ and 888+');
+
+            // Step 4: Optional open homepage
+            if (confirm('Open homepage in new tab to verify?')) {
+                window.open('../index.html?t=' + Date.now(), '_blank');
+            }
         }
 
         // Initialize

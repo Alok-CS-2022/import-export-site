@@ -1113,7 +1113,19 @@
 
     <script type="module" src="js/app.js"></script>
     <script type="module" src="js/home.js"></script>
-    <script type="module" src="js/content-loader.js?v=1.1"></script>
+    <script type="module" src="js/content-loader.js?v=1.2"></script>
+    <script>
+    // Handle force refresh from content editor
+    if (window.location.href.includes('forceRefresh=')) {
+        console.log('Force refresh triggered, reloading page...');
+        setTimeout(() => {
+            // Remove forceRefresh parameter and reload
+            const url = window.location.href.split('?')[0];
+            console.log('Reloading to:', url);
+            window.location.href = url;
+        }, 500);
+    }
+    </script>
 </body>
 
 </html>

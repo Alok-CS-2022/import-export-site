@@ -5,6 +5,8 @@ let contentData = {};
 
 // Load and apply site content from database
 export async function loadSiteContent() {
+    console.log('=== loadSiteContent START ===');
+
     try {
         // First try to load from Supabase
         const { data, error } = await supabase
@@ -28,6 +30,109 @@ export async function loadSiteContent() {
                     if (content.hasOwnProperty(key)) {
                         cleanContent[key] = content[key];
                     }
+                });
+                content = cleanContent;
+
+                console.log('Cleaned content object:', JSON.stringify(content));
+
+                // CRITICAL FIX: Actually call the update functions!
+                console.log('Now applying loaded content...');
+
+                // Force DOM to be ready
+                if (document.readyState === 'loading') {
+                    console.log('DOM still loading, waiting...');
+                    await new Promise(resolve => {
+                        if (document.readyState === 'complete') {
+                            resolve();
+                        } else {
+                            document.addEventListener('DOMContentLoaded', () => resolve(), { once: true });
+                        }
+                    });
+                }
+
+                console.log('DOM is ready, applying updates...');
+
+                if (content.hero) {
+                    console.log('Updating hero section...');
+                    updateHeroSection(content.hero);
+                }
+                if (content.whyChooseUs) {
+                    console.log('Updating why-choose-us section...');
+                    updateWhyChooseUs(content.whyChooseUs);
+                }
+                if (content.stats) {
+                    console.log('Calling updateStatsSection with:', content.stats);
+                    updateStatsSection(content.stats);
+                }
+                if (content.seo) updateMetaTags(content.seo);
+                if (content.testimonials) updateTestimonials(content.testimonials);
+                if (content.blogStories) updateBlogStories(content.blogStories);
+
+                console.log('Content applied from localStorage!');
+                console.log('=== loadSiteContent END ===');
+                return;
+            } else {
+                console.log('No custom content found, using defaults');
+                // Still call these to apply hardcoded fallbacks
+                updateWhyChooseUs({});
+                updateStatsSection({});
+                console.log('=== loadSiteContent END (defaults) ===');
+                return;
+            }
+        } else {
+            content = data.content;
+
+            // CLEAN: Remove prototype pollution
+            const cleanContent = {};
+            Object.keys(content).forEach(key => {
+                if (content.hasOwnProperty(key)) {
+                    cleanContent[key] = content[key];
+                }
+            });
+            content = cleanContent;
+
+            console.log('Cleaned content object:', JSON.stringify(content));
+
+            // CRITICAL FIX: Actually call the update functions!
+
+            // Force DOM to be ready
+            if (document.readyState === 'loading') {
+                console.log('DOM still loading, waiting...');
+                await new Promise(resolve => {
+                    if (document.readyState === 'complete') {
+                        resolve();
+                    } else {
+                        document.addEventListener('DOMContentLoaded', () => resolve(), { once: true });
+                    }
+                });
+            }
+
+            console.log('DOM is ready, applying updates...');
+
+            if (content.hero) {
+                console.log('Updating hero section...');
+                updateHeroSection(content.hero);
+            }
+            if (content.whyChooseUs) {
+                console.log('Updating why-choose-us section...');
+                updateWhyChooseUs(content.whyChooseUs);
+            }
+            if (content.stats) {
+                console.log('Calling updateStatsSection with:', content.stats);
+                updateStatsSection(content.stats);
+            }
+            if (content.seo) updateMetaTags(content.seo);
+            if (content.testimonials) updateTestimonials(content.testimonials);
+            if (content.blogStories) updateBlogStories(content.blogStories);
+
+            console.log('Content applied from database!');
+            console.log('=== loadSiteContent END ===');
+        }
+    } catch (error) {
+        console.error('Error loading content:', error);
+        console.log('=== loadSiteContent ERROR ===');
+    }
+}
                 });
                 content = cleanContent;
 

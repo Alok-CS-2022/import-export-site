@@ -6,22 +6,35 @@ let contentData = {};
 // Load and apply site content from database
 export async function loadSiteContent() {
     try {
+        // First try to load from Supabase
         const { data, error } = await supabase
             .from('site_content')
             .select('*')
             .single();
 
+        let content = null;
+
         if (error) {
-            console.log('No custom content found, using defaults');
-            // Still call these to apply hardcoded fallbacks
-            updateWhyChooseUs({});
-            updateStatsSection({});
-            return;
+            console.log('Database not available, checking localStorage:', error.message);
+            // Fall back to localStorage
+            const localData = localStorage.getItem('site_content');
+            if (localData) {
+                content = JSON.parse(localData);
+                console.log('Loaded content from localStorage');
+            } else {
+                console.log('No custom content found, using defaults');
+                // Still call these to apply hardcoded fallbacks
+                updateWhyChooseUs({});
+                updateStatsSection({});
+                return;
+            }
+        } else {
+            content = data.content;
+            console.log('Loaded content from database');
         }
 
-        if (data && data.content) {
-            contentData = data.content;
-            const content = data.content;
+        if (content) {
+            contentData = content;
 
             // Apply SEO Meta Tags
             if (content.seo) updateMetaTags(content.seo);

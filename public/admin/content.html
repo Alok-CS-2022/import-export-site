@@ -169,12 +169,15 @@
                     </div>
 
                     <div class="mt-8 pt-6 border-t border-gray-200">
-                        <div class="flex gap-4 justify-center">
+                        <div class="flex gap-4 justify-center flex-wrap">
                             <button onclick="testLocalStorage()" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-medium">
                                 🧪 Test Storage
                             </button>
                             <button onclick="clearLocalStorage()" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg text-sm font-medium">
                                 🗑️ Clear Data
+                            </button>
+                            <button onclick="openHomepage()" class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg text-sm font-medium">
+                                🏠 Test Homepage
                             </button>
                         </div>
                         <div class="text-center mt-4">
@@ -752,47 +755,35 @@
                         break
 
                     case 'why-choose-us':
-                        // Already handled by updateWhyItem functions
                         sectionData = currentContent.whyChooseUs || {}
                         break
 
                     case 'testimonials':
-                        // Already handled by testimonial functions
                         sectionData = currentContent.testimonials || []
                         break
 
                     case 'blog':
-                        // Already handled by blog functions
                         sectionData = currentContent.blogStories || []
                         break
                 }
 
                 currentContent[currentSection] = sectionData
 
-                try {
-                    // Try to save to Supabase first
-                    const { error } = await supabase
-                        .from('site_content')
-                        .upsert({
-                            id: 1,
-                            content: currentContent,
-                            updated_at: new Date().toISOString()
-                        })
+                // Save to localStorage
+                localStorage.setItem('site_content', JSON.stringify(currentContent))
 
-                    if (error) throw error
+                // Show exactly what was saved
+                const savedStats = currentContent.stats
+                const message = `✅ SAVED!\n\nStats that were saved:\n` +
+                    `Happy Customers: ${savedStats?.happyCustomers || 'not set'}\n` +
+                    `Products Sold: ${savedStats?.productsSold || 'not set'}\n` +
+                    `Years in Business: ${savedStats?.yearsInBusiness || 'not set'}\n` +
+                    `Average Rating: ${savedStats?.averageRating || 'not set'}\n\n` +
+                    `Now open the homepage in a NEW tab to see changes!`
 
-                    console.log('Saved to database successfully')
-                } catch (dbError) {
-                    // Fall back to localStorage
-                    console.warn('Database save failed, using localStorage:', dbError.message)
-                    localStorage.setItem('site_content', JSON.stringify(currentContent))
-                    console.log('Saved to localStorage successfully:', currentContent)
+                alert(message)
 
-                    // Verify it was saved
-                    const saved = localStorage.getItem('site_content')
-                    console.log('Verification - saved data:', saved ? JSON.parse(saved) : 'NOT SAVED')
-                }
-
+                console.log('Saved to localStorage:', currentContent)
                 showSuccess()
 
             } catch (error) {
@@ -844,6 +835,11 @@
                 alert('✅ localStorage cleared. Page will reload.')
                 location.reload()
             }
+        }
+
+        window.openHomepage = function() {
+            // Open homepage in new tab with cache-busting
+            window.open('../index.html?t=' + Date.now(), '_blank')
         }
 
         // Initialize

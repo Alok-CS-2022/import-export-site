@@ -56,15 +56,11 @@ export async function loadSiteContent() {
             updateStatsSection(content.stats || {});
             if (content.sectionTitles) updateSectionTitles(content.sectionTitles);
 
-            // Apply all new dynamic content updates
-            await updateHeroSection();
-            await updateCategoryShowcase();
-            await updateHimalayanSlider();
-            await updateWhyChooseUs();
-            await updateImpactStats();
-            await updateTestimonials();
-            await updateBlogStories();
-            await updateFooterContent();
+            console.log('Applied content updates:', {
+                hero: content.hero,
+                stats: content.stats,
+                whyChooseUs: content.whyChooseUs
+            });
 
             // Apply legacy dynamic sections
             if (content.himalayanSlider) {
@@ -202,7 +198,12 @@ function updateWhyChooseUs(data) {
 }
 
 function updateStatsSection(stats) {
-    if (!stats) return;
+    console.log('updateStatsSection called with:', stats);
+
+    if (!stats) {
+        console.log('No stats provided, returning');
+        return;
+    }
 
     const mapping = {
         'stat-happy-customers': stats.happyCustomers || 20,
@@ -211,11 +212,17 @@ function updateStatsSection(stats) {
         'stat-avg-rating': stats.averageRating || '4.8'
     };
 
+    console.log('Stats mapping:', mapping);
+
     for (const [id, value] of Object.entries(mapping)) {
         const el = document.getElementById(id);
+        console.log(`Updating element ${id}:`, el, 'with value:', value);
         if (el) {
             el.setAttribute('data-target', value);
-            el.textContent = typeof value === 'number' ? value + '+' : value + '+';
+            el.textContent = typeof value === 'number' ? value + '+' : value;
+            console.log(`Successfully updated ${id} to:`, el.textContent);
+        } else {
+            console.warn(`Element ${id} not found`);
         }
     }
 }

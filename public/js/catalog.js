@@ -211,5 +211,8 @@ function setupEventListeners() {
     })
 }
 
+// Expose to window for HTML onclick access
+window.filterByCategory = window.catalogFilterByCategory;
+
 // Start
 initCatalog()

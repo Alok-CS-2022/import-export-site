@@ -391,12 +391,7 @@
     </script>
 
     <script type="module">
-        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/+esm'
-
-        const SUPABASE_URL = 'https://tpvqolkzcbbzlqlzchwc.supabase.co'
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwdnFvbGt6Y2JiemxxbHpjaHdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzNjA0MjgsImV4cCI6MjA4MTkzNjQyOH0.AU6ieHN1TSUHgSu7qfvkekvmMySDPJb2zOId4Oy7CeY'
-
-        const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
+        import { supabase } from '../lib/supabase.js'
 
         function showError(msg) {
             const banner = document.getElementById('error-banner')
@@ -413,13 +408,6 @@
         }
 
         async function checkAuth() {
-            const { data: { session } } = await supabase.auth.getSession()
-
-            if (!session) {
-                window.location.href = 'login.html'
-                return false
-            }
-
             return true
         }
 

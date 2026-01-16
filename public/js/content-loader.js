@@ -1,234 +1,152 @@
 import { supabase } from '../lib/supabase.js';
 
+/**
+ * Content Loader Module
+ * 
+ * This module loads content from Supabase database (primary) or localStorage (fallback)
+ * and applies it to the homepage sections dynamically.
+ * 
+ * Flow:
+ * 1. Try to load from Supabase site_content table
+ * 2. If database fails, fall back to localStorage
+ * 3. Apply content to DOM elements on the page
+ */
+
 // Global content data variable
 let contentData = {};
 
-// Load and apply site content from database
+/**
+ * Main entry point - loads and applies site content
+ */
 export async function loadSiteContent() {
     console.log('=== loadSiteContent START ===');
 
     try {
-        // First try to load from Supabase
+        let content = null;
+
+        // Step 1: Try to load from Supabase database
         const { data, error } = await supabase
             .from('site_content')
             .select('*')
             .single();
 
-        let content = null;
-
         if (error) {
             console.log('Database not available, checking localStorage:', error.message);
             // Fall back to localStorage
             const localData = localStorage.getItem('site_content');
-            console.log('localStorage data:', localData);
+            console.log('localStorage data found:', !!localData);
+
             if (localData) {
                 content = JSON.parse(localData);
-
-                // CLEAN: Remove prototype pollution
-                const cleanContent = {};
-                Object.keys(content).forEach(key => {
-                    if (content.hasOwnProperty(key)) {
-                        cleanContent[key] = content[key];
-                    }
-                });
-                content = cleanContent;
-
-                console.log('Cleaned content object:', JSON.stringify(content));
-
-                // CRITICAL FIX: Actually call the update functions!
-                console.log('Now applying loaded content...');
-
-                // Force DOM to be ready
-                if (document.readyState === 'loading') {
-                    console.log('DOM still loading, waiting...');
-                    await new Promise(resolve => {
-                        if (document.readyState === 'complete') {
-                            resolve();
-                        } else {
-                            document.addEventListener('DOMContentLoaded', () => resolve(), { once: true });
-                        }
-                    });
-                }
-
-                console.log('DOM is ready, applying updates...');
-
-                if (content.hero) {
-                    console.log('Updating hero section...');
-                    updateHeroSection(content.hero);
-                }
-                if (content.whyChooseUs) {
-                    console.log('Updating why-choose-us section...');
-                    updateWhyChooseUs(content.whyChooseUs);
-                }
-                if (content.stats) {
-                    console.log('Calling updateStatsSection with:', content.stats);
-                    updateStatsSection(content.stats);
-                }
-                if (content.seo) updateMetaTags(content.seo);
-                if (content.testimonials) updateTestimonials(content.testimonials);
-                if (content.blogStories) updateBlogStories(content.blogStories);
-
-                console.log('Content applied from localStorage!');
-                console.log('=== loadSiteContent END ===');
-                return;
+                console.log('Loaded content from localStorage');
             } else {
                 console.log('No custom content found, using defaults');
-                // Still call these to apply hardcoded fallbacks
-                updateWhyChooseUs({});
-                updateStatsSection({});
-                console.log('=== loadSiteContent END (defaults) ===');
-                return;
+                content = {};
             }
         } else {
-            content = data.content;
+            // Successfully loaded from database
+            content = data?.content || {};
+            console.log('Loaded content from database');
+        }
 
-            // CLEAN: Remove prototype pollution
-            const cleanContent = {};
+        // Clean the content object (remove any prototype pollution)
+        const cleanContent = {};
+        if (content && typeof content === 'object') {
             Object.keys(content).forEach(key => {
                 if (content.hasOwnProperty(key)) {
                     cleanContent[key] = content[key];
                 }
             });
-            content = cleanContent;
-
-            console.log('Cleaned content object:', JSON.stringify(content));
-
-            // CRITICAL FIX: Actually call the update functions!
-
-            // Force DOM to be ready
-            if (document.readyState === 'loading') {
-                console.log('DOM still loading, waiting...');
-                await new Promise(resolve => {
-                    if (document.readyState === 'complete') {
-                        resolve();
-                    } else {
-                        document.addEventListener('DOMContentLoaded', () => resolve(), { once: true });
-                    }
-                });
-            }
-
-            console.log('DOM is ready, applying updates...');
-
-            if (content.hero) {
-                console.log('Updating hero section...');
-                updateHeroSection(content.hero);
-            }
-            if (content.whyChooseUs) {
-                console.log('Updating why-choose-us section...');
-                updateWhyChooseUs(content.whyChooseUs);
-            }
-            if (content.stats) {
-                console.log('Calling updateStatsSection with:', content.stats);
-                updateStatsSection(content.stats);
-            }
-            if (content.seo) updateMetaTags(content.seo);
-            if (content.testimonials) updateTestimonials(content.testimonials);
-            if (content.blogStories) updateBlogStories(content.blogStories);
-
-            console.log('Content applied from database!');
-            console.log('=== loadSiteContent END ===');
         }
+        content = cleanContent;
+        contentData = content;
+
+        console.log('Content to apply:', JSON.stringify(content, null, 2));
+
+        // Step 2: Wait for DOM to be ready
+        if (document.readyState === 'loading') {
+            console.log('DOM still loading, waiting...');
+            await new Promise(resolve => {
+                document.addEventListener('DOMContentLoaded', () => resolve(), { once: true });
+            });
+        }
+
+        console.log('DOM is ready, applying updates...');
+
+        // Step 3: Apply content to all sections
+        if (content.hero) {
+            console.log('Updating hero section...');
+            updateHeroSection(content.hero);
+        }
+
+        if (content.whyChooseUs) {
+            console.log('Updating why-choose-us section...');
+            updateWhyChooseUs(content.whyChooseUs);
+        }
+
+        if (content.stats) {
+            console.log('Updating stats section with:', content.stats);
+            updateStatsSection(content.stats);
+        }
+
+        if (content.seo) {
+            console.log('Updating SEO meta tags...');
+            updateMetaTags(content.seo);
+        }
+
+        if (content.testimonials) {
+            console.log('Updating testimonials...');
+            updateTestimonials(content.testimonials);
+        }
+
+        if (content.blogStories) {
+            console.log('Updating blog stories...');
+            updateBlogStories(content.blogStories);
+        }
+
+        if (content.social) {
+            console.log('Updating social links...');
+            updateSocialLinks(content.social);
+        }
+
+        if (content.footer) {
+            console.log('Updating footer...');
+            updateFooter(content.footer);
+        }
+
+        if (content.branding && content.branding.logoUrl) {
+            console.log('Updating logo...');
+            updateLogo(content.branding.logoUrl);
+        }
+
+        if (content.himalayanSlider) {
+            console.log('Updating Himalayan slider...');
+            updateHimalayanSlider(content.himalayanSlider);
+        }
+
+        if (content.categories) {
+            console.log('Updating categories...');
+            updateCategories(content.categories);
+        }
+
+        console.log('=== loadSiteContent END ===');
+
     } catch (error) {
         console.error('Error loading content:', error);
         console.log('=== loadSiteContent ERROR ===');
     }
 }
-                });
-                content = cleanContent;
 
-                console.log('Cleaned content object:', JSON.stringify(content));
+// ============================================
+// SECTION UPDATE FUNCTIONS
+// ============================================
 
-                // CRITICAL FIX: Actually call the update functions!
-                console.log('Now applying loaded content...');
-                if (content.hero) updateHeroSection(content.hero);
-                if (content.whyChooseUs) updateWhyChooseUs(content.whyChooseUs);
-                if (content.stats) {
-                    console.log('Calling updateStatsSection with:', content.stats);
-                    updateStatsSection(content.stats);
-                }
-                if (content.seo) updateMetaTags(content.seo);
-                if (content.testimonials) updateTestimonials(content.testimonials);
-                if (content.blogStories) updateBlogStories(content.blogStories);
-
-                console.log('Content applied from localStorage!');
-                return;
-            } else {
-                console.log('No custom content found, using defaults');
-                // Still call these to apply hardcoded fallbacks
-                updateWhyChooseUs({});
-                updateStatsSection({});
-                return;
-            }
-        } else {
-            content = data.content;
-            console.log('Loaded content from database:', content);
-
-            // CLEAN: Remove prototype pollution
-            const cleanContent = {};
-            Object.keys(content).forEach(key => {
-                if (content.hasOwnProperty(key)) {
-                    cleanContent[key] = content[key];
-                }
-            });
-            content = cleanContent;
-
-            console.log('Cleaned content object:', JSON.stringify(content));
-
-            // CRITICAL FIX: Actually call the update functions!
-            console.log('Now applying loaded content...');
-            if (content.hero) updateHeroSection(content.hero);
-            if (content.whyChooseUs) updateWhyChooseUs(content.whyChooseUs);
-            if (content.stats) {
-                console.log('Calling updateStatsSection with:', content.stats);
-                updateStatsSection(content.stats);
-            }
-            if (content.seo) updateMetaTags(content.seo);
-            if (content.testimonials) updateTestimonials(content.testimonials);
-            if (content.blogStories) updateBlogStories(content.blogStories);
-
-            console.log('Content applied from database!');
-        }
-
-        if (content) {
-            contentData = content;
-
-            // Apply SEO Meta Tags
-            if (content.seo) updateMetaTags(content.seo);
-
-            // Apply Hero Section
-            if (content.hero) updateHeroSection(content.hero);
-
-            // Apply Social Media Links
-            if (content.social) updateSocialLinks(content.social);
-
-            // Apply Branding (Logo)
-            if (content.branding && content.branding.logoUrl) updateLogo(content.branding.logoUrl);
-
-            // Apply Footer
-            if (content.footer) updateFooter(content.footer);
-
-            console.log('Content application complete. Functions were already called during loading.');
-
-            // Apply legacy dynamic sections
-            if (content.himalayanSlider) {
-                updateHimalayanSlider(content.himalayanSlider);
-            }
-            if (content.categories) {
-                updateCategories(content.categories);
-            }
-            if (content.testimonials) {
-                updateTestimonials(content.testimonials);
-            }
-            if (content.blogStories) {
-                updateBlogStories(content.blogStories);
-            }
-        }
-    } catch (error) {
-        console.error('Error loading site content:', error);
-    }
-}
-
+/**
+ * Updates SEO meta tags
+ */
 function updateMetaTags(seo) {
+    if (!seo) return;
+
     if (seo.metaTitle) {
         document.title = seo.metaTitle;
         updateMetaTag('og:title', seo.metaTitle);
@@ -256,32 +174,106 @@ function updateMetaTag(property, content, attribute = 'property') {
     meta.setAttribute('content', content);
 }
 
+/**
+ * Updates the hero section (main banner)
+ */
 function updateHeroSection(hero) {
     if (!hero) return;
 
     const titleEl = document.querySelector('.hero-title');
     const subtitleEl = document.querySelector('.hero-subtitle');
-    const buttonEl = document.querySelector('.hero-button');
+    const buttonEl = document.querySelector('.hero-button span.relative');
+    const buttonContainer = document.querySelector('.hero-button');
 
-    if (titleEl) {
-        titleEl.innerHTML = hero.title || 'Handcrafted in the Himalayas';
+    if (titleEl && hero.title) {
+        // Preserve the existing animation structure if possible
+        titleEl.innerHTML = hero.title;
     }
-    if (subtitleEl) {
-        subtitleEl.textContent = hero.subtitle || 'Authentic Nepalese crafts made by skilled artisans using centuries-old traditions.';
+
+    if (subtitleEl && hero.subtitle) {
+        subtitleEl.textContent = hero.subtitle;
     }
-    if (buttonEl) {
-        buttonEl.textContent = hero.buttonText || 'Explore Collection';
+
+    if (buttonEl && hero.buttonText) {
+        buttonEl.textContent = hero.buttonText;
+    } else if (buttonContainer && hero.buttonText) {
+        // Fall back to button container if span not found
+        const span = buttonContainer.querySelector('span.relative');
+        if (span) span.textContent = hero.buttonText;
+    }
+
+    // Update hero image if provided
+    const heroImage = document.querySelector('.hero-image');
+    if (heroImage && hero.imageUrl) {
+        heroImage.src = hero.imageUrl;
     }
 }
 
+/**
+ * Updates the "Why Choose Us" section
+ */
+function updateWhyChooseUs(data) {
+    const container = document.getElementById('why-choose-us-items');
+    if (!container) return;
 
+    if (data && data.items && Array.isArray(data.items) && data.items.length > 0) {
+        container.innerHTML = data.items.map((item, index) => `
+            <div class="group p-10 bg-white rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-2xl hover:border-amber-100 transition-all duration-500 hover:-translate-y-2 scroll-reveal" style="transition-delay: ${index * 100}ms">
+                <div class="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center text-3xl mb-8 group-hover:scale-110 group-hover:bg-amber-100 transition-all">${item.icon || '✨'}</div>
+                <h3 class="text-2xl font-light text-gray-900 mb-4">${item.title || 'Benefit'}</h3>
+                <p class="text-gray-600 font-light leading-relaxed">${item.description || 'Description'}</p>
+            </div>
+        `).join('');
 
+        // Re-initialize scroll reveal if available
+        if (window.initScrollReveal) window.initScrollReveal();
+    }
+}
+
+/**
+ * Updates the impact stats section
+ */
+function updateStatsSection(stats) {
+    console.log('=== updateStatsSection START ===');
+    console.log('Stats received:', stats);
+
+    if (!stats) {
+        console.log('No stats provided, skipping update');
+        return;
+    }
+
+    const updateStat = (elementId, value) => {
+        const el = document.getElementById(elementId);
+        if (!el) {
+            console.warn(`Element ${elementId} not found`);
+            return;
+        }
+
+        const suffix = el.getAttribute('data-suffix') || '+';
+        el.textContent = value + suffix;
+        el.setAttribute('data-target', value);
+        console.log(`✅ Updated ${elementId} to: ${value}${suffix}`);
+    };
+
+    // Update all stats
+    if (stats.happyCustomers !== undefined) updateStat('stat-happy-customers', stats.happyCustomers);
+    if (stats.productsSold !== undefined) updateStat('stat-products-sold', stats.productsSold);
+    if (stats.yearsInBusiness !== undefined) updateStat('stat-years-business', stats.yearsInBusiness);
+    if (stats.averageRating !== undefined) updateStat('stat-avg-rating', stats.averageRating);
+
+    console.log('=== updateStatsSection END ===');
+}
+
+/**
+ * Updates social media links
+ */
 function updateSocialLinks(social) {
+    if (!social) return;
+
     const facebookEl = document.querySelector('.social-facebook');
     const instagramEl = document.querySelector('.social-instagram');
     const whatsappEl = document.querySelector('.social-whatsapp');
     const twitterEl = document.querySelector('.social-twitter');
-    const footerSocialContainer = document.getElementById('footer-social-links');
 
     if (facebookEl && social.facebook) {
         facebookEl.href = social.facebook;
@@ -302,6 +294,7 @@ function updateSocialLinks(social) {
     }
 
     // Dynamic Footer Social Links
+    const footerSocialContainer = document.getElementById('footer-social-links');
     if (footerSocialContainer) {
         let html = '';
         if (social.facebook) html += `<a href="${social.facebook}" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-amber-600 transition">FB</a>`;
@@ -315,435 +308,106 @@ function updateSocialLinks(social) {
     }
 }
 
+/**
+ * Updates logo
+ */
 function updateLogo(logoUrl) {
+    if (!logoUrl) return;
+
     const logoContainer = document.querySelector('.site-logo-container');
     if (logoContainer) {
         logoContainer.innerHTML = `<img src="${logoUrl}" alt="Logo" class="h-8 sm:h-10 w-auto">`;
     }
 }
 
+/**
+ * Updates footer content
+ */
 function updateFooter(footer) {
+    if (!footer) return;
+
     const copyrightEl = document.querySelector('.footer-copyright') || document.getElementById('footer-copyright-text');
     if (copyrightEl && footer.copyright) {
         copyrightEl.textContent = footer.copyright;
     }
-}
 
-function updateWhyChooseUs(data) {
-    const container = document.getElementById('why-choose-us-items');
-
-    if (container && data.items) {
-        container.innerHTML = data.items.map((item, index) => `
-            <div class="group p-10 bg-white rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-2xl hover:border-amber-100 transition-all duration-500 hover:-translate-y-2 scroll-reveal" style="transition-delay: ${index * 100}ms">
-                <div class="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center text-3xl mb-8 group-hover:scale-110 group-hover:bg-amber-100 transition-all">${item.icon || '✨'}</div>
-                <h3 class="text-2xl font-light text-gray-900 mb-4">${item.title || 'Benefit'}</h3>
-                <p class="text-gray-600 font-light leading-relaxed">${item.description || 'Description'}</p>
-            </div>
-        `).join('');
-        if (window.initScrollReveal) window.initScrollReveal();
+    const aboutEl = document.getElementById('footer-about-text');
+    if (aboutEl && footer.aboutText) {
+        aboutEl.textContent = footer.aboutText;
     }
 }
 
-function updateStatsSection(stats) {
-    console.log('=== updateStatsSection START ===');
-    console.log('stats received:', stats);
-    console.log('Current page URL:', window.location.href);
+/**
+ * Updates testimonials
+ */
+function updateTestimonials(testimonials) {
+    if (!Array.isArray(testimonials) || testimonials.length === 0) return;
 
-    if (!stats) {
-        console.log('No stats provided, using defaults');
-        stats = { happyCustomers: 20, productsSold: 500, yearsInBusiness: 15, averageRating: '4.8' };
-    }
+    // Store in window for home.js to use
+    window.contentTestimonials = testimonials.filter(t => t.isFeatured !== false).slice(0, 2);
 
-    // Define update function
-    const updateStat = (elementId, value) => {
-        let el = document.getElementById(elementId);
+    const container = document.getElementById('testimonials-grid');
+    if (!container) return;
 
-        // Retry if element not found (might be loading)
-        let retries = 0;
-        const maxRetries = 5;
-        const retryInterval = 100;
+    container.innerHTML = testimonials.slice(0, 2).map(t => {
+        const initials = (t.customerName || 'CU').split(' ').map(n => n[0]).join('').toUpperCase();
+        const stars = '★'.repeat(t.rating || 5);
 
-        const attemptUpdate = () => {
-            el = document.getElementById(elementId);
-            if (!el) {
-                retries++;
-                console.warn(`Attempt ${retries}/${maxRetries}: Element ${elementId} not found, retrying...`);
-                if (retries < maxRetries) {
-                    setTimeout(attemptUpdate, retryInterval);
-                    return;
-                } else {
-                    console.error(`Element ${elementId} not found after ${maxRetries} attempts`);
-                    return;
-                }
+        return `
+            <div class="p-8 bg-white rounded-3xl border border-stone-100 shadow-sm hover:shadow-xl transition-all duration-500">
+                <div class="flex text-amber-500 mb-4">${stars}</div>
+                <p class="text-gray-700 italic mb-6 leading-relaxed">"${escapeHtml(t.reviewText || '')}"</p>
+                <div class="flex items-center gap-4">
+                    ${t.customerPhotoUrl
+                ? `<img src="${escapeHtml(t.customerPhotoUrl)}" alt="${escapeHtml(t.customerName)}" class="w-12 h-12 rounded-full object-cover">`
+                : `<div class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center text-amber-800 font-bold">${initials}</div>`
             }
-
-            const suffix = el.getAttribute('data-suffix') || '+';
-            el.textContent = value + suffix;
-            el.setAttribute('data-target', value);
-
-            // Force reflow
-            el.style.display = 'none';
-            el.offsetHeight; // trigger reflow
-            el.style.display = '';
-
-            console.log(`✅ Updated ${elementId} to:`, el.textContent);
-
-            // Add visual indicator
-            el.style.backgroundColor = '#fef08a'; // yellow highlight
-            setTimeout(() => {
-                el.style.backgroundColor = '';
-            }, 1000);
-        };
-
-        attemptUpdate();
-    };
-
-    // Update all stats
-    updateStat('stat-happy-customers', stats.happyCustomers);
-    updateStat('stat-products-sold', stats.productsSold);
-    updateStat('stat-years-business', stats.yearsInBusiness);
-    updateStat('stat-avg-rating', stats.averageRating);
-
-    console.log('=== updateStatsSection END ===');
-}
-
-// Make it globally accessible for debugging
-window.manualUpdateStats = function() {
-    const data = localStorage.getItem('site_content');
-    if (data) {
-        const content = JSON.parse(data);
-        console.log('Manually updating stats with:', content.stats);
-        updateStatsSection(content.stats);
-    } else {
-        console.log('No data in localStorage');
-    }
-};
-
-function updateSectionTitles(titles) {
-    if (!titles) return;
-
-    // Featured Products Section
-    const featuredEyebrow = document.querySelector('#featured-products .text-sm.tracking-widest');
-    const featuredTitle = document.querySelector('#featured-products h2');
-    if (featuredEyebrow && titles.featuredEyebrow) {
-        featuredEyebrow.textContent = titles.featuredEyebrow;
-    }
-    if (featuredTitle && titles.featuredTitle) {
-        featuredTitle.innerHTML = titles.featuredTitle;
-    }
-
-    // Why Choose Us Section
-    const whyTitle = document.getElementById('why-choose-us-title');
-    if (whyTitle && titles.whyChooseUsTitle) {
-        whyTitle.innerHTML = titles.whyChooseUsTitle;
-    }
-
-    // Testimonials Section
-    const testimonialsSection = document.querySelector('section.py-24.bg-stone-50');
-    if (testimonialsSection) {
-        const testEyebrow = testimonialsSection.querySelector('.text-sm.tracking-widest');
-        const testTitle = testimonialsSection.querySelector('h2');
-        if (testEyebrow && titles.testimonialsEyebrow) {
-            testEyebrow.textContent = titles.testimonialsEyebrow;
-        }
-        if (testTitle && titles.testimonialsTitle) {
-            testTitle.innerHTML = titles.testimonialsTitle;
-        }
-    }
-
-    // Blog Stories Section
-    const blogSection = document.querySelector('section.py-24.bg-white.border-t');
-    if (blogSection) {
-        const blogEyebrow = blogSection.querySelector('.text-sm.tracking-widest');
-        const blogTitle = blogSection.querySelector('h2');
-        if (blogEyebrow && titles.blogEyebrow) {
-            blogEyebrow.textContent = titles.blogEyebrow;
-        }
-        if (blogTitle && titles.blogTitle) {
-            blogTitle.innerHTML = titles.blogTitle;
-        }
-    }
-}
-
-// FUNCTION 1: Update Category Showcase
-async function updateCategoryShowcase() {
-    const element = document.getElementById('category-showcase');
-    if (!element) return;
-    
-    if (!contentData.categories || !Array.isArray(contentData.categories) || contentData.categories.length === 0) {
-        return;
-    }
-    
-    element.innerHTML = '';
-    
-    contentData.categories.forEach(category => {
-        const div = document.createElement('div');
-        div.className = 'group relative overflow-hidden rounded-2xl bg-white shadow-md hover:shadow-2xl transition-all duration-500';
-        
-        div.innerHTML = `
-            <img src="${category.imageUrl || ''}" alt="${category.name || ''}" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
-            <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
-                <h3 class="text-2xl font-light mb-2">${category.name || ''}</h3>
-                <p class="text-sm text-gray-200">${category.description || ''}</p>
-                <a href="${category.link || '#'}" class="inline-block mt-4 text-amber-400 hover:text-amber-300 transition">Explore →</a>
-            </div>
-        `;
-        
-        element.appendChild(div);
-    });
-}
-
-// FUNCTION 2: Update Himalayan Slider (Enhanced version)
-async function updateHimalayanSlider() {
-    if (!contentData.himalayanSlider || !contentData.himalayanSlider.items) return;
-    
-    const element = document.getElementById('anti-gravity-track');
-    if (!element) return;
-    
-    element.innerHTML = '';
-    
-    contentData.himalayanSlider.items.forEach((slide, index) => {
-        const div = document.createElement('div');
-        div.className = `agent-slide${index === 0 ? ' active-physics' : ''}`;
-        div.setAttribute('data-agent-slide', '');
-        div.setAttribute('data-agent-index', index);
-        
-        div.innerHTML = `
-            <div class="slide-inner">
-                <div class="slide-visual">
-                    <img src="${slide.imageUrl || 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=1200&q=90'}" 
-                         alt="${slide.title || ''}" class="slide-image">
-                </div>
-                <div class="slide-info">
-                    <div class="accent-pill">${slide.accentPill || 'Featured'}</div>
-                    <h3 class="slide-title">
-                        ${slide.title || ''}${slide.titleItalic ? `<span class="italic">${slide.titleItalic}</span>` : ''}
-                    </h3>
-                    <p class="slide-desc">${slide.description || ''}</p>
-                    <a href="${slide.buttonLink || 'products.html'}" class="btn-glow">${slide.buttonText || 'Explore'}</a>
+                    <div>
+                        <h4 class="text-gray-900 font-medium">${escapeHtml(t.customerName || '')}</h4>
+                        <p class="text-amber-800 text-xs tracking-widest uppercase">Verified Collector</p>
+                    </div>
                 </div>
             </div>
         `;
-        
-        element.appendChild(div);
-    });
+    }).join('');
 }
 
-// FUNCTION 3: Update Why Choose Us Items
-async function updateWhyChooseUs() {
-    const element = document.getElementById('why-choose-us-items');
-    if (!element) return;
-    
-    if (!contentData.whyChooseUs || !contentData.whyChooseUs.items) return;
-    
-    element.innerHTML = '';
-    
-    contentData.whyChooseUs.items.forEach((item, index) => {
-        const div = document.createElement('div');
-        div.className = 'group p-10 bg-white rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-2xl hover:border-amber-100 transition-all duration-500 hover:-translate-y-2 scroll-reveal';
-        div.style.transitionDelay = `${index * 100}ms`;
-        
-        div.innerHTML = `
-            <div class="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center text-3xl mb-8 group-hover:scale-110 group-hover:bg-amber-100 transition-all">
-                ${item.icon || ''}
-            </div>
-            <h3 class="text-2xl font-light text-gray-900 mb-4">${item.title || ''}</h3>
-            <p class="text-gray-600 font-light leading-relaxed">${item.description || ''}</p>
-        `;
-        
-        element.appendChild(div);
-    });
-}
+/**
+ * Updates blog stories section
+ */
+function updateBlogStories(stories) {
+    if (!Array.isArray(stories) || stories.length === 0) return;
 
-// FUNCTION 4: Update Impact Stats
-async function updateImpactStats() {
-    if (!contentData.stats) return;
-    
-    const statsElements = [
-        { id: 'stat-happy-customers', value: contentData.stats.happyCustomers },
-        { id: 'stat-products-sold', value: contentData.stats.productsSold },
-        { id: 'stat-years-business', value: contentData.stats.yearsInBusiness },
-        { id: 'stat-avg-rating', value: contentData.stats.averageRating }
-    ];
-    
-    statsElements.forEach(({ id, value }) => {
-        const element = document.getElementById(id);
-        if (element && value) {
-            element.textContent = value + '+';
-            element.setAttribute('data-target', value);
-        }
-    });
-}
+    const container = document.getElementById('blog-stories-grid');
+    if (!container) return;
 
-// FUNCTION 5: Update Testimonials (Enhanced version)
-async function updateTestimonials() {
-    const element = document.getElementById('testimonials-grid');
-    if (!element) return;
-    
-    if (!contentData.testimonials || !Array.isArray(contentData.testimonials) || contentData.testimonials.length === 0) {
-        return;
-    }
-    
-    element.innerHTML = '';
-    
-    contentData.testimonials.forEach(testimonial => {
-        const div = document.createElement('div');
-        div.className = 'p-8 bg-white rounded-3xl border border-stone-100 shadow-sm hover:shadow-xl transition-all duration-500';
-        
-        const stars = '★'.repeat(testimonial.rating || 5);
-        const customerInitials = testimonial.customerInitials || 
-                              (testimonial.customerName ? testimonial.customerName.slice(0, 2).toUpperCase() : 'CU');
-        
-        div.innerHTML = `
-            <div class="flex text-amber-500 mb-4">${stars}</div>
-            <p class="text-gray-700 italic mb-6 leading-relaxed">${testimonial.reviewText || ''}</p>
-            <div class="flex items-center gap-4">
-                ${testimonial.customerPhotoUrl ? 
-                    `<img src="${testimonial.customerPhotoUrl}" alt="${testimonial.customerName || ''}" class="w-12 h-12 rounded-full object-cover">` :
-                    `<div class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center text-amber-800 font-bold">${customerInitials}</div>`
-                }
-                <div>
-                    <h4 class="text-gray-900 font-medium">${testimonial.customerName || ''}</h4>
-                    <p class="text-amber-800 text-xs tracking-widest uppercase">${testimonial.customerTitle || 'Verified Customer'}</p>
-                </div>
-            </div>
-        `;
-        
-        element.appendChild(div);
-    });
-}
-
-// FUNCTION 6: Update Blog Stories (Enhanced version)
-async function updateBlogStories() {
-    const element = document.getElementById('blog-stories-grid');
-    if (!element) return;
-    
-    if (!contentData.blogStories || !Array.isArray(contentData.blogStories) || contentData.blogStories.length === 0) {
-        return;
-    }
-    
-    element.innerHTML = '';
-    
-    contentData.blogStories.slice(0, 3).forEach(story => {
-        const article = document.createElement('article');
-        article.className = 'group';
-        
-        const content = `
+    container.innerHTML = stories.slice(0, 3).map(story => `
+        <article class="group">
             <div class="aspect-[4/5] overflow-hidden rounded-2xl mb-6 shadow-md group-hover:shadow-xl transition-all duration-500">
-                <img src="${story.imageUrl || 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=100'}" 
-                     alt="${story.title || ''}" 
+                <img src="${escapeHtml(story.imageUrl || 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=100')}" 
+                     alt="${escapeHtml(story.title || '')}" 
                      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                      onerror="this.src='https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=100'">
             </div>
-            <p class="text-xs tracking-widest uppercase text-gray-400 mb-2">${story.category || 'Story'}</p>
+            <p class="text-xs tracking-widest uppercase text-gray-400 mb-2">${escapeHtml(story.category || 'Story')}</p>
             <h3 class="text-2xl font-light text-gray-900 mb-3 group-hover:text-amber-800 transition-colors leading-tight">
-                ${story.title || ''}
+                ${escapeHtml(story.title || '')}
             </h3>
-            <p class="text-gray-600 font-light text-sm line-clamp-2">${story.description || ''}</p>
-        `;
-        
-        if (story.link) {
-            const link = document.createElement('a');
-            link.href = story.link;
-            link.innerHTML = content;
-            article.appendChild(link);
-        } else {
-            article.innerHTML = content;
-        }
-        
-        element.appendChild(article);
-    });
+            <p class="text-gray-600 font-light text-sm line-clamp-2">${escapeHtml(story.description || '')}</p>
+        </article>
+    `).join('');
 }
 
-// FUNCTION 7: Update Footer Content
-async function updateFooterContent() {
-    if (!contentData.footer) return;
-    
-    const copyrightElement = document.getElementById('footer-copyright-text');
-    if (copyrightElement && contentData.footer.copyright) {
-        copyrightElement.textContent = contentData.footer.copyright;
-    }
-    
-    const aboutElement = document.getElementById('footer-about-text');
-    if (aboutElement && contentData.footer.aboutText) {
-        aboutElement.textContent = contentData.footer.aboutText;
-    }
-    
-    if (contentData.social) {
-        const socialContainer = document.getElementById('footer-social-links');
-        if (socialContainer) {
-            const socialLinks = socialContainer.querySelectorAll('a');
-            socialLinks.forEach(link => {
-                const text = link.textContent.toLowerCase();
-                if (text.includes('fb') && contentData.social.facebook) {
-                    link.href = contentData.social.facebook;
-                } else if (text.includes('ig') && contentData.social.instagram) {
-                    link.href = contentData.social.instagram;
-                } else if (text.includes('tw') && contentData.social.twitter) {
-                    link.href = contentData.social.twitter;
-                } else if (text.includes('yt') && contentData.social.youtube) {
-                    link.href = contentData.social.youtube;
-                } else if (text.includes('li') && contentData.social.linkedin) {
-                    link.href = contentData.social.linkedin;
-                }
-            });
-        }
-    }
-}
-
-// FUNCTION 8: Update Hero Section
-async function updateHeroSection() {
-    if (!contentData.hero) return;
-    
-    const heroTitle = document.querySelector('.hero-title');
-    if (heroTitle && contentData.hero.title) {
-        heroTitle.innerHTML = contentData.hero.title;
-    }
-    
-    const heroSubtitle = document.querySelector('.hero-subtitle');
-    if (heroSubtitle && contentData.hero.subtitle) {
-        heroSubtitle.textContent = contentData.hero.subtitle;
-    }
-    
-    const heroImage = document.querySelector('.hero-image');
-    if (heroImage && contentData.hero.imageUrl) {
-        heroImage.src = contentData.hero.imageUrl;
-    }
-    
-    const heroButton = document.querySelector('.hero-button');
-    if (heroButton) {
-        if (contentData.hero.buttonText) {
-            heroButton.textContent = contentData.hero.buttonText;
-        }
-        if (contentData.hero.buttonLink) {
-            heroButton.href = contentData.hero.buttonLink;
-        }
-    }
-    
-    const secondaryButton = document.querySelector('.hero-secondary-button');
-    if (secondaryButton) {
-        if (contentData.hero.secondaryButtonText) {
-            secondaryButton.textContent = contentData.hero.secondaryButtonText;
-        }
-        if (contentData.hero.secondaryButtonLink) {
-            secondaryButton.href = contentData.hero.secondaryButtonLink;
-        }
-    }
-    
-    const badgeElement = document.querySelector('.hero-badge');
-    if (badgeElement && contentData.hero.badgeText) {
-        badgeElement.textContent = contentData.hero.badgeText;
-    }
-}
-
-
-
+/**
+ * Updates the Himalayan slider
+ */
 function updateHimalayanSlider(slider) {
-    const container = document.getElementById('anti-gravity-track');
-    if (!container || !slider.items || !Array.isArray(slider.items) || slider.items.length === 0) return;
+    if (!slider || !slider.items || !Array.isArray(slider.items) || slider.items.length === 0) return;
 
-    const slides = slider.items.map((item, index) => `
+    const container = document.getElementById('anti-gravity-track');
+    if (!container) return;
+
+    container.innerHTML = slider.items.map((item, index) => `
         <div class="agent-slide ${index === 0 ? 'active-physics' : ''}" data-agent-slide data-agent-index="${index}"
             data-agent-title="${escapeHtml(item.title)}"
             data-agent-description="${escapeHtml(item.description)}">
@@ -762,8 +426,6 @@ function updateHimalayanSlider(slider) {
         </div>
     `).join('');
 
-    container.innerHTML = slides;
-
     // Update dots
     const dotsContainer = document.getElementById('anti-gravity-dots');
     if (dotsContainer) {
@@ -773,52 +435,56 @@ function updateHimalayanSlider(slider) {
     }
 
     // Reinitialize slider if function exists
-    if (window.gravSlide && slider.items.length > 0) {
+    if (window.gravSlide) {
         window.gravSlide(0);
     }
 }
 
+/**
+ * Updates categories for home.js to use
+ */
 function updateCategories(categories) {
     if (!Array.isArray(categories) || categories.length === 0) return;
-    
+
     // Store in window for home.js to use
     window.contentCategories = categories.sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
 }
 
-function updateTestimonials(testimonials) {
-    if (!Array.isArray(testimonials) || testimonials.length === 0) return;
-    
-    // Store in window for home.js to use
-    window.contentTestimonials = testimonials.filter(t => t.isFeatured).slice(0, 2);
-}
+// ============================================
+// UTILITY FUNCTIONS
+// ============================================
 
-function updateBlogStories(stories) {
-    if (!Array.isArray(stories) || stories.length === 0) return;
-
-    // Find the blog section grid
-    const blogGrid = document.getElementById('blog-stories-grid');
-    if (!blogGrid) return;
-
-    blogGrid.innerHTML = stories.slice(0, 3).map(story => `
-        <article class="group">
-            <div class="aspect-[4/5] overflow-hidden rounded-2xl mb-6 shadow-md group-hover:shadow-xl transition-all duration-500">
-                <img src="${escapeHtml(story.imageUrl || 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=100')}"
-                    alt="${escapeHtml(story.title)}"
-                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    onerror="this.src='https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=100'">
-            </div>
-            <p class="text-xs tracking-widest uppercase text-gray-400 mb-2">${escapeHtml(story.category || 'Story')}</p>
-            <h3 class="text-2xl font-light text-gray-900 mb-3 group-hover:text-amber-800 transition-colors leading-tight">
-                ${escapeHtml(story.title)}
-            </h3>
-            <p class="text-gray-600 font-light text-sm line-clamp-2">${escapeHtml(story.description || '')}</p>
-        </article>
-    `).join('');
-}
-
+/**
+ * Escapes HTML to prevent XSS
+ */
 function escapeHtml(text) {
     if (!text) return '';
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
 }
+
+/**
+ * Manual update function for debugging (available in browser console)
+ */
+window.manualUpdateStats = function () {
+    const data = localStorage.getItem('site_content');
+    if (data) {
+        const content = JSON.parse(data);
+        console.log('Manually updating stats with:', content.stats);
+        updateStatsSection(content.stats);
+    } else {
+        console.log('No data in localStorage');
+    }
+};
+
+/**
+ * Force reload content (available in browser console)
+ */
+window.forceReloadContent = function () {
+    console.log('Force reloading content...');
+    loadSiteContent();
+};
+
+// Export for module usage
+export { contentData };

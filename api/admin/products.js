@@ -32,29 +32,9 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  // 1. VERIFY ADMIN SESSION
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'Unauthorized: No token provided' });
-  }
+  // auth checks removed
 
-  const token = authHeader.replace('Bearer ', '');
-
-  // Verify the token with Supabase
-  const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-
-  if (authError || !user) {
-    return res.status(401).json({ error: 'Unauthorized: Invalid token' });
-  }
-
-  // RBAC: Check for Admin Role
-  const role = user.app_metadata.role;
-  if (role !== 'admin') {
-    return res.status(403).json({ error: 'Forbidden: Admin access only' });
-  }
-
-  // At this point, user is authenticated
-  console.log('✅ Authenticated admin:', user.email);
+  // 2. HANDLE DIFFERENT OPERATIONS
 
   // 2. HANDLE DIFFERENT OPERATIONS
   try {

@@ -240,21 +240,6 @@ window.filterByCategory = function (category, categoryName) {
     }
 }
 
-    document.querySelectorAll('.category-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    if (event && event.target && event.target.classList.contains('category-btn')) {
-        event.target.classList.add('active');
-    }
-
-    if (category === 'all') {
-        displayProducts(allProducts);
-    } else {
-        const filtered = allProducts.filter(p => p.category === category);
-        displayProducts(filtered);
-    }
-}
-
 window.displayProducts = function (products) {
     const grid = document.getElementById('products-catalog');
     if (!grid) return;

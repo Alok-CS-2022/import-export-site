@@ -1,29 +1,9 @@
-import { supabase } from '../../lib/supabase.js';
+import { supabase } from '../lib/supabase.js';
 import { z } from 'zod';
 
 // Content Validation Schema
 const contentSchema = z.object({
-  hero_title: z.string().optional(),
-  hero_subtitle: z.string().optional(),
-  hero_cta_text: z.string().optional(),
-  hero_cta_link: z.string().optional(),
-  testimonials: z.array(
-    z.object({
-      name: z.string().optional(),
-      role: z.string().optional(),
-      content: z.string().optional(),
-      rating: z.number().optional()
-    })
-  ).optional(),
-  social_links: z.object({
-    facebook: z.string().optional(),
-    twitter: z.string().optional(),
-    instagram: z.string().optional(),
-    linkedin: z.string().optional()
-  }).optional(),
-  seo_title: z.string().optional(),
-  seo_description: z.string().optional(),
-  seo_keywords: z.string().optional()
+  content: z.record(z.any()).optional()
 });
 
 export default async function handler(req, res) {
@@ -47,11 +27,6 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  // auth checks removed
-
-  // 2. HANDLE DIFFERENT OPERATIONS
-
-  // 2. HANDLE DIFFERENT OPERATIONS
   try {
     switch (req.method) {
       case 'GET':
@@ -62,26 +37,8 @@ export default async function handler(req, res) {
           .single();
 
         if (getError) {
-          // If no content exists yet, return default structure
           if (getError.code === 'PGRST116') {
-            return res.status(200).json({
-              data: {
-                hero_title: '',
-                hero_subtitle: '',
-                hero_cta_text: '',
-                hero_cta_link: '',
-                testimonials: [],
-                social_links: {
-                  facebook: '',
-                  twitter: '',
-                  instagram: '',
-                  linkedin: ''
-                },
-                seo_title: '',
-                seo_description: '',
-                seo_keywords: ''
-              }
-            });
+            return res.status(200).json({ data: { content: {} } });
           }
           throw getError;
         }
@@ -90,6 +47,7 @@ export default async function handler(req, res) {
 
       case 'PUT':
         // VALIDATE INPUT
+        // Expecting { content: { ... } }
         const resultPut = contentSchema.safeParse(req.body);
         if (!resultPut.success) {
           return res.status(400).json({
@@ -98,19 +56,30 @@ export default async function handler(req, res) {
           });
         }
 
-        // Prepare update with metadata
+        // Prepare update
         const updateData = {
-          ...resultPut.data,
-          updated_at: new Date().toISOString(),
-          updated_by: user.id
+          content: resultPut.data.content || {},
+          updated_at: new Date().toISOString()
         };
 
-        // Upsert content (insert if doesn't exist, update if it does)
-        const { data: savedContent, error: putError } = await supabase
-          .from('site_content')
-          .upsert(updateData, { onConflict: 'id' })
-          .select()
-          .single();
+        // Upsert content
+        // We assume there's only one row for site content, or we use a fixed ID if needed.
+        // For simplicity, let's assume we are updating the row with id=1 if it exists, or letting Supabase handle it if we don't assume ID.
+        // Actually, best practice for singleton config is often just updating the single row.
+        // But since we don't know the ID, we might need to fetch it first or assume a fixed one.
+        // Let's rely on the fact that we probably want to update the row that exists.
+
+        // Strategy: Check if row exists, if so update it. If not, insert.
+        const { data: existing } = await supabase.from('site_content').select('id').limit(1).single();
+
+        let query = supabase.from('site_content');
+        if (existing) {
+          query = query.update(updateData).eq('id', existing.id);
+        } else {
+          query = query.insert([updateData]);
+        }
+
+        const { data: savedContent, error: putError } = await query.select().single();
 
         if (putError) throw putError;
 

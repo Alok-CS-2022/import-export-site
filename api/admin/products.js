@@ -1,4 +1,4 @@
-import { supabase } from '../../lib/supabase.js';
+import { supabase } from '../lib/supabase.js';
 import { z } from 'zod';
 
 // Product Validation Schema
@@ -6,9 +6,10 @@ const productSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 chars"),
   description: z.string().min(10, "Description must be at least 10 chars"),
   price: z.number().min(0, "Price cannot be negative").nullable().optional(),
-  category: z.string().min(1, "Category is required"),
+  category_id: z.string().min(1, "Category is required"),
   image_url: z.string().url("Invalid image URL"),
-  id: z.string().optional() // For updates
+  id: z.string().optional(), // For updates
+  is_featured: z.boolean().optional()
 });
 
 export default async function handler(req, res) {

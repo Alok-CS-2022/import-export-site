@@ -1,40 +1,42 @@
-import { createClient } from '@supabase/supabase-js';
-
-const SUPABASE_URL = 'https://tpvqolkzcbbzlqlzchwc.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwdnFvbGt6Y2JiemxxbHpjaHdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzNjA0MjgsImV4cCI6MjA4MTkzNjQyOH0.AU6ieHN1TSUHgSu7qfvkekvmMySDPJb2zOId4Oy7CeY';
+import { supabase } from './lib/supabase.js';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Content-Type', 'application/json');
 
   try {
-    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-    
+    // Test 1: Check if Supabase client is imported correctly
+    const test1 = { 
+      imported: !!supabase, 
+      hasUrl: !!supabase.supabaseUrl,
+      hasKey: !!supabase.supabaseKey 
+    };
+
+    // Test 2: Try a simple query
     const { data, error } = await supabase
       .from('products')
-      .select('*')
+      .select('id, name')
       .limit(1);
 
-    if (error) {
-      return res.status(200).json({ 
-        status: 'supabase_error',
-        message: error.message,
-        code: error.code,
-        details: error.details
-      });
-    }
+    const test2 = { 
+      success: !error, 
+      error_message: error?.message,
+      error_code: error?.code,
+      data_count: data?.length 
+    };
 
-    return res.status(200).json({ 
-      status: 'success',
-      message: 'Supabase connection working',
-      data_count: data ? data.length : 0,
-      sample_data: data
+    return res.status(200).json({
+      status: 'diagnostic_results',
+      test1_supabase_import: test1,
+      test2_database_query: test2,
+      all_env_vars: Object.keys(process.env).filter(k => k.includes('SUPABASE')),
+      timestamp: new Date().toISOString()
     });
   } catch (err) {
     return res.status(200).json({ 
       status: 'error',
-      message: err.message,
-      stack: err.stack
+      error_message: err.message,
+      error_stack: err.stack
     });
   }
 }

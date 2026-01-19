@@ -115,23 +115,12 @@ const mockProducts = [
 
 // CORE: Load Products
 async function loadProducts() {
-    const grid = document.getElementById('products-grid');
+    const grid = document.getElementById('products-catalog');
     if (!grid) return;
 
     // Skeleton Loading
-    const skeletonHTML = Array(6).fill(0).map(() => `
-        <div class="bg-white rounded-xl overflow-hidden shadow-lg h-full border border-gray-100">
-            <div class="aspect-square skeleton w-full"></div>
-            <div class="p-6 space-y-3">
-                <div class="h-3 skeleton w-1/3 rounded-full"></div>
-                <div class="h-6 skeleton w-3/4 rounded-lg"></div>
-                <div class="h-4 skeleton w-1/2 rounded-full"></div>
-                <div class="pt-4 flex gap-2">
-                    <div class="h-10 skeleton flex-1 rounded-lg"></div>
-                    <div class="h-10 skeleton flex-1 rounded-lg"></div>
-                </div>
-            </div>
-        </div>
+    const skeletonHTML = Array(3).fill(0).map(() => `
+        <div class="skeleton-card bg-gray-200 h-96 rounded-2xl animate-pulse"></div>
     `).join('');
     grid.innerHTML = skeletonHTML;
 
@@ -176,21 +165,52 @@ async function loadProducts() {
     }
 }
 
+        console.log('Products loaded from API:', data.length);
+        window.allProducts = data;
+        allProducts = data;
+
+        allCategories.clear();
+        data.forEach(product => {
+            if (product.category) {
+                allCategories.add(product.category);
+            }
+        });
+
+        buildCategoryButtons();
+        displayProducts(data);
+    } catch (err) {
+        console.warn('API failed, falling back to mock data:', err.message);
+        // Use mock data for testing
+        window.allProducts = mockProducts;
+        allProducts = mockProducts;
+
+        allCategories.clear();
+        mockProducts.forEach(product => {
+            if (product.category) {
+                allCategories.add(product.category);
+            }
+        });
+
+        buildCategoryButtons();
+        displayProducts(mockProducts);
+    }
+}
+
 function buildCategoryButtons() {
-    const container = document.getElementById('category-container');
+    const container = document.getElementById('category-filters');
     if (!container) return;
 
     let buttonsHTML = `
-        <button onclick="filterByCategory('all')" 
-                class="category-btn active px-4 sm:px-6 py-2 rounded-full font-medium text-sm sm:text-base transition">
-            All Products
+        <button onclick="filterByCategory('all')"
+                class="filter-chip active px-4 py-2 border border-gray-200 rounded-full text-sm text-left hover:border-amber-500 transition">
+            All Collection
         </button>
     `;
 
     allCategories.forEach(category => {
         buttonsHTML += `
-            <button onclick="filterByCategory('${escapeHtml(category)}')" 
-                    class="category-btn px-4 sm:px-6 py-2 rounded-full font-medium text-sm sm:text-base transition">
+            <button onclick="filterByCategory('${escapeHtml(category)}')"
+                    class="filter-chip px-4 py-2 border border-gray-200 rounded-full text-sm text-left hover:border-amber-500 transition">
                 ${escapeHtml(category)}
             </button>
         `;
@@ -200,10 +220,25 @@ function buildCategoryButtons() {
 }
 
 window.filterByCategory = function (category, categoryName) {
-    // If we are on the catalog page, defer to catalog.js logic
+    // If we are on catalog page, defer to catalog.js logic
     if (window.catalogFilterByCategory) {
         return window.catalogFilterByCategory(category, categoryName);
     }
+
+    document.querySelectorAll('.filter-chip').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    if (event && event.target && event.target.classList.contains('filter-chip')) {
+        event.target.classList.add('active');
+    }
+
+    if (category === 'all') {
+        displayProducts(allProducts);
+    } else {
+        const filtered = allProducts.filter(p => p.category === category);
+        displayProducts(filtered);
+    }
+}
 
     document.querySelectorAll('.category-btn').forEach(btn => {
         btn.classList.remove('active');
@@ -221,7 +256,7 @@ window.filterByCategory = function (category, categoryName) {
 }
 
 window.displayProducts = function (products) {
-    const grid = document.getElementById('products-grid');
+    const grid = document.getElementById('products-catalog');
     if (!grid) return;
 
     if (products.length === 0) {

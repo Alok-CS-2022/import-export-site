@@ -69,14 +69,8 @@
 
         async function loadRecentOrders() {
             try {
-                const { data: { session } } = await supabase.auth.getSession()
-                if (!session) return
-
-                const response = await fetch('/api/admin/orders', {
-                    headers: {
-                        'Authorization': `Bearer ${session.access_token}`
-                    }
-                })
+                // API doesn't require auth, load orders directly
+                const response = await fetch('/api/admin/orders')
 
                 if (!response.ok) throw new Error('Failed to fetch orders')
 

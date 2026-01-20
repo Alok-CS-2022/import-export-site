@@ -737,10 +737,15 @@
         })
 
         async function init() {
+            console.log('Admin products: init() function called')
             const isAuth = await checkAuth()
+            console.log('Admin products: checkAuth returned:', isAuth)
             if (isAuth) {
+                console.log('Admin products: Calling loadCategories and loadProducts')
                 await loadCategories()
                 await loadProducts()
+            } else {
+                console.log('Admin products: checkAuth failed, not loading products')
             }
         }
 

@@ -509,16 +509,26 @@
         }
 
         async function loadProducts() {
+            console.log('Admin products: Starting loadProducts...')
             try {
                 // API doesn't require auth, load products directly
+                console.log('Admin products: Fetching from /api/admin/products')
                 const response = await fetch('/api/admin/products')
 
-                if (!response.ok) throw new Error('Failed to fetch products')
+                if (!response.ok) {
+                    console.error('Admin products: API response not ok:', response.status, response.statusText)
+                    throw new Error('Failed to fetch products: ' + response.status)
+                }
 
                 const data = await response.json()
+                console.log('Admin products: Received data:', data)
+                console.log('Admin products: Data length:', data ? data.length : 'null')
+
                 displayProducts(data || [])
                 updateStats(data || [])
+                console.log('Admin products: Products displayed successfully')
             } catch (error) {
+                console.error('Admin products: Error loading products:', error)
                 showError('Error loading products: ' + error.message)
                 document.getElementById('products-container').innerHTML =
                     `<div class="col-span-full flex flex-col items-center justify-center py-20">

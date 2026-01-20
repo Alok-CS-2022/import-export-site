@@ -392,9 +392,16 @@
     </script>
 
     <script type="module">
-        import { supabase } from '../lib/supabase.js'
+        let supabase;
+        try {
+            const { supabase: importedSupabase } = await import('../lib/supabase.js');
+            supabase = importedSupabase;
+            console.log('Admin products: Supabase imported successfully');
+        } catch (importError) {
+            console.error('Admin products: Failed to import supabase:', importError);
+        }
 
-        console.log('Admin products: Script loaded, supabase imported')
+        console.log('Admin products: Script loaded')
 
         function showError(msg) {
             const banner = document.getElementById('error-banner')

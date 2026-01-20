@@ -332,6 +332,14 @@
     <script src="js/ui.js"></script>
     <script type="module" src="js/app.js"></script>
     <script type="module" src="js/catalog.js"></script>
+    <script type="module">
+        import { loadSiteContent } from './js/content-loader.js';
+
+        // Initialize content loader
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSiteContent();
+        });
+    </script>
 </body>
 
 </html>

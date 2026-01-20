@@ -208,11 +208,65 @@ window.subscribeNewsletter = function (event) {
 }
 
 window.openWishlist = function () {
-    if (wishlist.length === 0) {
+    if (window.wishlist.length === 0) {
         showNotification('Your wishlist is empty', 'info');
         return;
     }
-    alert('Wishlist modal - building after cart!');
+
+    const modal = document.getElementById('wishlist-modal');
+    const sidebar = document.getElementById('wishlist-sidebar');
+
+    if (!modal || !sidebar) {
+        console.error('Wishlist modal elements not found');
+        return;
+    }
+
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+        sidebar.classList.remove('translate-x-full');
+    }, 10);
+
+    renderWishlistItems();
+    document.body.style.overflow = 'hidden';
+}
+
+window.closeWishlist = function () {
+    const modal = document.getElementById('wishlist-modal');
+    const sidebar = document.getElementById('wishlist-sidebar');
+
+    if (sidebar) sidebar.classList.add('translate-x-full');
+    setTimeout(() => {
+        if (modal) modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }, 300);
+}
+
+function renderWishlistItems() {
+    const container = document.getElementById('wishlist-items');
+    if (!container) return;
+
+    if (window.wishlist.length === 0) {
+        container.innerHTML = '<p class="text-center text-gray-500 py-8">Your wishlist is empty</p>';
+        setTimeout(() => closeWishlist(), 1500);
+        return;
+    }
+
+    container.innerHTML = window.wishlist.map(item => `
+        <div class="flex gap-4 bg-gray-50 p-4 rounded-lg">
+            <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded-lg" onerror="this.src='https://via.placeholder.com/80x80'">
+            <div class="flex-1 min-w-0">
+                <a href="product-detail.html?id=${item.id}" class="font-semibold text-gray-900 truncate hover:text-amber-700 transition block">${item.name}</a>
+                <button onclick="addToCart('${item.id}', '${item.name.replace(/'/g, "\\'")}', 0, '${item.image}')" 
+                    class="mt-2 text-sm text-amber-700 font-medium hover:text-amber-900 transition flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                    Add to Cart
+                </button>
+            </div>
+            <button onclick="toggleWishlist('${item.id}', '${item.name.replace(/'/g, "\\'")}', '${item.image}'); renderWishlistItems();" class="text-gray-400 hover:text-red-500 transition self-start">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+            </button>
+        </div>
+    `).join('');
 }
 
 window.searchProducts = function (query) {

@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabase.js'
+// All data now loaded through APIs
 
 // State management
 let allProducts = []
@@ -38,16 +38,14 @@ async function loadCategories() {
     ];
 
     try {
-        const { data, error } = await supabase
-            .from('categories')
-            .select('*')
-            .order('display_order', { ascending: true })
-
-        if (error) throw error
+        const response = await fetch('/api/categories')
+        if (!response.ok) throw new Error('Failed to load categories')
+        
+        const data = await response.json()
         categories = (data && data.length > 0) ? data : defaultCategories;
         renderCategoryFilters()
     } catch (err) {
-        console.warn('Supabase categories fetch failed, using fallbacks:', err)
+        console.warn('Categories API fetch failed, using fallbacks:', err)
         categories = defaultCategories;
         renderCategoryFilters()
     }
@@ -92,12 +90,10 @@ async function loadProducts() {
             </div>
         `
 
-        const { data, error } = await supabase
-            .from('products')
-            .select('*')
-            .order('created_at', { ascending: false })
-
-        if (error) throw error
+        const response = await fetch('/api/products')
+        if (!response.ok) throw new Error('Failed to load products')
+        
+        const data = await response.json()
         allProducts = (data && data.length > 0) ? data : defaultProducts;
 
         // Handle initial category from URL
@@ -110,7 +106,7 @@ async function loadProducts() {
             applyFilters();
         }
     } catch (err) {
-        console.warn('Supabase products fetch failed, using fallbacks:', err)
+        console.warn('Products API fetch failed, using fallbacks:', err)
         allProducts = defaultProducts;
         applyFilters();
     }

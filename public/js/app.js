@@ -1,4 +1,3 @@
-import { supabase } from '../lib/supabase.js';
 import { loadSiteContent } from './content-loader.js';
 import { countries } from './countries.js';
 
@@ -35,15 +34,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 1. LOAD SITE CONTENT FIRST
     await loadSiteContent();
 
-    // 2. AUTH INITIALIZATION
-    const { data: { session } } = await supabase.auth.getSession();
-    currentUser = session?.user || null;
+    // 2. AUTH INITIALIZATION - Using API endpoints now
+    // Auth is handled via login.html and API endpoints
+    currentUser = null; // Will be set by login system
     updateAuthUI();
-
-    supabase.auth.onAuthStateChange((event, session) => {
-        currentUser = session?.user || null;
-        updateAuthUI();
-    });
 
     // 3. APP INITIALIZATION
     loadProducts();
@@ -100,9 +94,12 @@ function updateAuthUI() {
 
 // AUTH: Logout
 window.handleLogout = async () => {
-    await supabase.auth.signOut();
+    // Clear any local auth state
+    currentUser = null;
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userEmail');
     showToast("Logged out successfully");
-    setTimeout(() => window.location.reload(), 500);
+    setTimeout(() => window.location.href = 'index.html', 500);
 };
 
 // Mock data for testing when API is not available
@@ -133,37 +130,6 @@ async function loadProducts() {
             console.warn('API failed, using mock data:', data.error);
             throw new Error(data.error || 'API not available');
         }
-
-        console.log('Products loaded from API:', data.length);
-        window.allProducts = data;
-        allProducts = data;
-
-        allCategories.clear();
-        data.forEach(product => {
-            if (product.category) {
-                allCategories.add(product.category);
-            }
-        });
-
-        buildCategoryButtons();
-        displayProducts(data);
-    } catch (err) {
-        console.warn('API failed, falling back to mock data:', err.message);
-        // Use mock data for testing
-        window.allProducts = mockProducts;
-        allProducts = mockProducts;
-
-        allCategories.clear();
-        mockProducts.forEach(product => {
-            if (product.category) {
-                allCategories.add(product.category);
-            }
-        });
-
-        buildCategoryButtons();
-        displayProducts(mockProducts);
-    }
-}
 
         console.log('Products loaded from API:', data.length);
         window.allProducts = data;
@@ -516,11 +482,10 @@ if (inquiryForm) {
         try {
             console.log('Submitting inquiry:', inquiry);
 
-            // Get Token
-            const { data: { session } } = await supabase.auth.getSession();
-            const token = session?.access_token;
+            // Get Token from localStorage
+            const token = localStorage.getItem('authToken');
 
-            console.log('Auth session:', session ? 'authenticated' : 'not authenticated');
+            console.log('Auth session:', token ? 'authenticated' : 'not authenticated');
 
             const headers = { 'Content-Type': 'application/json' };
             if (token) headers['Authorization'] = `Bearer ${token}`;

@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabase.js'
+// All data now loaded through APIs
 
 // Elements
 const detailContainer = document.getElementById('product-detail-container')
@@ -17,17 +17,13 @@ async function initProductDetail() {
 
     try {
         // Fetch Product
-        const { data: product, error } = await supabase
-            .from('products')
-            .select(`
-                *,
-                categories (name)
-            `)
-            .eq('id', productId)
-            .single()
-
-        if (error) throw error
-        if (!product) throw new Error('Product not found')
+        const response = await fetch(`/api/products/${productId}`)
+        if (!response.ok) {
+            if (response.status === 404) throw new Error('Product not found')
+            throw new Error('Failed to load product')
+        }
+        
+        const product = await response.json()
 
         renderProduct(product)
         loadRelatedProducts(product.category_id, product.id)
@@ -47,7 +43,7 @@ async function initProductDetail() {
 }
 
 function renderProduct(product) {
-    const categoryName = product.categories?.name || 'Artisan Work'
+    const categoryName = product.category_name || 'Artisan Work'
 
     detailContainer.innerHTML = `
         <!-- Image Showcase -->
@@ -115,14 +111,13 @@ function renderProduct(product) {
 
 async function loadRelatedProducts(categoryId, currentId) {
     try {
-        const { data: related, error } = await supabase
-            .from('products')
-            .select('*')
-            .eq('category_id', categoryId)
-            .neq('id', currentId)
-            .limit(4)
-
-        if (error) throw error
+        const response = await fetch(`/api/products?category=${categoryId}&limit=4`)
+        if (!response.ok) throw new Error('Failed to load related products')
+        
+        const allRelated = await response.json()
+        
+        // Filter out current product from related products
+        const related = allRelated.filter(p => p.id !== currentId).slice(0, 4)
 
         if (!related || related.length === 0) {
             relatedContainer.innerHTML = `<p class="text-gray-400 font-light">Explore our other categories for more treasures.</p>`

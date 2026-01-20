@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabase.js';
+// Contact form using API only
 
 // Elements
 const contactForm = document.getElementById('contact-page-form');
@@ -36,12 +36,7 @@ async function initContactPage() {
             submitBtn.disabled = true;
             submitBtn.textContent = 'Sending...';
 
-            // Get Auth Session
-            const { data: { session } } = await supabase.auth.getSession();
-            const token = session?.access_token;
-
             const headers = { 'Content-Type': 'application/json' };
-            if (token) headers['Authorization'] = `Bearer ${token}`;
 
             const response = await fetch('/api/inquiry', {
                 method: 'POST',

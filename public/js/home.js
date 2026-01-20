@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabase.js'
+// All data now loaded through APIs
 
 // Elements
 const featuredGrid = document.getElementById('featured-products-grid')
@@ -20,22 +20,22 @@ async function loadHeritageSlider() {
 
     try {
         // Try to get featured products first, then fallback to any 5 products
-        let { data: products, error } = await supabase
-            .from('products')
-            .select('*')
-            .eq('is_featured', true)
-            .limit(5)
+        let response = await fetch('/api/featured-products?limit=5')
+        if (!response.ok) throw new Error('Failed to load featured products')
+        
+        let products = await response.json()
 
-        if (!error && products && products.length > 0) {
-            renderHeritageSlides(products);
-        } else {
+        if (!products || products.length === 0) {
             // Fallback: try latest products if no featured
-            const { data: latest, error: latestError } = await supabase.from('products').select('*').limit(5);
-            if (!latestError && latest && latest.length > 0) {
-                renderHeritageSlides(latest);
-            }
-            // If still no products, we just leave the default placeholder already in HTML
+            response = await fetch('/api/products?limit=5')
+            if (!response.ok) throw new Error('Failed to load products')
+            products = await response.json()
         }
+
+        if (products && products.length > 0) {
+            renderHeritageSlides(products);
+        }
+        // If still no products, we just leave the default placeholder already in HTML
     } catch (err) {
         console.error('Error loading heritage slider:', err);
         // On error, let the static placeholder show
@@ -219,37 +219,9 @@ async function loadFeaturedTestimonials() {
         return;
     }
 
-    try {
-        const { data: testimonials, error } = await supabase
-            .from('testimonials')
-            .select('*')
-            .eq('is_featured', true)
-            .limit(2)
-
-        if (error) throw error
-
-        if (testimonials && testimonials.length > 0) {
-            container.innerHTML = testimonials.map(t => `
-                <div class="p-8 bg-white rounded-3xl border border-stone-100 shadow-sm hover:shadow-xl transition-all duration-500 scroll-reveal">
-                    <div class="flex text-amber-500 mb-4">
-                        ${'★'.repeat(t.rating)}${'☆'.repeat(5 - t.rating)}
-                    </div>
-                    <p class="text-gray-700 italic mb-6 leading-relaxed">"${t.review_text}"</p>
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full overflow-hidden bg-amber-50 flex items-center justify-center text-amber-800 font-bold border border-amber-100">
-                            ${t.customer_photo_url ? `<img src="${t.customer_photo_url}" alt="${t.customer_name}" class="w-full h-full object-cover">` : t.customer_name.split(' ').map(n => n[0]).join('')}
-                        </div>
-                        <div>
-                            <h4 class="text-gray-900 font-medium">${t.customer_name}</h4>
-                            <p class="text-amber-800 text-xs tracking-widest uppercase">Verified Collector</p>
-                        </div>
-                    </div>
-                </div>
-            `).join('')
-        }
-    } catch (err) {
-        console.error('Error loading testimonials:', err)
-    }
+    // Note: Testimonials API not implemented yet, using fallback behavior
+    // TODO: Implement testimonials API endpoint
+    console.log('Testimonials will be loaded from content management or static HTML')
 }
 
 function escapeHtml(text) {

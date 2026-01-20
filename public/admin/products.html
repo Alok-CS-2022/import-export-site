@@ -409,11 +409,17 @@
         }
 
         async function checkAuth() {
+            const token = localStorage.getItem('admin_token')
+            if (!token) {
+                window.location.href = 'login.html'
+                return false
+            }
             return true
         }
 
         window.logout = async function () {
-            await supabase.auth.signOut()
+            localStorage.removeItem('admin_token')
+            localStorage.removeItem('admin_user')
             window.location.href = 'login.html'
         }
 

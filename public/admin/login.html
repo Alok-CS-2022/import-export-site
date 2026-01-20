@@ -216,12 +216,6 @@
     <div class="fixed bottom-8 left-8 text-white/20 text-6xl font-light animate-float" style="animation-delay: 3s;">✨</div>
 
     <script type="module">
-        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/+esm'
-
-        const supabase = createClient(
-            'https://tpvqolkzcbbzlqlzchwc.supabase.co',
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwdnFvbGt6Y2JiemxxbHpjaHdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzNjA0MjgsImV4cCI6MjA4MTkzNjQyOH0.AU6ieHN1TSUHgSu7qfvkekvmMySDPJb2zOId4Oy7CeY'
-        )
 
         const form = document.getElementById('login-form')
         const errorDiv = document.getElementById('error-message')
@@ -247,40 +241,51 @@
             loginBtn.disabled = true
             
             try {
-                const { data, error } = await supabase.auth.signInWithPassword({
+                // Use admin auth API
+                const response = await fetch('/api/admin/auth', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                })
+
+                const result = await response.json()
+
+                if (!response.ok || !result.success) {
+                    throw new Error(result.error || 'Authentication failed')
+                }
                     email,
                     password
                 })
                 
-                console.log('📡 Response:', { data, error })
-                
-                if (error) {
-                    console.error('❌ Login error:', error)
-                    errorText.textContent = error.message
+                console.log('📡 Auth response:', result)
+
+                if (!result.success) {
+                    console.error('❌ Login error:', result.error)
+                    errorText.textContent = result.error
                     errorDiv.classList.remove('hidden')
-                    debugError.textContent = error.message
+                    debugError.textContent = result.error
                     statusSpan.textContent = 'Failed'
                     statusSpan.className = 'text-red-600 font-semibold'
                     loginBtn.disabled = false
                     loadingDiv.classList.add('hidden')
                     return
                 }
-                
-                if (data?.session) {
-                    statusSpan.textContent = 'Authorized'
-                    statusSpan.className = 'text-green-600 font-semibold'
-                    debugError.textContent = 'Redirecting to dashboard...'
-                    console.log('✅ Login successful, redirecting...')
-                    
-                    // Smooth redirect after brief delay
-                    setTimeout(() => {
-                        window.location.href = 'dashboard.html'
-                    }, 500)
-                } else {
-                    errorText.textContent = 'Authentication failed - No session created'
-                    errorDiv.classList.remove('hidden')
-                    statusSpan.textContent = 'No Session'
-                    statusSpan.className = 'text-red-600 font-semibold'
+
+                // Store token and redirect
+                localStorage.setItem('admin_token', result.token)
+                localStorage.setItem('admin_user', JSON.stringify(result.user))
+
+                statusSpan.textContent = 'Authorized'
+                statusSpan.className = 'text-green-600 font-semibold'
+                debugError.textContent = 'Redirecting to dashboard...'
+                console.log('✅ Login successful, redirecting...')
+
+                // Smooth redirect after brief delay
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html'
+                }, 500)
                     debugError.textContent = 'No session returned'
                     loginBtn.disabled = false
                     loadingDiv.classList.add('hidden')

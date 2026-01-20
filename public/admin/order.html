@@ -104,7 +104,12 @@
         let selectedOrderId = null
 
         async function verifyAuth() {
-            document.getElementById('admin-email').textContent = 'admin@local.test'
+            const token = localStorage.getItem('admin_token')
+            if (!token) {
+                window.location.href = 'login.html'
+                return false
+            }
+            await loadOrders()
             return true
         }
 
@@ -251,7 +256,11 @@
 
         window.closeModal = function () { document.getElementById('order-modal').classList.add('hidden') }
         window.closeStatusModal = function () { document.getElementById('status-modal').classList.add('hidden'); selectedOrderId = null }
-        window.logout = async function () { await supabase.auth.signOut(); window.location.href = 'login.html' }
+        window.logout = async function () {
+            localStorage.removeItem('admin_token')
+            localStorage.removeItem('admin_user')
+            window.location.href = 'login.html'
+        }
         function escapeHtml(text) { const div = document.createElement('div'); div.textContent = text; return div.innerHTML }
 
         verifyAuth().then(isAuth => { if (isAuth) { loadOrders() } })

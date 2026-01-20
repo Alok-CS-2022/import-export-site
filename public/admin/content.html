@@ -375,6 +375,11 @@
                 let currentSection = null
 
                 async function verifyAuth() {
+                    const token = localStorage.getItem('admin_token')
+                    if (!token) {
+                        window.location.href = 'login.html'
+                        return false
+                    }
                     await loadCurrentContent()
                     return true
                 }
@@ -841,7 +846,8 @@
                 }
 
                 window.logout = async function () {
-                    await supabase.auth.signOut()
+                    localStorage.removeItem('admin_token')
+                    localStorage.removeItem('admin_user')
                     window.location.href = 'login.html'
                 }
 

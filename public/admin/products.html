@@ -394,6 +394,8 @@
     <script type="module">
         import { supabase } from '../lib/supabase.js'
 
+        console.log('Admin products: Script loaded, supabase imported')
+
         function showError(msg) {
             const banner = document.getElementById('error-banner')
             banner.innerHTML = `<strong>Error:</strong> ${msg}`

@@ -31,35 +31,37 @@ export async function loadSiteContent() {
             .single();
 
         if (error) {
-            console.log('Database not available, checking localStorage:', error.message);
+            console.warn('Database error, checking localStorage:', error.message);
             // Fall back to localStorage
-            const localData = localStorage.getItem('site_content');
-            console.log('localStorage data found:', !!localData);
+            loadFromLocalStorage();
+        } else {
+            // Check if we actually got valid content
+            if (data && data.content && Object.keys(data.content).length > 0) {
+                content = data.content;
+                console.log('✅ Loaded content from database');
+            } else {
+                console.warn('Database returned empty content, checking localStorage');
+                loadFromLocalStorage();
+            }
+        }
 
+        function loadFromLocalStorage() {
+            const localData = localStorage.getItem('site_content');
             if (localData) {
-                content = JSON.parse(localData);
-                console.log('Loaded content from localStorage');
+                try {
+                    content = JSON.parse(localData);
+                    console.log('✅ Loaded content from localStorage');
+                } catch (e) {
+                    console.error('Error parsing localStorage:', e);
+                    content = {};
+                }
             } else {
                 console.log('No custom content found, using defaults');
                 content = {};
             }
-        } else {
-            // Successfully loaded from database
-            content = data?.content || {};
-            console.log('Loaded content from database');
         }
 
-        // Clean the content object (remove any prototype pollution)
-        const cleanContent = {};
-        if (content && typeof content === 'object') {
-            Object.keys(content).forEach(key => {
-                if (content.hasOwnProperty(key)) {
-                    cleanContent[key] = content[key];
-                }
-            });
-        }
-        content = cleanContent;
-        contentData = content;
+        contentData = content || {};
 
         console.log('Content to apply:', JSON.stringify(content, null, 2));
 
@@ -119,9 +121,18 @@ export async function loadSiteContent() {
             updateLogo(content.branding.logoUrl);
         }
 
-        if (content.himalayanSlider) {
+        // Handle slider data (from API or content)
+        const sliderData = content.slider || content.himalayanSlider;
+        if (sliderData) {
             console.log('Updating Himalayan slider...');
-            updateHimalayanSlider(content.himalayanSlider);
+            updateHimalayanSlider(sliderData);
+        }
+
+        // Handle blog data (from API or content)
+        const blogData = content.blog || content.blogStories;
+        if (blogData) {
+            console.log('Updating blog stories...');
+            updateBlogStories(blogData);
         }
 
         if (content.categories) {

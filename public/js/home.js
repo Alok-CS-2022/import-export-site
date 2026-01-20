@@ -114,13 +114,11 @@ async function loadCategoryShowcase() {
 
     // Fallback: try to load from database
     try {
-        const { data: categories, error } = await supabase
-            .from('categories')
-            .select('*')
-            .order('display_order')
-            .limit(4);
+        // Use the new categories API
+        const response = await fetch('/api/categories')
+        if (!response.ok) throw new Error('Failed to load categories')
 
-        if (error) throw error;
+        const categories = await response.json()
 
         if (categories && categories.length > 0) {
             container.innerHTML = categories.map(cat => `
@@ -176,13 +174,11 @@ async function loadFeaturedProducts() {
     }
 
     try {
-        const { data: products, error } = await supabase
-            .from('products')
-            .select('*')
-            .eq('is_featured', true)
-            .limit(6)
+        // Use the new featured products API
+        const response = await fetch('/api/featured-products')
+        if (!response.ok) throw new Error('Failed to load featured products')
 
-        if (error) throw error
+        const products = await response.json()
 
         if (!products || products.length === 0) {
             renderProducts(defaultProducts)
@@ -190,7 +186,7 @@ async function loadFeaturedProducts() {
             renderProducts(products)
         }
     } catch (err) {
-        console.warn('Supabase fetch failed, using fallback products:', err)
+        console.warn('API fetch failed, using fallback products:', err)
         renderProducts(defaultProducts)
     }
 }

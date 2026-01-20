@@ -494,57 +494,21 @@
             </div>
 
             <div class="slider-stage" id="anti-gravity-track">
-                <!-- Slide Meta Index 0 -->
+                <!-- Dynamic slider content loaded by content-loader.js -->
                 <div class="agent-slide active-physics" data-agent-slide data-agent-index="0"
-                    data-agent-title="Handwoven Thangka"
-                    data-agent-description="200-year technique from Kathmandu Valley">
+                    data-agent-title="Loading..."
+                    data-agent-description="Content loading...">
                     <div class="slide-inner">
                         <div class="slide-visual">
-                            <img src="https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=1200&q=90"
-                                class="slide-image" alt="Thangka">
+                            <div class="w-full h-full bg-gray-200 animate-pulse flex items-center justify-center">
+                                <span class="text-gray-500">Loading...</span>
+                            </div>
                         </div>
                         <div class="slide-info">
-                            <div class="accent-pill">Ancient Craft</div>
-                            <h3 class="slide-title">Handwoven <span class="italic text-amber-500">Thangka</span></h3>
-                            <p class="slide-desc">Sacred geometry and celestial colors preserved through centuries of
-                                monastic tradition.</p>
-                            <a href="products.html" class="btn-glow">Explore Legacy</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Slide Meta Index 1 -->
-                <div class="agent-slide" data-agent-slide data-agent-index="1" data-agent-title="Singing Bowls"
-                    data-agent-description="7-Metal alloy handcrafted in the Himalayas">
-                    <div class="slide-inner">
-                        <div class="slide-visual">
-                            <img src="https://images.unsplash.com/photo-1599458319801-443b73259966?w=1200&q=90"
-                                class="slide-image" alt="Singing Bowls">
-                        </div>
-                        <div class="slide-info">
-                            <div class="accent-pill">Vimana Sounds</div>
-                            <h3 class="slide-title">Sonic <span class="italic text-amber-500">Resonance</span></h3>
-                            <p class="slide-desc">Master-hammered bowls crafted using metallurgical secrets known only
-                                to the high-pass artisans.</p>
-                            <a href="products.html" class="btn-glow">Feel the Sound</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Slide Meta Index 2 -->
-                <div class="agent-slide" data-agent-slide data-agent-index="2" data-agent-title="Pashmina Shawls"
-                    data-agent-description="Authentic hand-combed Chyangra goat wool">
-                    <div class="slide-inner">
-                        <div class="slide-visual">
-                            <img src="https://images.unsplash.com/photo-1574634534894-89d7576c8259?w=1200&q=90"
-                                class="slide-image" alt="Pashmina">
-                        </div>
-                        <div class="slide-info">
-                            <div class="accent-pill">Mountain Gold</div>
-                            <h3 class="slide-title">Softness <span class="italic text-amber-500">Personified</span></h3>
-                            <p class="slide-desc">Genuine Chyangra wool, hand-spun and dyed using natural Himalayan
-                                flora.</p>
-                            <a href="products.html" class="btn-glow">Discover Warmth</a>
+                            <div class="accent-pill">Loading</div>
+                            <h3 class="slide-title">Content <span class="italic text-amber-500">Loading</span></h3>
+                            <p class="slide-desc">Please wait while we load the latest content...</p>
+                            <a href="products.html" class="btn-glow">Browse Products</a>
                         </div>
                     </div>
                 </div>
@@ -553,8 +517,6 @@
             <!-- Dots -->
             <div class="dots-container" id="anti-gravity-dots">
                 <div class="dot active" onclick="gravSlide(0)"></div>
-                <div class="dot" onclick="gravSlide(1)"></div>
-                <div class="dot" onclick="gravSlide(2)"></div>
             </div>
         </div>
 
@@ -841,6 +803,40 @@
                     Proceed to Checkout
                 </button>
                 <button onclick="closeCart()"
+                    class="w-full border-2 border-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:border-gray-400 transition">
+                    Continue Shopping
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Wishlist Modal -->
+    <div id="wishlist-modal" class="hidden fixed inset-0 z-50">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black bg-opacity-50 transition-opacity" onclick="closeWishlist()"></div>
+
+        <!-- Wishlist Sidebar (slides from right) -->
+        <div id="wishlist-sidebar"
+            class="absolute right-0 top-0 h-full w-full sm:w-[480px] bg-white shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col">
+            <!-- Header -->
+            <div class="flex items-center justify-between p-6 border-b">
+                <h2 class="text-2xl font-bold text-gray-900">Your Wishlist</h2>
+                <button onclick="closeWishlist()" class="p-2 hover:bg-gray-100 rounded-full transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Wishlist Items (scrollable) -->
+            <div id="wishlist-items" class="flex-1 overflow-y-auto p-6 space-y-4">
+                <!-- Items will be inserted here by JavaScript -->
+            </div>
+
+            <!-- Footer -->
+            <div class="border-t p-6 bg-gray-50">
+                <button onclick="closeWishlist()"
                     class="w-full border-2 border-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:border-gray-400 transition">
                     Continue Shopping
                 </button>

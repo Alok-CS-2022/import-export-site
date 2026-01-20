@@ -1,6 +1,7 @@
 import { supabase } from './lib/supabase.js';
 import { z } from 'zod';
 
+// Categories API - Full CRUD for product categories
 // Category Validation Schema
 const categorySchema = z.object({
   name: z.string().min(2, "Name must be at least 2 chars"),

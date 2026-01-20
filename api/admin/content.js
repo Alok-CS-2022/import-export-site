@@ -20,7 +20,7 @@ export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', origin);
     res.setHeader('Access-Control-Allow-Credentials', 'true');
   }
-  res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   if (req.method === 'OPTIONS') {
@@ -113,6 +113,97 @@ export default async function handler(req, res) {
           data: savedContent,
           message: 'Content saved successfully'
         });
+
+      case 'POST':
+        // Simple save/update for content data
+        try {
+          const contentData = req.body;
+
+          // Check if content record exists
+          const { data: existing } = await supabase
+            .from('site_content')
+            .select('id')
+            .limit(1)
+            .single();
+
+          let result;
+          if (existing) {
+            // Update existing
+            result = await supabase
+              .from('site_content')
+              .update({
+                content: contentData,
+                updated_at: new Date().toISOString()
+              })
+              .eq('id', existing.id)
+              .select()
+              .single();
+          } else {
+            // Insert new
+            result = await supabase
+              .from('site_content')
+              .insert([{
+                content: contentData,
+                updated_at: new Date().toISOString()
+              }])
+              .select()
+              .single();
+          }
+
+          if (result.error) throw result.error;
+
+          // Also save slider items if provided
+          if (contentData.slider && Array.isArray(contentData.slider)) {
+            // First deactivate all existing
+            await supabase.from('slider_items').update({ is_active: false });
+
+            // Then insert/update new ones
+            for (const item of contentData.slider) {
+              await supabase
+                .from('slider_items')
+                .upsert({
+                  title: item.title,
+                  description: item.description,
+                  image_url: item.imageUrl || item.image_url,
+                  button_text: item.buttonText || item.button_text,
+                  button_link: item.buttonLink || item.button_link,
+                  accent_pill: item.accentPill || item.accent_pill,
+                  display_order: item.display_order || 0,
+                  is_active: true
+                }, { onConflict: 'title' });
+            }
+          }
+
+          // Also save blog stories if provided
+          if (contentData.blogStories && Array.isArray(contentData.blogStories)) {
+            // First deactivate all existing
+            await supabase.from('blog_stories').update({ is_active: false });
+
+            // Then insert/update new ones
+            for (const story of contentData.blogStories) {
+              await supabase
+                .from('blog_stories')
+                .upsert({
+                  title: story.title,
+                  description: story.description,
+                  image_url: story.imageUrl || story.image_url,
+                  category: story.category,
+                  is_featured: story.isFeatured || story.is_featured || false,
+                  display_order: story.display_order || 0,
+                  is_active: true
+                }, { onConflict: 'title' });
+            }
+          }
+
+          return res.status(200).json({
+            message: 'Content saved successfully',
+            data: result.data
+          });
+
+        } catch (postError) {
+          console.error('POST save error:', postError);
+          return res.status(500).json({ error: 'Failed to save content' });
+        }
 
       default:
         return res.status(405).json({ error: 'Method not allowed' });

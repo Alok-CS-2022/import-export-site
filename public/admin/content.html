@@ -381,22 +381,14 @@
 
                 async function loadCurrentContent() {
                     try {
-                        // First try to load from Supabase
-                        const { data, error } = await supabase
-                            .from('site_content')
-                            .select('*')
-                            .single()
+                        console.log('Admin content: Loading content...')
+                        // Load content from API
+                        const response = await fetch('/api/admin/content')
+                        if (!response.ok) throw new Error('Failed to load content')
 
-                        if (error && error.code !== 'PGRST116') {
-                            // If table doesn't exist, fall back to localStorage
-                            console.warn('Database not available, using localStorage:', error.message)
-                            const localData = localStorage.getItem('site_content')
-                            currentContent = localData ? JSON.parse(localData) : {}
-                            return
-                        }
-
-                        currentContent = data?.content || {}
-                        console.log('Loaded content from database:', currentContent)
+                        const result = await response.json()
+                        currentContent = result.data || {}
+                        console.log('Admin content: Loaded content from API:', currentContent)
                     } catch (error) {
                         console.error('Error loading content:', error)
                         // Fall back to localStorage
@@ -807,27 +799,21 @@
                         currentContent[currentSection] = sectionData
 
                         // Save to localStorage (for immediate local access)
+                        // Save to API
+                        const response = await fetch('/api/admin/content', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(currentContent)
+                        })
+
+                        if (!response.ok) throw new Error('Failed to save content')
+
+                        console.log('✅ Saved to API successfully!')
+
+                        // Also save to localStorage as backup
                         localStorage.setItem('site_content', JSON.stringify(currentContent))
-                        console.log('Saved to localStorage:', currentContent)
-
-                        // Also save to Supabase database (for persistence)
-                        try {
-                            const { error: dbError } = await supabase
-                                .from('site_content')
-                                .upsert({
-                                    id: 1,
-                                    content: currentContent,
-                                    updated_at: new Date().toISOString()
-                                }, { onConflict: 'id' })
-
-                            if (dbError) {
-                                console.warn('Database save failed (using localStorage only):', dbError.message)
-                            } else {
-                                console.log('✅ Also saved to database!')
-                            }
-                        } catch (dbErr) {
-                            console.warn('Database save error:', dbErr)
-                        }
 
                         // Show success message
                         showSuccess()

@@ -109,7 +109,6 @@
         }
 
         async function loadOrders() {
-            console.log('Admin orders: loadOrders called')
             const loading = document.getElementById('loading')
             const container = document.getElementById('orders-container')
             const emptyState = document.getElementById('empty-state')
@@ -125,7 +124,6 @@
                 if (!response.ok) throw new Error('Failed to fetch orders')
 
                 const data = await response.json()
-                console.log('Admin orders: loaded', data.length, 'orders')
 
                 loading.classList.add('hidden')
                 allOrders = data || []

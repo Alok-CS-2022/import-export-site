@@ -88,13 +88,13 @@ export default async function handler(req, res) {
 
       case 'DELETE':
         // DELETE slider item
-        const { id } = req.query;
-        if (!id) return res.status(400).json({ error: 'Slider item ID required' });
+        const { id: deleteId } = req.query;
+        if (!deleteId) return res.status(400).json({ error: 'Slider item ID required' });
 
         const { error: deleteError } = await supabase
           .from('slider_items')
           .delete()
-          .eq('id', id);
+          .eq('id', deleteId);
 
         if (deleteError) throw deleteError;
         return res.status(200).json({ message: 'Slider item deleted successfully' });

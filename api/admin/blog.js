@@ -88,13 +88,13 @@ export default async function handler(req, res) {
 
       case 'DELETE':
         // DELETE blog story
-        const { id } = req.query;
-        if (!id) return res.status(400).json({ error: 'Blog story ID required' });
+        const { id: deleteId } = req.query;
+        if (!deleteId) return res.status(400).json({ error: 'Blog story ID required' });
 
         const { error: deleteError } = await supabase
           .from('blog_stories')
           .delete()
-          .eq('id', id);
+          .eq('id', deleteId);
 
         if (deleteError) throw deleteError;
         return res.status(200).json({ message: 'Blog story deleted successfully' });

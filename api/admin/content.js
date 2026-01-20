@@ -30,20 +30,46 @@ export default async function handler(req, res) {
   try {
     switch (req.method) {
       case 'GET':
-        // Fetch content
+        // Fetch main content
         const { data: content, error: getError } = await supabase
           .from('site_content')
           .select('*')
           .single();
 
+        let contentData = {};
         if (getError) {
           if (getError.code === 'PGRST116') {
-            return res.status(200).json({ data: { content: {} } });
+            contentData = { content: {} };
+          } else {
+            throw getError;
           }
-          throw getError;
+        } else {
+          contentData = content;
         }
 
-        return res.status(200).json({ data: content });
+        // Fetch slider items
+        const { data: sliderItems, error: sliderError } = await supabase
+          .from('slider_items')
+          .select('*')
+          .eq('is_active', true)
+          .order('display_order', { ascending: true });
+
+        if (!sliderError && sliderItems) {
+          contentData.slider = sliderItems;
+        }
+
+        // Fetch blog stories
+        const { data: blogStories, error: blogError } = await supabase
+          .from('blog_stories')
+          .select('*')
+          .eq('is_active', true)
+          .order('display_order', { ascending: true });
+
+        if (!blogError && blogStories) {
+          contentData.blog = blogStories;
+        }
+
+        return res.status(200).json({ data: contentData });
 
       case 'PUT':
         // VALIDATE INPUT

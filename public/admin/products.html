@@ -162,22 +162,16 @@
                     <h2 class="text-5xl font-light text-gray-900 mb-2">Product Collection</h2>
                     <p class="text-gray-600 font-light text-lg">Curate your handcrafted masterpieces</p>
                 </div>
-                 <div class="flex gap-4">
-                     <button id="add-product-btn"
-                         class="group gold-gradient text-white px-8 py-4 rounded-xl font-medium shadow-xl hover:shadow-2xl transition-all transform hover:scale-105">
-                         <span class="flex items-center gap-2">
-                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                     d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                             </svg>
-                             Create Masterpiece
-                         </span>
-                     </button>
-                     <button onclick="loadProducts()" id="debug-btn"
-                         class="bg-blue-600 text-white px-6 py-4 rounded-xl font-medium shadow-xl hover:bg-blue-700 transition">
-                         Debug: Reload Products
-                     </button>
-                 </div>
+                 <button id="add-product-btn"
+                     class="group gold-gradient text-white px-8 py-4 rounded-xl font-medium shadow-xl hover:shadow-2xl transition-all transform hover:scale-105">
+                     <span class="flex items-center gap-2">
+                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                 d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                         </svg>
+                         Create Masterpiece
+                     </span>
+                 </button>
             </div>
         </div>
 
@@ -398,16 +392,7 @@
     </script>
 
     <script type="module">
-        let supabase;
-        try {
-            const { supabase: importedSupabase } = await import('../lib/supabase.js');
-            supabase = importedSupabase;
-            console.log('Admin products: Supabase imported successfully');
-        } catch (importError) {
-            console.error('Admin products: Failed to import supabase:', importError);
-        }
-
-        console.log('Admin products: Script loaded')
+        import { supabase } from '../lib/supabase.js'
 
         function showError(msg) {
             const banner = document.getElementById('error-banner')
@@ -524,26 +509,17 @@
         }
 
         async function loadProducts() {
-            console.log('Admin products: Starting loadProducts - function called')
             try {
                 // API doesn't require auth, load products directly
-                console.log('Admin products: Fetching from /api/admin/products')
                 const response = await fetch('/api/admin/products')
 
-                if (!response.ok) {
-                    console.error('Admin products: API response not ok:', response.status, response.statusText)
-                    throw new Error('Failed to fetch products: ' + response.status)
-                }
+                if (!response.ok) throw new Error('Failed to fetch products')
 
                 const data = await response.json()
-                console.log('Admin products: Received data:', data)
-                console.log('Admin products: Data length:', data ? data.length : 'null')
 
                 displayProducts(data || [])
                 updateStats(data || [])
-                console.log('Admin products: Products displayed successfully')
             } catch (error) {
-                console.error('Admin products: Error loading products:', error)
                 showError('Error loading products: ' + error.message)
                 document.getElementById('products-container').innerHTML =
                     `<div class="col-span-full flex flex-col items-center justify-center py-20">
@@ -579,9 +555,7 @@
         }
 
         function displayProducts(products) {
-            console.log('Admin products: displayProducts called with', products.length, 'products')
             const container = document.getElementById('products-container')
-            console.log('Admin products: container element found:', !!container)
 
             if (products.length === 0) {
                 container.innerHTML = `
@@ -627,12 +601,7 @@
                     </div>
                 </div>
             `).join('')
-            console.log('Admin products: Set container.innerHTML with', productHTML.length, 'characters')
             container.innerHTML = productHTML
-            console.log('Admin products: displayProducts completed')
-
-            // Temporary alert to confirm display
-            alert('Products should now be displayed! Check the page.')
         }
 
         function openAddModal() {
@@ -751,15 +720,10 @@
         })
 
         async function init() {
-            console.log('Admin products: init() function called')
             const isAuth = await checkAuth()
-            console.log('Admin products: checkAuth returned:', isAuth)
             if (isAuth) {
-                console.log('Admin products: Calling loadCategories and loadProducts')
                 await loadCategories()
                 await loadProducts()
-            } else {
-                console.log('Admin products: checkAuth failed, not loading products')
             }
         }
 

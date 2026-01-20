@@ -1,3 +1,4 @@
+// Blog API for managing blog stories
 import { supabase } from '../lib/supabase.js';
 import { z } from 'zod';
 

@@ -16,6 +16,11 @@ const sortSelect = document.getElementById('sort-select')
 const activeFiltersLabel = document.getElementById('active-filters')
 const currentCategoryName = document.getElementById('current-category-name')
 
+// Initialize on DOMContentLoaded
+document.addEventListener('DOMContentLoaded', async () => {
+    initCatalog()
+})
+
 // Initialize
 async function initCatalog() {
     await loadCategories()

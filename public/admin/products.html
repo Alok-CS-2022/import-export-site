@@ -175,8 +175,26 @@
             </div>
         </div>
 
-        <!-- Stats Bar -->
-        <div id="stats-bar" class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12 animate-slideIn">
+        <!-- Management Tabs -->
+        <div class="flex gap-1 mb-8 border-b border-gray-200">
+            <button id="products-tab" onclick="switchTab('products')"
+                class="px-6 py-3 text-sm font-medium border-b-2 border-amber-500 text-amber-700 bg-amber-50 rounded-t-lg">
+                Products
+            </button>
+            <button id="categories-tab" onclick="switchTab('categories')"
+                class="px-6 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 rounded-t-lg">
+                Categories
+            </button>
+            <button id="featured-tab" onclick="switchTab('featured')"
+                class="px-6 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 rounded-t-lg">
+                Featured Products
+            </button>
+        </div>
+
+        <!-- Products Section -->
+        <div id="products-section">
+            <!-- Stats Bar -->
+            <div id="stats-bar" class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12 animate-slideIn">
             <div class="glass p-6 rounded-2xl shadow-lg border border-amber-100">
                 <div class="flex items-center gap-4">
                     <div
@@ -376,6 +394,44 @@
             </div>
         </div>
     </div>
+        </div>
+
+        <!-- Categories Section -->
+        <div id="categories-section" class="hidden">
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h3 class="text-3xl font-light text-gray-900 mb-2">Category Management</h3>
+                    <p class="text-gray-600 font-light">Organize your product categories</p>
+                </div>
+                <button onclick="openCategoryModal()"
+                    class="gold-gradient text-white px-6 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all transform hover:scale-105">
+                    <span class="flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Add Category
+                    </span>
+                </button>
+            </div>
+
+            <div id="categories-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Categories will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Featured Products Section -->
+        <div id="featured-section" class="hidden">
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h3 class="text-3xl font-light text-gray-900 mb-2">Featured Products</h3>
+                    <p class="text-gray-600 font-light">Products displayed on homepage (max 6)</p>
+                </div>
+            </div>
+
+            <div id="featured-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Featured products will be loaded here -->
+            </div>
+        </div>
 
     <script>
         function previewImage(url) {
@@ -421,6 +477,176 @@
             localStorage.removeItem('admin_token')
             localStorage.removeItem('admin_user')
             window.location.href = 'login.html'
+        }
+
+        // Tab switching functionality
+        window.switchTab = function(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('[id$="-tab"]').forEach(btn => {
+                btn.classList.remove('border-amber-500', 'text-amber-700', 'bg-amber-50')
+                btn.classList.add('text-gray-500')
+            })
+            document.getElementById(tabName + '-tab').classList.add('border-amber-500', 'text-amber-700', 'bg-amber-50')
+            document.getElementById(tabName + '-tab').classList.remove('text-gray-500')
+
+            // Hide all content sections
+            document.getElementById('products-section').classList.add('hidden')
+            document.getElementById('categories-section').classList.add('hidden')
+            document.getElementById('featured-section').classList.add('hidden')
+            document.getElementById('stats-bar').classList.add('hidden')
+
+            // Show selected content section
+            document.getElementById(tabName + '-section').classList.remove('hidden')
+            if (tabName === 'products') {
+                document.getElementById('stats-bar').classList.remove('hidden')
+            }
+
+            // Load content for the selected tab
+            if (tabName === 'categories') loadCategoriesList()
+            if (tabName === 'featured') loadFeaturedProducts()
+        }
+
+        // Load categories for management
+        async function loadCategoriesList() {
+            const container = document.getElementById('categories-container')
+            container.innerHTML = '<div class="col-span-full text-center py-12"><div class="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-500 mx-auto"></div></div>'
+
+            try {
+                const response = await fetch('/api/admin/categories')
+                const categories = await response.json()
+
+                if (!response.ok) throw new Error('Failed to load categories')
+
+                if (categories.length === 0) {
+                    container.innerHTML = '<div class="col-span-full text-center py-12 text-gray-500">No categories found. Create your first category!</div>'
+                    return
+                }
+
+                container.innerHTML = categories.map(category => `
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-lg transition">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-3">
+                                ${category.image_url ? `<img src="${category.image_url}" alt="${category.name}" class="w-12 h-12 rounded-lg object-cover">` : '<div class="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">📁</div>'}
+                                <div>
+                                    <h3 class="font-semibold text-gray-900">${category.name}</h3>
+                                    <p class="text-sm text-gray-500">Order: ${category.display_order}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button onclick="editCategory('${category.id}')" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                    </svg>
+                                </button>
+                                <button onclick="deleteCategory('${category.id}')" class="p-2 text-red-600 hover:bg-red-50 rounded-lg">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600">Status: <span class="text-green-600">Active</span></span>
+                        </div>
+                    </div>
+                `).join('')
+            } catch (error) {
+                container.innerHTML = '<div class="col-span-full text-center py-12 text-red-500">Error loading categories: ' + error.message + '</div>'
+            }
+        }
+
+        // Load featured products for management
+        async function loadFeaturedProducts() {
+            const container = document.getElementById('featured-container')
+            container.innerHTML = '<div class="col-span-full text-center py-12"><div class="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-500 mx-auto"></div></div>'
+
+            try {
+                const response = await fetch('/api/featured-products')
+                const featuredProducts = await response.json()
+
+                if (!response.ok) throw new Error('Failed to load featured products')
+
+                if (featuredProducts.length === 0) {
+                    container.innerHTML = '<div class="col-span-full text-center py-12 text-gray-500">No featured products. Mark products as featured to display them here!</div>'
+                    return
+                }
+
+                container.innerHTML = featuredProducts.map(product => `
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-lg transition">
+                        <div class="flex items-center gap-4 mb-4">
+                            ${product.image_url ? `<img src="${product.image_url}" alt="${product.name}" class="w-16 h-16 rounded-lg object-cover">` : '<div class="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">📦</div>'}
+                            <div class="flex-1">
+                                <h3 class="font-semibold text-gray-900">${product.name}</h3>
+                                <p class="text-sm text-gray-600">$${product.price}</p>
+                                <p class="text-xs text-gray-500">Order: ${product.display_order}</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="toggleFeatured('${product.id}')" class="flex-1 bg-amber-500 text-white py-2 rounded-lg hover:bg-amber-600 transition">
+                                Remove from Featured
+                            </button>
+                            <button onclick="updateDisplayOrder('${product.id}', ${product.display_order - 1})" class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
+                                ▲
+                            </button>
+                            <button onclick="updateDisplayOrder('${product.id}', ${product.display_order + 1})" class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
+                                ▼
+                            </button>
+                        </div>
+                    </div>
+                `).join('')
+            } catch (error) {
+                container.innerHTML = '<div class="col-span-full text-center py-12 text-red-500">Error loading featured products: ' + error.message + '</div>'
+            }
+        }
+
+        // Category management functions
+        window.openCategoryModal = function(categoryId = null) {
+            // TODO: Implement category modal
+            alert('Category management modal coming soon!')
+        }
+
+        window.editCategory = function(id) {
+            alert('Edit category functionality coming soon!')
+        }
+
+        window.deleteCategory = function(id) {
+            if (confirm('Delete this category? This may affect products.')) {
+                alert('Delete category functionality coming soon!')
+            }
+        }
+
+        // Featured products management functions
+        window.toggleFeatured = async function(productId) {
+            try {
+                const response = await fetch('/api/admin/products', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: productId, is_featured: false })
+                })
+
+                if (!response.ok) throw new Error('Failed to update product')
+
+                loadFeaturedProducts()
+                showSuccess('Product removed from featured')
+            } catch (error) {
+                showError('Failed to update featured status: ' + error.message)
+            }
+        }
+
+        window.updateDisplayOrder = async function(productId, newOrder) {
+            try {
+                const response = await fetch('/api/admin/products', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: productId, display_order: newOrder })
+                })
+
+                if (!response.ok) throw new Error('Failed to update order')
+
+                loadFeaturedProducts()
+            } catch (error) {
+                showError('Failed to update display order: ' + error.message)
+            }
         }
 
         // --- NEW: Image Upload Logic ---
@@ -696,8 +922,6 @@
             }
 
             try {
-                const { data: { session } } = await supabase.auth.getSession()
-
                 const response = await fetch('/api/admin/products', {
                     method: editingProductId ? 'PUT' : 'POST',
                     headers: {

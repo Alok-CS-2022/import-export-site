@@ -579,7 +579,9 @@
         }
 
         function displayProducts(products) {
+            console.log('Admin products: displayProducts called with', products.length, 'products')
             const container = document.getElementById('products-container')
+            console.log('Admin products: container element found:', !!container)
 
             if (products.length === 0) {
                 container.innerHTML = `
@@ -596,7 +598,7 @@
                 return
             }
 
-            container.innerHTML = products.map(product => `
+            const productHTML = products.map(product => `
                 <div class="product-card glass rounded-2xl overflow-hidden shadow-lg border border-amber-100 animate-fadeIn">
                     <div class="relative h-64 overflow-hidden bg-gradient-to-br from-stone-100 to-stone-200">
                         <img src="${product.image_url}" alt="${product.name}" 
@@ -625,6 +627,9 @@
                     </div>
                 </div>
             `).join('')
+            console.log('Admin products: Set container.innerHTML with', productHTML.length, 'characters')
+            container.innerHTML = productHTML
+            console.log('Admin products: displayProducts completed')
         }
 
         function openAddModal() {

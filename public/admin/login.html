@@ -231,16 +231,17 @@
             const email = document.getElementById('email').value.trim()
             const password = document.getElementById('password').value
             
-            console.log('🔐 Login attempt:', email)
+            console.log('🔐 Login attempt:', email, 'password length:', password.length)
             statusSpan.textContent = 'Authenticating...'
             statusSpan.className = 'text-amber-600 font-semibold'
             debugError.textContent = 'Contacting server...'
-            
+
             errorDiv.classList.add('hidden')
             loadingDiv.classList.remove('hidden')
             loginBtn.disabled = true
-            
+
             try {
+                console.log('📤 Sending request to /api/admin/auth')
                 // Use admin auth API
                 const response = await fetch('/api/admin/auth', {
                     method: 'POST',
@@ -250,28 +251,29 @@
                     body: JSON.stringify({ email, password })
                 })
 
+                console.log('📥 Response status:', response.status)
                 const result = await response.json()
+                console.log('📥 Response data:', result)
 
                 if (!response.ok || !result.success) {
                     throw new Error(result.error || 'Authentication failed')
                 }
 
                 console.log('📡 Auth response:', result)
-                    loadingDiv.classList.add('hidden')
-                    return
-                }
 
                 // Store token and redirect
                 localStorage.setItem('admin_token', result.token)
                 localStorage.setItem('admin_user', JSON.stringify(result.user))
+                console.log('💾 Token stored, user:', result.user)
 
                 statusSpan.textContent = 'Authorized'
                 statusSpan.className = 'text-green-600 font-semibold'
                 debugError.textContent = 'Redirecting to dashboard...'
-                console.log('✅ Login successful, redirecting...')
+                console.log('✅ Login successful, redirecting to dashboard...')
 
                 // Smooth redirect after brief delay
                 setTimeout(() => {
+                    console.log('🔄 Redirecting now...')
                     window.location.href = 'dashboard.html'
                 }, 500)
                 

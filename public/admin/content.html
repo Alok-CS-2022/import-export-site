@@ -381,14 +381,12 @@
 
                 async function loadCurrentContent() {
                     try {
-                        console.log('Admin content: Loading content...')
                         // Load content from API
                         const response = await fetch('/api/admin/content')
                         if (!response.ok) throw new Error('Failed to load content')
 
                         const result = await response.json()
                         currentContent = result.data || {}
-                        console.log('Admin content: Loaded content from API:', currentContent)
                     } catch (error) {
                         console.error('Error loading content:', error)
                         // Fall back to localStorage

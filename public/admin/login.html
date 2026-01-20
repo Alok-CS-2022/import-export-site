@@ -255,20 +255,8 @@
                 if (!response.ok || !result.success) {
                     throw new Error(result.error || 'Authentication failed')
                 }
-                    email,
-                    password
-                })
-                
-                console.log('📡 Auth response:', result)
 
-                if (!result.success) {
-                    console.error('❌ Login error:', result.error)
-                    errorText.textContent = result.error
-                    errorDiv.classList.remove('hidden')
-                    debugError.textContent = result.error
-                    statusSpan.textContent = 'Failed'
-                    statusSpan.className = 'text-red-600 font-semibold'
-                    loginBtn.disabled = false
+                console.log('📡 Auth response:', result)
                     loadingDiv.classList.add('hidden')
                     return
                 }
@@ -286,10 +274,6 @@
                 setTimeout(() => {
                     window.location.href = 'dashboard.html'
                 }, 500)
-                    debugError.textContent = 'No session returned'
-                    loginBtn.disabled = false
-                    loadingDiv.classList.add('hidden')
-                }
                 
             } catch (err) {
                 console.error('💥 Unexpected error:', err)
@@ -304,17 +288,16 @@
         })
         
         // Check if already logged in
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            if (session) {
-                console.log('✅ Already authenticated, redirecting...')
-                statusSpan.textContent = 'Authorized'
-                statusSpan.className = 'text-green-600 font-semibold'
-                debugError.textContent = 'Session active, redirecting...'
-                window.location.href = 'dashboard.html'
-            } else {
-                debugError.textContent = 'Awaiting login'
-            }
-        })
+        const existingToken = localStorage.getItem('admin_token')
+        if (existingToken) {
+            console.log('✅ Already authenticated, redirecting...')
+            statusSpan.textContent = 'Authorized'
+            statusSpan.className = 'text-green-600 font-semibold'
+            debugError.textContent = 'Token active, redirecting...'
+            window.location.href = 'dashboard.html'
+        } else {
+            debugError.textContent = 'Awaiting login'
+        }
     </script>
 </body>
 </html>

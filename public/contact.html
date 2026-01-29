@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact - Import From Nepal</title>
     
-    <!-- Meta Tags -->
     <meta name="description" content="Contact Import From Nepal for inquiries about authentic Nepalese handicrafts.">
-    <meta name="keywords" content="contact Nepal handicrafts, Nepal handicraft inquiry">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -15,8 +13,8 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/custom.css">
 
-    <!-- Load App ONLY -->
-    <script type="module" src="js/app.js?v=4"></script>
+    <!-- Load App -->
+    <script type="module" src="js/app.js?v=5"></script>
 </head>
 
 <body class="bg-gray-50">
@@ -28,38 +26,31 @@
                     <span class="text-xl font-bold text-amber-700">Import From Nepal</span>
                 </div>
 
-                <!-- Desktop Navigation -->
                 <div class="hidden md:flex items-center space-x-8">
                     <a href="index.html" class="text-gray-700 hover:text-amber-700 transition">Home</a>
                     <a href="products.html" class="text-gray-700 hover:text-amber-700 transition">Products</a>
                     <a href="contact.html" class="text-amber-700 font-semibold">Contact</a>
                 </div>
 
-                <!-- Cart & Mobile Menu -->
                 <div class="flex items-center space-x-4">
-                    <!-- Cart Icon -->
                     <button onclick="openCart()" class="relative p-2 hover:bg-gray-100 rounded-full transition">
                         <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
                             </path>
                         </svg>
-                        <span id="cart-count"
-                            class="hidden absolute -top-1 -right-1 bg-amber-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">0</span>
+                        <span id="cart-count" class="hidden absolute -top-1 -right-1 bg-amber-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">0</span>
                     </button>
 
-                    <!-- Mobile Menu Button -->
                     <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-gray-100">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 6h16M4 12h16M4 18h16"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
             <div class="px-4 py-3 space-y-3">
                 <a href="index.html" class="block py-2 text-gray-700 hover:text-amber-700 transition">Home</a>
@@ -86,7 +77,6 @@
         <div class="max-w-3xl mx-auto px-4 sm:px-6">
             <div class="bg-white rounded-2xl shadow-lg p-8">
                 <form id="contact-page-form" class="space-y-6">
-                    <!-- Name -->
                     <div>
                         <label for="customer_name" class="block text-sm font-medium text-gray-700 mb-2">
                             Your Name *
@@ -99,7 +89,6 @@
                                placeholder="John Doe">
                     </div>
 
-                    <!-- Email -->
                     <div>
                         <label for="customer_email" class="block text-sm font-medium text-gray-700 mb-2">
                             Email Address *
@@ -112,7 +101,6 @@
                                placeholder="john@example.com">
                     </div>
 
-                    <!-- Phone -->
                     <div>
                         <label for="customer_phone" class="block text-sm font-medium text-gray-700 mb-2">
                             Phone Number (Optional)
@@ -124,7 +112,6 @@
                                placeholder="+1 (555) 123-4567">
                     </div>
 
-                    <!-- Message -->
                     <div>
                         <label for="message" class="block text-sm font-medium text-gray-700 mb-2">
                             Message *
@@ -137,7 +124,6 @@
                                   placeholder="Tell us about your inquiry..."></textarea>
                     </div>
 
-                    <!-- Submit Button -->
                     <div>
                         <button type="submit"
                                 class="w-full bg-amber-700 text-white py-4 rounded-xl font-medium text-lg hover:bg-amber-800 transition shadow-lg">
@@ -191,15 +177,13 @@
     <footer class="bg-gray-900 text-white py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-                <!-- About -->
                 <div>
                     <h3 class="text-xl font-bold mb-4 text-amber-500">Import From Nepal</h3>
                     <p class="text-gray-400 text-sm leading-relaxed mb-6">
-                        Bringing authentic Himalayan handicrafts to the world. Each piece tells a story of tradition and craftsmanship.
+                        Bringing authentic Himalayan handicrafts to the world.
                     </p>
                 </div>
 
-                <!-- Quick Links -->
                 <div>
                     <h3 class="text-lg font-bold mb-6">Quick Links</h3>
                     <ul class="space-y-4 text-gray-400 text-sm">
@@ -209,7 +193,6 @@
                     </ul>
                 </div>
 
-                <!-- Contact -->
                 <div>
                     <h3 class="text-lg font-bold mb-6">Contact</h3>
                     <ul class="space-y-4 text-gray-400 text-sm">
@@ -229,8 +212,7 @@
     <!-- Cart Modal -->
     <div id="cart-modal" class="hidden fixed inset-0 z-50">
         <div class="absolute inset-0 bg-black bg-opacity-50" onclick="closeCart()"></div>
-        <div id="cart-sidebar" class="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl flex flex-col">
-            <!-- Header -->
+        <div class="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl flex flex-col">
             <div class="p-6 border-b flex justify-between items-center">
                 <h2 class="text-2xl font-light">Your Cart</h2>
                 <button onclick="closeCart()" class="text-gray-500 hover:text-black">
@@ -240,12 +222,8 @@
                 </button>
             </div>
             
-            <!-- Cart Items -->
-            <div id="cart-items" class="flex-grow overflow-y-auto p-6 space-y-6">
-                <!-- Dynamic content -->
-            </div>
+            <div id="cart-items" class="flex-grow overflow-y-auto p-6 space-y-6"></div>
             
-            <!-- Footer -->
             <div class="p-6 border-t bg-gray-50 space-y-4">
                 <div class="flex justify-between text-lg">
                     <span>Subtotal:</span>

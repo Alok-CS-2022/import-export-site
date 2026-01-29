@@ -35,21 +35,8 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/custom.css">
 
-    <!-- Force clear any old module cache -->
-    <script>
-        if (window.performance && window.performance.getEntriesByType) {
-            window.performance.getEntriesByType("resource").forEach(r => {
-                if (r.name.includes('.js')) {
-                    console.log('Clearing:', r.name);
-                }
-            });
-        }
-    </script>
-
-    <!-- Load Supabase First -->
-    <script type="module" src="js/supabase-client.js?v=3"></script>
-    <!-- Then Load App -->
-    <script type="module" src="js/app.js?v=3"></script>
+    <!-- Load App (with Supabase included) -->
+    <script type="module" src="js/app.js?v=4"></script>
 </head>
 
 <body class="bg-gray-50">
@@ -142,7 +129,7 @@
             
             <div id="featured-products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Products will be loaded here by app.js -->
-                <div class="text-center py-12">
+                <div class="col-span-full text-center py-12">
                     <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-amber-700"></div>
                     <p class="mt-4 text-gray-600">Loading products...</p>
                 </div>
@@ -243,7 +230,7 @@
                     <span>Subtotal:</span>
                     <span id="cart-subtotal" class="font-semibold text-amber-700">$0.00</span>
                 </div>
-                <button onclick="checkout()" class="w-full bg-amber-700 text-white py-4 rounded-xl font-medium hover:bg-amber-800 transition">
+                <button onclick="window.location.href='contact.html'" class="w-full bg-amber-700 text-white py-4 rounded-xl font-medium hover:bg-amber-800 transition">
                     Proceed to Inquiry
                 </button>
             </div>
@@ -283,11 +270,6 @@
                         </div>
                         
                         <div class="space-y-3">
-                            <button id="add-to-cart-btn" onclick="addToCartFromDetail()"
-                                class="hidden w-full bg-amber-700 text-white px-8 py-4 rounded-xl font-medium hover:bg-amber-800 transition">
-                                Add to Cart
-                            </button>
-                            
                             <button onclick="closeProductDetail()"
                                 class="w-full border-2 border-gray-300 text-gray-700 py-3 rounded-xl font-medium hover:border-gray-400 transition">
                                 Continue Shopping

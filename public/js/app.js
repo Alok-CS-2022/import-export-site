@@ -1,13 +1,20 @@
 // ============================================
-// MAIN APP.JS - SIMPLIFIED AND WORKING
+// MAIN APP.JS - CORRECTED VERSION
 // ============================================
+
+// ==================== SUPABASE INITIALIZATION ====================
+// Import Supabase from CDN
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 // Supabase Configuration
 const SUPABASE_URL = 'https://tpvqolkzcbbzlqlzchwc.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwdnFvbGt6Y2JiemxxbHpjaHdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzNjA0MjgsImV4cCI6MjA4MTkzNjQyOH0.AU6ieHN1TSUHgSu7qfvkekvmMySDPJb2zOId4Oy7CeY';
 
-// Initialize Supabase (you'll need to add your actual keys)
-const supabase = window.supabase || null;
+// Initialize Supabase
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+window.supabase = supabase; // Make it globally available
+
+console.log('✓ Supabase initialized:', !!supabase);
 
 // Global State
 let currentUser = null;
@@ -65,29 +72,17 @@ async function loadProductsFromSupabase() {
     try {
         console.log('Loading products from Supabase...');
         
-        // Try to load from Supabase
-        if (supabase) {
-            const { data, error } = await supabase
-                .from('products')
-                .select('*')
-                .eq('is_active', true)
-                .order('display_order', { ascending: true })
-                .limit(12);
-            
-            if (error) throw error;
-            
-            products = data;
-            console.log(`Loaded ${products.length} products from Supabase`);
-        } else {
-            // Fallback: Load from API or mock data
-            console.log('Supabase not initialized, trying API...');
-            const response = await fetch('/api/products');
-            if (response.ok) {
-                products = await response.json();
-            } else {
-                throw new Error('API failed');
-            }
-        }
+        // Load from Supabase
+        const { data, error } = await supabase
+            .from('products')
+            .select('*')
+            .eq('is_active', true)
+            .order('display_order', { ascending: true });
+        
+        if (error) throw error;
+        
+        products = data || [];
+        console.log(`✓ Loaded ${products.length} products from Supabase`);
         
         // Display products
         if (productsGrid) {
@@ -96,43 +91,50 @@ async function loadProductsFromSupabase() {
         
         if (featuredGrid) {
             const featured = products.filter(p => p.is_featured).slice(0, 6);
-            displayProductsInGrid(featured, featuredGrid);
+            displayProductsInGrid(featured.length > 0 ? featured : products.slice(0, 6), featuredGrid);
         }
         
     } catch (error) {
-        console.error('Failed to load products:', error);
+        console.error('❌ Failed to load products:', error);
         
         // Show error message
-        if (productsGrid) {
-            productsGrid.innerHTML = `
-                <div class="col-span-full text-center py-12">
-                    <p class="text-gray-600 mb-4">Unable to load products</p>
-                    <button onclick="loadProductsFromSupabase()" class="bg-amber-100 text-amber-800 px-4 py-2 rounded-lg hover:bg-amber-200">
-                        Try Again
-                    </button>
-                </div>
-            `;
-        }
+        const errorHTML = `
+            <div class="col-span-full text-center py-12">
+                <p class="text-gray-600 mb-4">Unable to load products</p>
+                <p class="text-sm text-gray-500 mb-4">${error.message}</p>
+                <button onclick="location.reload()" class="bg-amber-100 text-amber-800 px-4 py-2 rounded-lg hover:bg-amber-200">
+                    Reload Page
+                </button>
+            </div>
+        `;
+        
+        if (productsGrid) productsGrid.innerHTML = errorHTML;
+        if (featuredGrid) featuredGrid.innerHTML = errorHTML;
     }
 }
 
 function displayProductsInGrid(products, container) {
-    if (!container || !products.length) return;
+    if (!container || !products || !products.length) {
+        if (container) {
+            container.innerHTML = '<div class="col-span-full text-center py-12 text-gray-500">No products available</div>';
+        }
+        return;
+    }
     
     container.innerHTML = products.map(product => `
         <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
             <div class="aspect-square bg-gray-100 overflow-hidden">
                 <img src="${product.image_url || 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80'}" 
-                     alt="${product.name}" 
+                     alt="${escapeHtml(product.name)}" 
                      class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                      onerror="this.src='https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80'">
             </div>
             <div class="p-4">
                 <div class="flex justify-between items-start mb-2">
-                    <h3 class="font-medium text-gray-900 truncate">${product.name}</h3>
+                    <h3 class="font-medium text-gray-900 truncate">${escapeHtml(product.name)}</h3>
                     ${product.price ? `<span class="text-amber-700 font-bold">$${product.price}</span>` : ''}
                 </div>
-                ${product.description ? `<p class="text-sm text-gray-600 mb-3 line-clamp-2">${product.description}</p>` : ''}
+                ${product.description ? `<p class="text-sm text-gray-600 mb-3 line-clamp-2">${escapeHtml(product.description)}</p>` : ''}
                 <div class="flex gap-2">
                     <button onclick="addToCart('${product.id}', '${escapeHtml(product.name)}', ${product.price || 0}, '${product.image_url}')" 
                             class="flex-1 bg-amber-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-amber-700 transition">
@@ -207,9 +209,9 @@ function openCart() {
         } else {
             itemsContainer.innerHTML = cart.map(item => `
                 <div class="flex gap-4 p-4 bg-white rounded-lg border">
-                    <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded">
+                    <img src="${item.image}" alt="${escapeHtml(item.name)}" class="w-20 h-20 object-cover rounded">
                     <div class="flex-1">
-                        <h4 class="font-medium">${item.name}</h4>
+                        <h4 class="font-medium">${escapeHtml(item.name)}</h4>
                         <p class="text-amber-700 font-bold">$${item.price} × ${item.quantity}</p>
                         <div class="flex items-center gap-2 mt-2">
                             <button onclick="updateCartQuantity('${item.id}', ${item.quantity - 1})" class="w-8 h-8 flex items-center justify-center border rounded">−</button>
@@ -270,7 +272,7 @@ async function viewProductDetail(productId) {
         // Try to get from loaded products first
         product = products.find(p => p.id === productId);
         
-        if (!product && supabase) {
+        if (!product) {
             // Fetch from Supabase
             const { data, error } = await supabase
                 .from('products')
@@ -302,7 +304,7 @@ function openProductDetailModal(product) {
     
     // Update modal content
     document.getElementById('detail-product-name').textContent = product.name;
-    document.getElementById('detail-product-image').src = product.image_url;
+    document.getElementById('detail-product-image').src = product.image_url || 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80';
     document.getElementById('detail-product-description').textContent = product.description || 'No description available.';
     
     const priceInfo = document.getElementById('detail-product-price-info');
@@ -355,22 +357,11 @@ function setupContactForm() {
             };
             
             // Save to Supabase
-            if (supabase) {
-                const { error } = await supabase
-                    .from('inquiries')
-                    .insert([inquiry]);
-                
-                if (error) throw error;
-            } else {
-                // Fallback to API
-                const response = await fetch('/api/inquiry', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(inquiry)
-                });
-                
-                if (!response.ok) throw new Error('API failed');
-            }
+            const { error } = await supabase
+                .from('inquiries')
+                .insert([inquiry]);
+            
+            if (error) throw error;
             
             showToast('Message sent successfully! We will contact you soon.', 'success');
             form.reset();
@@ -446,4 +437,8 @@ window.openCart = openCart;
 window.closeCart = closeCart;
 window.viewProductDetail = viewProductDetail;
 window.closeProductDetail = closeProductDetail;
+window.updateCartQuantity = updateCartQuantity;
+window.removeFromCart = removeFromCart;
 window.showToast = showToast;
+
+console.log('✓ App.js loaded successfully');

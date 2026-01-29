@@ -3,42 +3,28 @@
 // ============================================
 
 // ==================== SUPABASE INITIALIZATION ====================
-// Import Supabase from CDN
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-// Supabase Configuration
 const SUPABASE_URL = 'https://tpvqolkzcbbzlqlzchwc.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwdnFvbGt6Y2JiemxxbHpjaHdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzNjA0MjgsImV4cCI6MjA4MTkzNjQyOH0.AU6ieHN1TSUHgSu7qfvkekvmMySDPJb2zOId4Oy7CeY';
 
-// Initialize Supabase
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-window.supabase = supabase; // Make it globally available
+window.supabase = supabase;
 
 console.log('✓ Supabase initialized:', !!supabase);
 
-// Global State
 let currentUser = null;
 let products = [];
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-// ==================== INITIALIZATION ====================
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('App initializing...');
-    
-    // Initialize mobile menu
     initMobileMenu();
-    
-    // Load products from Supabase
     await loadProductsFromSupabase();
-    
-    // Update cart UI
     updateCartCount();
-    
-    // Setup event listeners
     setupEventListeners();
 });
 
-// ==================== MOBILE MENU ====================
 function initMobileMenu() {
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
@@ -48,7 +34,6 @@ function initMobileMenu() {
             mobileMenu.classList.toggle('hidden');
         });
         
-        // Close menu when clicking links
         mobileMenu.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 mobileMenu.classList.add('hidden');
@@ -57,14 +42,12 @@ function initMobileMenu() {
     }
 }
 
-// ==================== PRODUCT LOADING ====================
 async function loadProductsFromSupabase() {
     const productsGrid = document.getElementById('products-catalog');
     const featuredGrid = document.getElementById('featured-products-grid');
     
     if (!productsGrid && !featuredGrid) return;
     
-    // Show loading state
     if (productsGrid) {
         productsGrid.innerHTML = '<div class="col-span-full text-center py-12"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-amber-700"></div><p class="mt-4 text-gray-600">Loading products...</p></div>';
     }
@@ -72,7 +55,6 @@ async function loadProductsFromSupabase() {
     try {
         console.log('Loading products from Supabase...');
         
-        // Load from Supabase
         const { data, error } = await supabase
             .from('products')
             .select('*')
@@ -84,7 +66,6 @@ async function loadProductsFromSupabase() {
         products = data || [];
         console.log(`✓ Loaded ${products.length} products from Supabase`);
         
-        // Display products
         if (productsGrid) {
             displayProductsInGrid(products, productsGrid);
         }
@@ -97,7 +78,6 @@ async function loadProductsFromSupabase() {
     } catch (error) {
         console.error('❌ Failed to load products:', error);
         
-        // Show error message
         const errorHTML = `
             <div class="col-span-full text-center py-12">
                 <p class="text-gray-600 mb-4">Unable to load products</p>
@@ -150,7 +130,6 @@ function displayProductsInGrid(products, container) {
     `).join('');
 }
 
-// ==================== CART FUNCTIONS ====================
 function addToCart(productId, productName, price, imageUrl) {
     const existingItem = cart.find(item => item.id === productId);
     
@@ -166,16 +145,10 @@ function addToCart(productId, productName, price, imageUrl) {
         });
     }
     
-    // Save to localStorage
     localStorage.setItem('cart', JSON.stringify(cart));
-    
-    // Update UI
     updateCartCount();
-    
-    // Show notification
     showToast(`${productName} added to cart`, 'success');
     
-    // Open cart if on mobile
     if (window.innerWidth < 768) {
         openCart();
     }
@@ -184,7 +157,6 @@ function addToCart(productId, productName, price, imageUrl) {
 function updateCartCount() {
     const count = cart.reduce((total, item) => total + item.quantity, 0);
     
-    // Update all cart count elements
     document.querySelectorAll('#cart-count').forEach(el => {
         if (count > 0) {
             el.textContent = count;
@@ -199,7 +171,6 @@ function openCart() {
     const modal = document.getElementById('cart-modal');
     if (!modal) return;
     
-    // Update cart items display
     const itemsContainer = document.getElementById('cart-items');
     const subtotalEl = document.getElementById('cart-subtotal');
     
@@ -253,7 +224,7 @@ function updateCartQuantity(productId, newQuantity) {
         item.quantity = newQuantity;
         localStorage.setItem('cart', JSON.stringify(cart));
         updateCartCount();
-        openCart(); // Refresh cart display
+        openCart();
     }
 }
 
@@ -261,19 +232,14 @@ function removeFromCart(productId) {
     cart = cart.filter(item => item.id !== productId);
     localStorage.setItem('cart', JSON.stringify(cart));
     updateCartCount();
-    openCart(); // Refresh cart display
+    openCart();
 }
 
-// ==================== PRODUCT DETAILS ====================
 async function viewProductDetail(productId) {
     try {
-        let product;
-        
-        // Try to get from loaded products first
-        product = products.find(p => p.id === productId);
+        let product = products.find(p => p.id === productId);
         
         if (!product) {
-            // Fetch from Supabase
             const { data, error } = await supabase
                 .from('products')
                 .select('*')
@@ -289,7 +255,6 @@ async function viewProductDetail(productId) {
             return;
         }
         
-        // Open modal with product details
         openProductDetailModal(product);
         
     } catch (error) {
@@ -302,7 +267,6 @@ function openProductDetailModal(product) {
     const modal = document.getElementById('product-detail-modal');
     if (!modal) return;
     
-    // Update modal content
     document.getElementById('detail-product-name').textContent = product.name;
     document.getElementById('detail-product-image').src = product.image_url || 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80';
     document.getElementById('detail-product-description').textContent = product.description || 'No description available.';
@@ -332,7 +296,6 @@ function closeProductDetail() {
     }
 }
 
-// ==================== CONTACT FORM ====================
 function setupContactForm() {
     const form = document.getElementById('contact-page-form');
     if (!form) return;
@@ -356,7 +319,6 @@ function setupContactForm() {
                 status: 'new'
             };
             
-            // Save to Supabase
             const { error } = await supabase
                 .from('inquiries')
                 .insert([inquiry]);
@@ -376,7 +338,6 @@ function setupContactForm() {
     });
 }
 
-// ==================== UTILITY FUNCTIONS ====================
 function escapeHtml(text) {
     if (!text) return '';
     const div = document.createElement('div');
@@ -385,7 +346,6 @@ function escapeHtml(text) {
 }
 
 function showToast(message, type = 'success') {
-    // Create toast container if it doesn't exist
     let container = document.querySelector('.toast-container');
     if (!container) {
         container = document.createElement('div');
@@ -393,7 +353,6 @@ function showToast(message, type = 'success') {
         document.body.appendChild(container);
     }
     
-    // Create toast
     const toast = document.createElement('div');
     toast.className = `toast ${type} bg-white border-l-4 px-4 py-3 rounded shadow-lg mb-2 transform translate-x-full transition-transform duration-300`;
     
@@ -404,12 +363,10 @@ function showToast(message, type = 'success') {
     toast.textContent = message;
     container.appendChild(toast);
     
-    // Animate in
     setTimeout(() => {
         toast.style.transform = 'translateX(0)';
     }, 10);
     
-    // Remove after 3 seconds
     setTimeout(() => {
         toast.style.transform = 'translateX(100%)';
         setTimeout(() => toast.remove(), 300);
@@ -417,21 +374,17 @@ function showToast(message, type = 'success') {
 }
 
 function setupEventListeners() {
-    // Cart modal close buttons
     document.querySelectorAll('[onclick="closeCart()"]').forEach(btn => {
         btn.addEventListener('click', closeCart);
     });
     
-    // Product detail modal close
     document.querySelectorAll('[onclick="closeProductDetail()"]').forEach(btn => {
         btn.addEventListener('click', closeProductDetail);
     });
     
-    // Contact form setup
     setupContactForm();
 }
 
-// ==================== GLOBAL EXPORTS ====================
 window.addToCart = addToCart;
 window.openCart = openCart;
 window.closeCart = closeCart;

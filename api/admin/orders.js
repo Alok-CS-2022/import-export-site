@@ -20,7 +20,13 @@ export default async function handler(req, res) {
             case 'GET':
                 const { data: orders, error: getError } = await supabase
                     .from('orders')
-                    .select('*')
+                    .select(`
+                        *,
+                        profiles:user_id (
+                            email,
+                            name
+                        )
+                    `)
                     .order('created_at', { ascending: false });
 
                 if (getError) throw getError;

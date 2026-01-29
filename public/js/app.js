@@ -522,10 +522,6 @@ if (inquiryForm) {
             contactForm.reset();
         }
 
-            messageDiv.textContent = 'Thank you! Your inquiry has been submitted successfully.';
-            messageDiv.className = 'mx-4 sm:mx-6 mb-4 p-3 rounded-lg bg-green-100 text-green-700 text-sm';
-            messageDiv.classList.remove('hidden');
-
             // Clear Cart if it was a bulk order
             if (document.getElementById('inquiry-product-display').value.includes('Bulk Order')) {
                 window.cart = [];

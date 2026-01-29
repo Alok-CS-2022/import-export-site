@@ -167,6 +167,7 @@
                                 <h3 class="text-lg font-bold mb-1">${escapeHtml(order.customer_name || 'No name')}</h3>
                                 <p class="text-sm text-gray-600">${escapeHtml(order.customer_email || 'No email')}</p>
                                 ${order.customer_phone ? `<p class="text-sm text-gray-600">${escapeHtml(order.customer_phone)}</p>` : ''}
+                                ${order.profiles?.email ? `<p class="text-sm text-blue-600">Registered user: ${escapeHtml(order.profiles.email)}</p>` : ''}
                             </div>
                             <span class="px-3 py-1 text-sm rounded-full ${statusColors[order.status] || statusColors.new}">
                                 ${(order.status || 'new').charAt(0).toUpperCase() + (order.status || 'new').slice(1)}

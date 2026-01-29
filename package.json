@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vercel dev"
+    "dev": "vercel dev --listen 3000",
+    "dev:local": "node api/index.js",
+    "dev:vercel": "vercel dev"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",

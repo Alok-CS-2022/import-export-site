@@ -28,17 +28,17 @@ export default async function handler(req, res) {
     }
 
     try {
-        // 1. AUTHENTICATE USER (REQUIRED)
+        // 1. AUTHENTICATE USER (OPTIONAL - allow guest inquiries)
+        let user = null;
         const authHeader = req.headers.authorization;
-        if (!authHeader) {
-            return res.status(401).json({ error: 'You must be logged in to submit an inquiry.' });
-        }
-
-        const token = authHeader.replace('Bearer ', '');
-        const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-
-        if (authError || !user) {
-            return res.status(401).json({ error: 'Invalid session. Please login again.' });
+        
+        if (authHeader) {
+            const token = authHeader.replace('Bearer ', '');
+            const { data: { user: authUser }, error: authError } = await supabase.auth.getUser(token);
+            
+            if (!authError && authUser) {
+                user = authUser;
+            }
         }
 
         // 2. VALIDATE INPUT
@@ -49,11 +49,15 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: errorMessage });
         }
 
-        // 3. PREPARE DATA WITH USER ID
+        // 3. PREPARE DATA WITH USER ID (optional)
         const inquiry = {
-            ...validationResult.data,
-            user_id: user.id
+            ...validationResult.data
         };
+        
+        // Only add user_id if user is authenticated
+        if (user) {
+            inquiry.user_id = user.id;
+        }
 
         // 4. INSERT INTO DB
         const { error } = await supabase.from('orders').insert([inquiry]);

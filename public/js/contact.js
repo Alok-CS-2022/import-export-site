@@ -37,6 +37,12 @@ async function initContactPage() {
             submitBtn.textContent = 'Sending...';
 
             const headers = { 'Content-Type': 'application/json' };
+            
+            // Get authentication token if user is logged in
+            const token = localStorage.getItem('authToken');
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
 
             const response = await fetch('/api/inquiry', {
                 method: 'POST',

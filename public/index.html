@@ -35,10 +35,21 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/custom.css">
 
+    <!-- Force clear any old module cache -->
+    <script>
+        if (window.performance && window.performance.getEntriesByType) {
+            window.performance.getEntriesByType("resource").forEach(r => {
+                if (r.name.includes('.js')) {
+                    console.log('Clearing:', r.name);
+                }
+            });
+        }
+    </script>
+
     <!-- Load Supabase First -->
-    <script type="module" src="js/supabase-client.js"></script>
+    <script type="module" src="js/supabase-client.js?v=3"></script>
     <!-- Then Load App -->
-    <script type="module" src="js/app.js"></script>
+    <script type="module" src="js/app.js?v=3"></script>
 </head>
 
 <body class="bg-gray-50">

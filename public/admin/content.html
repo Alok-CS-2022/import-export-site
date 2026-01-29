@@ -404,19 +404,36 @@
 
                 async function loadCurrentContent() {
                     try {
-                        // Load content from API
-                        const response = await fetch('/api/admin/content')
-                        if (!response.ok) throw new Error('Failed to load content')
-
-                        const result = await response.json()
-                        currentContent = result.data || {}
+                        // Load from API
+                        const response = await fetch('/api/admin/content');
+                        
+                        if (!response.ok) {
+                            throw new Error('Failed to load content from API');
+                        }
+                        
+                        const result = await response.json();
+                        currentContent = result || {};
+                        
+                        console.log('✅ Content loaded from API:', currentContent);
+                        
+                        // Load the appropriate section
+                        if (currentSection) {
+                            selectSection(currentSection);
+                        }
+                        
                     } catch (error) {
-                        console.error('Error loading content:', error)
+                        console.error('Error loading content:', error);
                         // Fall back to localStorage
-                        const localData = localStorage.getItem('site_content')
-                        currentContent = localData ? JSON.parse(localData) : {}
-                        console.log('Loaded content from localStorage:', currentContent)
+                        const localData = localStorage.getItem('site_content');
+                        currentContent = localData ? JSON.parse(localData) : {};
+                        console.log('Loaded content from localStorage:', currentContent);
+                        
+                        // Load the appropriate section
+                        if (currentSection) {
+                            selectSection(currentSection);
+                        }
                     }
+                }
                 }
 
                 window.selectSection = function (section) {

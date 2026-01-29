@@ -5,76 +5,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Products | Import From Nepal</title>
-    <!-- Umami Analytics -->
-    <script defer src="https://cloud.umami.is/script.js"
-        data-website-id="ac82397e-0bc4-4fe6-bac5-42f6b962b391"></script>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="css/custom.css">
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-30N5XW6E4C"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-        gtag('config', 'G-30N5XW6E4C');
-    </script>
-    <style>
-        .product-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
 
-        .product-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        }
-
-        .filter-chip {
-            transition: all 0.2s ease;
-        }
-
-        .filter-chip.active {
-            background-color: #B45309;
-            color: white;
-            border-color: #B45309;
-        }
-
-        .sidebar-sticky {
-            position: sticky;
-            top: 5rem;
-            max-height: calc(100vh - 6rem);
-            overflow-y: auto;
-        }
-    </style>
+    <!-- Load Supabase First -->
+    <script type="module" src="js/supabase-client.js"></script>
+    <!-- Then Load App -->
+    <script type="module" src="js/app.js"></script>
 </head>
 
 <body class="bg-gray-50 flex flex-col min-h-screen">
     <!-- Navigation -->
     <nav class="bg-white shadow-lg fixed w-full z-50 top-0">
-        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-14 sm:h-16">
-                <div class="flex items-center site-logo-container">
-                    <a href="index.html"
-                        class="text-base sm:text-xl md:text-2xl font-bold text-amber-700 leading-tight">Import From
-                        Nepal</a>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-xl font-bold text-amber-700">Import From Nepal</a>
                 </div>
 
-                <div class="hidden md:flex items-center space-x-6 lg:space-x-8">
+                <div class="hidden md:flex items-center space-x-8">
                     <a href="index.html" class="text-gray-700 hover:text-amber-700 transition">Home</a>
-                    <a href="products.html" class="text-amber-700 font-semibold transition">Products</a>
+                    <a href="products.html" class="text-amber-700 font-semibold">Products</a>
                     <a href="contact.html" class="text-gray-700 hover:text-amber-700 transition">Contact</a>
                 </div>
 
-                <!-- Right side icons -->
-                <div class="flex items-center space-x-2 sm:space-x-4">
-                    <button onclick="toggleSearch()" class="p-2 hover:bg-gray-100 rounded-full transition">
-                        <svg class="w-5 h-5 sm:w-6 sm:h-6 text-gray-700" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
-                    </button>
+                <!-- Cart Icon -->
+                <div class="flex items-center space-x-4">
                     <button onclick="openCart()" class="relative p-2 hover:bg-gray-100 rounded-full transition">
-                        <svg class="w-5 h-5 sm:w-6 sm:h-6 text-gray-700" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
+                        <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
                             </path>
@@ -82,7 +44,24 @@
                         <span id="cart-count"
                             class="hidden absolute -top-1 -right-1 bg-amber-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">0</span>
                     </button>
+                    
+                    <!-- Mobile Menu Button -->
+                    <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-gray-100">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+            <div class="px-4 py-3 space-y-3">
+                <a href="index.html" class="block py-2 text-gray-700 hover:text-amber-700 transition">Home</a>
+                <a href="products.html" class="block py-2 text-gray-700 hover:text-amber-700 transition">Products</a>
+                <a href="contact.html" class="block py-2 text-gray-700 hover:text-amber-700 transition">Contact</a>
             </div>
         </div>
     </nav>
@@ -93,7 +72,7 @@
         <div class="mb-8">
             <nav class="text-sm text-gray-500 mb-2">
                 <a href="index.html" class="hover:text-amber-700">Home</a> /
-                <span class="text-gray-900 font-medium">Shop All Masterpieces</span>
+                <span class="text-gray-900 font-medium">Shop All Products</span>
             </nav>
             <h1 class="text-3xl md:text-4xl font-light text-gray-900">Artisan Collection</h1>
         </div>
@@ -101,30 +80,16 @@
         <div class="flex flex-col lg:flex-row gap-8">
             <!-- Sidebar -->
             <aside class="w-full lg:w-64 flex-shrink-0">
-                <div class="sidebar-sticky space-y-8">
-                    <!-- Search -->
-                    <div>
-                        <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Search</h3>
-                        <div class="relative">
-                            <input type="text" id="catalog-search" placeholder="Find a masterpiece..."
-                                class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none transition">
-                            <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                            </svg>
-                        </div>
-                    </div>
-
+                <div class="space-y-8">
                     <!-- Categories -->
                     <div>
                         <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Categories</h3>
                         <div id="category-filters" class="flex flex-wrap lg:flex-col gap-2">
                             <button onclick="filterByCategory('all')"
-                                class="filter-chip active px-4 py-2 border border-gray-200 rounded-full text-sm text-left hover:border-amber-500 transition">
+                                class="px-4 py-2 border border-gray-200 rounded-full text-sm text-left hover:border-amber-500 transition bg-amber-700 text-white">
                                 All Collection
                             </button>
-                            <!-- Dynamically loaded -->
+                            <!-- Categories will be loaded by app.js -->
                         </div>
                     </div>
 
@@ -144,202 +109,86 @@
 
             <!-- Product Grid -->
             <div class="flex-grow">
-                <!-- Active Filters Label -->
-                <div id="active-filters" class="mb-6 flex items-center gap-4 text-sm text-gray-600 hidden">
-                    <span>Showing artifacts in: <strong id="current-category-name"
-                            class="text-amber-800">All</strong></span>
-                    <button onclick="filterByCategory('all')" class="text-blue-600 hover:underline">Clear all</button>
-                </div>
-
                 <div id="products-catalog" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Skeleton Loaders -->
-                    <div class="skeleton-card bg-gray-200 h-96 rounded-2xl animate-pulse"></div>
-                    <div class="skeleton-card bg-gray-200 h-96 rounded-2xl animate-pulse"></div>
-                    <div class="skeleton-card bg-gray-200 h-96 rounded-2xl animate-pulse"></div>
-                </div>
-
-                <!-- Load More / Empty State -->
-                <div id="catalog-footer" class="mt-12 text-center hidden">
-                    <p class="text-gray-500 font-light">End of collection</p>
+                    <!-- Loading state -->
+                    <div class="text-center py-12 col-span-full">
+                        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-amber-700"></div>
+                        <p class="mt-4 text-gray-600">Loading products...</p>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white mt-auto">
-        <!-- Main Footer -->
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+    <footer class="bg-gray-900 text-white mt-auto py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-                <!-- Column 1: About -->
+                <!-- About -->
                 <div>
                     <h3 class="text-xl font-bold mb-4 text-amber-500">Import From Nepal</h3>
                     <p class="text-gray-400 text-sm leading-relaxed mb-6">
-                        Bringing authentic Himalayan handicrafts to the world. Each piece tells a story of tradition and
-                        craftsmanship.
+                        Bringing authentic Himalayan handicrafts to the world.
                     </p>
-                    <!-- Social Icons -->
-                    <div id="footer-social-links" class="flex gap-3">
-                        <a href="#"
-                            class="bg-gray-800 p-2.5 rounded-full hover:bg-amber-600 transition social-facebook">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                            </svg>
-                        </a>
-                        <a href="#"
-                            class="bg-gray-800 p-2.5 rounded-full hover:bg-amber-600 transition social-instagram">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073z" />
-                                <path
-                                    d="M12 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                            </svg>
-                        </a>
-                        <a href="#" class="bg-gray-800 p-2.5 rounded-full hover:bg-amber-600 transition social-twitter">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
-                            </svg>
-                        </a>
-                    </div>
                 </div>
 
-                <!-- Column 2: Quick Links -->
-                <div class="lg:pl-12">
+                <!-- Quick Links -->
+                <div>
                     <h3 class="text-lg font-bold mb-6">Quick Links</h3>
                     <ul class="space-y-4 text-gray-400 text-sm">
                         <li><a href="index.html" class="hover:text-amber-500 transition">Home</a></li>
-                        <li><a href="products.html" class="hover:text-amber-500 transition">All Products</a></li>
-                        <li><a href="contact.html" class="hover:text-amber-500 transition">Contact Us</a></li>
-                        <li><a href="#" class="hover:text-amber-500 transition">Track Order</a></li>
+                        <li><a href="products.html" class="hover:text-amber-500 transition">Products</a></li>
+                        <li><a href="contact.html" class="hover:text-amber-500 transition">Contact</a></li>
                     </ul>
                 </div>
 
-                <!-- Column 3: Customer Service -->
-                <div class="lg:pl-12">
-                    <h3 class="text-lg font-bold mb-6">Customer Service</h3>
+                <!-- Contact -->
+                <div>
+                    <h3 class="text-lg font-bold mb-6">Contact</h3>
                     <ul class="space-y-4 text-gray-400 text-sm">
-                        <li><a href="#" class="hover:text-amber-500 transition">Shipping Policy</a></li>
-                        <li><a href="#" class="hover:text-amber-500 transition">Return & Refund</a></li>
-                        <li><a href="#" class="hover:text-amber-500 transition">Privacy Policy</a></li>
-                        <li><a href="#" class="hover:text-amber-500 transition">FAQ</a></li>
+                        <li>Email: info@importfromnepal.com</li>
+                        <li>Location: Thamel, Kathmandu</li>
+                        <li>Hours: Mon-Fri 9AM-6PM</li>
                     </ul>
                 </div>
             </div>
-        </div>
-
-        <!-- Bottom Bar -->
-        <div class="border-t border-gray-800">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6">
-                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                    <p id="footer-copyright-text" class="text-gray-400 text-sm">&copy; 2025 Import From Nepal. All
-                        rights reserved.</p>
-                </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center">
+                <p class="text-gray-400 text-sm">&copy; 2025 Import From Nepal.</p>
             </div>
         </div>
     </footer>
 
-    <!-- Modals (Cart, Search, Inquiry) -->
-    <div id="cart-modal" class="hidden fixed inset-0 z-[60] overflow-hidden">
-        <div class="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm" onclick="closeCart()"></div>
-        <div id="cart-sidebar"
-            class="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300">
-            <!-- Cart Header -->
+    <!-- Cart Modal -->
+    <div id="cart-modal" class="hidden fixed inset-0 z-50">
+        <div class="absolute inset-0 bg-black bg-opacity-50" onclick="closeCart()"></div>
+        <div id="cart-sidebar" class="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl flex flex-col">
+            <!-- Header -->
             <div class="p-6 border-b flex justify-between items-center">
-                <h2 class="text-2xl font-light">Your Collection</h2>
+                <h2 class="text-2xl font-light">Your Cart</h2>
                 <button onclick="closeCart()" class="text-gray-500 hover:text-black">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
-                        </path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
                 </button>
             </div>
+            
             <!-- Cart Items -->
             <div id="cart-items" class="flex-grow overflow-y-auto p-6 space-y-6">
-                <!-- Dynamic cart items -->
+                <!-- Dynamic content -->
             </div>
-            <!-- Cart Footer -->
+            
+            <!-- Footer -->
             <div class="p-6 border-t bg-gray-50 space-y-4">
                 <div class="flex justify-between text-lg">
-                    <span>Estimate Subtotal:</span>
+                    <span>Subtotal:</span>
                     <span id="cart-subtotal" class="font-semibold text-amber-700">$0.00</span>
                 </div>
-                <button onclick="proceedToCheckout()"
-                    class="w-full bg-amber-700 text-white py-4 rounded-xl font-medium shadow-lg hover:bg-amber-800 transition transform hover:scale-[1.02]">
+                <button onclick="checkout()" class="w-full bg-amber-700 text-white py-4 rounded-xl font-medium hover:bg-amber-800 transition">
                     Proceed to Inquiry
                 </button>
             </div>
         </div>
     </div>
-
-    <!-- Inquiry Modal -->
-    <div id="inquiry-modal"
-        class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
-        <div class="bg-white rounded-lg w-full max-w-md max-h-[95vh] overflow-y-auto mx-2 sm:mx-4">
-            <div
-                class="sticky top-0 bg-white border-b px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center z-10">
-                <h3 class="text-lg sm:text-xl md:text-2xl font-bold">Product Inquiry</h3>
-                <button onclick="closeInquiryModal()"
-                    class="text-gray-500 hover:text-gray-700 text-2xl sm:text-3xl leading-none">&times;</button>
-            </div>
-            <form id="inquiry-form" class="p-4 sm:p-6 space-y-3 sm:space-y-4">
-                <input type="hidden" id="inquiry-product-name" name="product_name">
-                <div>
-                    <label class="block text-xs sm:text-sm font-medium mb-1 sm:mb-2">Product</label>
-                    <input type="text" id="inquiry-product-display" readonly
-                        class="w-full px-3 sm:px-4 py-2 border rounded-lg bg-gray-50 text-sm sm:text-base">
-                </div>
-                <div>
-                    <label class="block text-xs sm:text-sm font-medium mb-1 sm:mb-2">Your Name *</label>
-                    <input type="text" name="customer_name" required
-                        class="w-full px-3 sm:px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 text-sm sm:text-base">
-                </div>
-                <div>
-                    <label class="block text-xs sm:text-sm font-medium mb-1 sm:mb-2">Email *</label>
-                    <input type="email" name="customer_email" required
-                        class="w-full px-3 sm:px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 text-sm sm:text-base">
-                </div>
-                <div>
-                    <label class="block text-xs sm:text-sm font-medium mb-1 sm:mb-2">Phone</label>
-                    <div class="flex gap-2">
-                        <select name="country_code"
-                            class="w-32 sm:w-36 px-2 sm:px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm">
-                            <option value="+977" selected>🇳🇵 +977</option>
-                        </select>
-
-                        <input type="tel" name="customer_phone" placeholder="9812345678"
-                            class="flex-1 px-3 sm:px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 text-sm sm:text-base">
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-xs sm:text-sm font-medium mb-1 sm:mb-2">Message *</label>
-                    <textarea name="message" required rows="3"
-                        class="w-full px-3 sm:px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"></textarea>
-                </div>
-                <div class="flex gap-2 sm:gap-4 pt-2">
-                    <button type="button" onclick="closeInquiryModal()"
-                        class="flex-1 px-4 sm:px-6 py-2 sm:py-3 border rounded-lg hover:bg-gray-50 text-sm sm:text-base font-medium">Cancel</button>
-                    <button type="submit"
-                        class="flex-1 px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm sm:text-base font-medium">Submit</button>
-                </div>
-            </form>
-            <div id="form-message" class="hidden mx-4 sm:mx-6 mb-4 p-3 rounded-lg text-sm"></div>
-        </div>
-    </div>
-
-    <!-- Core Scripts -->
-    <script src="js/ui.js"></script>
-    <script type="module" src="js/app.js"></script>
-    <script type="module" src="js/catalog.js"></script>
-    <script type="module">
-        import { loadSiteContent } from './js/content-loader.js';
-
-        // Initialize content loader
-        document.addEventListener('DOMContentLoaded', () => {
-            loadSiteContent();
-        });
-    </script>
 </body>
-
 </html>

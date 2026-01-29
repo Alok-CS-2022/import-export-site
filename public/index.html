@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Import From Nepal - Authentic Handicrafts</title>
-    <!-- Umami Analytics -->
+    
+    <!-- Analytics (Optional - Remove if not needed) -->
     <script defer src="https://cloud.umami.is/script.js"
         data-website-id="ac82397e-0bc4-4fe6-bac5-42f6b962b391"></script>
-    <meta name="description"
-        content="Authentic handcrafted treasures from Nepal. Shop statues, singing bowls, thangkas, and more directly from artisans in the Himalayas.">
-    <meta name="keywords"
-        content="Nepal handicrafts, singing bowls, buddha statues, thangka painting, himalayan art, authentic nepal export">
+    
+    <!-- Meta Tags -->
+    <meta name="description" content="Authentic handcrafted treasures from Nepal. Shop statues, singing bowls, thangkas, and more directly from artisans in the Himalayas.">
+    <meta name="keywords" content="Nepal handicrafts, singing bowls, buddha statues, thangka painting, himalayan art, authentic nepal export">
     <meta name="author" content="Import From Nepal">
     <meta name="robots" content="index, follow">
 
@@ -19,74 +19,49 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://importfromnepal.com/">
     <meta property="og:title" content="Import From Nepal - Authentic Handicrafts">
-    <meta property="og:description"
-        content="Authentic handcrafted treasures from Nepal. Shop statues, singing bowls, thangkas, and more directly from artisans in the Himalayas.">
-    <meta property="og:image"
-        content="https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=1200&h=630&fit=crop&q=90">
+    <meta property="og:description" content="Authentic handcrafted treasures from Nepal. Shop statues, singing bowls, thangkas, and more directly from artisans in the Himalayas.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=1200&h=630&fit=crop&q=90">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://importfromnepal.com/">
     <meta property="twitter:title" content="Import From Nepal - Authentic Handicrafts">
-    <meta property="twitter:description"
-        content="Authentic handcrafted treasures from Nepal. Shop statues, singing bowls, thangkas, and more directly from artisans in the Himalayas.">
-    <meta property="twitter:image"
-        content="https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=1200&h=630&fit=crop&q=90">
+    <meta property="twitter:description" content="Authentic handcrafted treasures from Nepal. Shop statues, singing bowls, thangkas, and more directly from artisans in the Himalayas.">
+    <meta property="twitter:image" content="https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=1200&h=630&fit=crop&q=90">
 
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="css/custom.css">
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-30N5XW6E4C"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
 
-        gtag('config', 'G-30N5XW6E4C');
-    </script>
-    <!-- Owl Carousel & jQuery -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <!-- Load Supabase First -->
+    <script type="module" src="js/supabase-client.js"></script>
+    <!-- Then Load App -->
+    <script type="module" src="js/app.js"></script>
 </head>
 
 <body class="bg-gray-50">
+    <!-- Navigation -->
     <nav class="bg-white shadow-lg fixed w-full z-50 top-0">
-        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-14 sm:h-16">
-                <div class="flex items-center site-logo-container">
-                    <span class="text-base sm:text-xl md:text-2xl font-bold text-amber-700 leading-tight">Import From
-                        Nepal</span>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-amber-700">Import From Nepal</span>
                 </div>
 
-                <div class="hidden md:flex items-center space-x-6 lg:space-x-8">
-                    <a href="index.html" class="text-amber-700 font-semibold transition">Home</a>
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="text-amber-700 font-semibold">Home</a>
                     <a href="products.html" class="text-gray-700 hover:text-amber-700 transition">Products</a>
                     <a href="contact.html" class="text-gray-700 hover:text-amber-700 transition">Contact</a>
                 </div>
 
-                <!-- Right side icons -->
-                <div class="flex items-center space-x-2 sm:space-x-4">
-                    <!-- Wishlist Icon -->
-
-                    <!-- Wishlist Icon -->
-                    <button onclick="openWishlist()"
-                        class="relative p-2 hover:bg-gray-100 rounded-full transition hidden sm:block">
-                        <svg class="w-5 h-5 sm:w-6 sm:h-6 text-gray-700" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
-                            </path>
-                        </svg>
-                        <span id="wishlist-count"
-                            class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">0</span>
-                    </button>
-
+                <!-- Cart & Mobile Menu -->
+                <div class="flex items-center space-x-4">
                     <!-- Cart Icon -->
                     <button onclick="openCart()" class="relative p-2 hover:bg-gray-100 rounded-full transition">
-                        <svg class="w-5 h-5 sm:w-6 sm:h-6 text-gray-700" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
+                        <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
                             </path>
@@ -106,1032 +81,211 @@
             </div>
         </div>
 
-        <!-- Search Bar (Hidden by default) -->
-        <div id="search-bar" class="hidden border-t bg-gray-50 py-3 px-4">
-            <div class="max-w-3xl mx-auto">
-                <input type="text" id="search-input" placeholder="Search products..."
-                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                    oninput="searchProducts(this.value)">
-            </div>
-        </div>
-
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
             <div class="px-4 py-3 space-y-3">
                 <a href="index.html" class="block py-2 text-gray-700 hover:text-amber-700 transition">Home</a>
                 <a href="products.html" class="block py-2 text-gray-700 hover:text-amber-700 transition">Products</a>
                 <a href="contact.html" class="block py-2 text-gray-700 hover:text-amber-700 transition">Contact</a>
-                <button onclick="openWishlist()"
-                    class="w-full text-left py-2 text-gray-700 hover:text-amber-700 transition sm:hidden">
-                    Wishlist (<span id="wishlist-count-mobile">0</span>)
-                </button>
             </div>
         </div>
     </nav>
 
-    <section id="home" class="pt-14 sm:pt-16 relative overflow-hidden min-h-screen flex items-center">
-        <!-- Animated Gradient Background -->
+    <!-- Hero Section -->
+    <section class="pt-20 pb-16 px-4 relative overflow-hidden">
         <div class="absolute inset-0 bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 animate-gradient"></div>
-
-        <!-- Floating Particles -->
-        <div class="absolute inset-0 overflow-hidden pointer-events-none">
-            <div class="particle-float" style="left: 5%; animation-delay: 0s;"></div>
-            <div class="particle-float" style="left: 15%; animation-delay: 2s;"></div>
-            <div class="particle-float" style="left: 25%; animation-delay: 4s;"></div>
-            <div class="particle-float" style="left: 35%; animation-delay: 1s;"></div>
-            <div class="particle-float" style="left: 45%; animation-delay: 3s;"></div>
-            <div class="particle-float" style="left: 55%; animation-delay: 5s;"></div>
-            <div class="particle-float" style="left: 65%; animation-delay: 2.5s;"></div>
-            <div class="particle-float" style="left: 75%; animation-delay: 4.5s;"></div>
-            <div class="particle-float" style="left: 85%; animation-delay: 1.5s;"></div>
-            <div class="particle-float" style="left: 95%; animation-delay: 3.5s;"></div>
-        </div>
-
-        <!-- Ambient Light Orbs -->
-        <div
-            class="absolute top-20 left-20 w-96 h-96 bg-amber-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob">
-        </div>
-        <div
-            class="absolute top-40 right-20 w-96 h-96 bg-orange-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000">
-        </div>
-        <div
-            class="absolute bottom-20 left-40 w-96 h-96 bg-red-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000">
-        </div>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <!-- Split Layout -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center py-12 lg:py-20">
-
-                <!-- LEFT: Hero Image with Parallax -->
-                <div class="relative order-2 lg:order-1 hero-image-container">
-                    <div
-                        class="relative aspect-square rounded-2xl overflow-hidden shadow-2xl transform transition-transform duration-700 hover:scale-105">
-                        <!-- Glow effect behind image -->
-                        <div
-                            class="absolute -inset-4 bg-gradient-to-r from-amber-400 via-orange-400 to-red-400 rounded-2xl blur-2xl opacity-30 animate-pulse-slow">
-                        </div>
-
-                        <!-- Main image with tilt effect -->
-                        <div
-                            class="relative rounded-2xl overflow-hidden bg-gradient-to-br from-stone-50 to-amber-50 image-3d-tilt">
-                            <img src="https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=1200&h=1200&fit=crop&q=90"
-                                alt="Handcrafted Nepalese Handicrafts"
-                                class="hero-image w-full h-full object-cover transform transition-transform duration-700"
-                                onerror="this.src='https://images.unsplash.com/photo-1582719366955-bfb54a72b2fc?w=1200&h=1200&fit=crop&q=90'">
-
-                            <!-- Shimmer effect overlay -->
-                            <div class="absolute inset-0 shimmer-effect"></div>
-                        </div>
-                    </div>
-
-                    <!-- Floating Badge -->
-                    <div
-                        class="absolute bottom-6 right-6 bg-white/95 backdrop-blur-xl px-6 py-3 rounded-full shadow-2xl animate-float border-2 border-amber-200">
-                        <span class="text-sm font-semibold text-amber-900 flex items-center gap-2">
-                            <span class="animate-pulse">🇳🇵</span>
-                            Made in Nepal
-                        </span>
-                    </div>
-
-                    <!-- Decorative rings -->
-                    <div
-                        class="absolute -top-4 -left-4 w-24 h-24 border-4 border-amber-400 rounded-full opacity-20 animate-spin-slow">
-                    </div>
-                    <div
-                        class="absolute -bottom-4 -right-4 w-32 h-32 border-4 border-orange-400 rounded-full opacity-20 animate-spin-reverse">
+        
+        <div class="max-w-7xl mx-auto relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <!-- Left: Content -->
+                <div class="text-center lg:text-left">
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-light text-gray-900 leading-tight mb-6">
+                        Handcrafted in the <span class="font-normal text-amber-800">Himalayas</span>
+                    </h1>
+                    <p class="text-lg text-gray-600 mb-10 leading-relaxed">
+                        Authentic Nepalese crafts made by skilled artisans using centuries-old traditions.
+                    </p>
+                    <a href="products.html" class="inline-block bg-amber-800 text-white px-8 py-4 rounded-lg font-medium text-lg hover:bg-amber-900 transition shadow-lg">
+                        Explore Collection
+                    </a>
+                </div>
+                
+                <!-- Right: Image -->
+                <div class="relative">
+                    <div class="aspect-square rounded-2xl overflow-hidden shadow-2xl">
+                        <img src="https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=1200&h=1200&fit=crop&q=90" 
+                             alt="Handcrafted Nepalese Handicrafts" 
+                             class="w-full h-full object-cover">
                     </div>
                 </div>
-
-                <!-- RIGHT: Content with Text Animation -->
-                <div class="order-1 lg:order-2 text-center lg:text-left">
-                    <div class="max-w-xl mx-auto lg:mx-0">
-
-                        <!-- Eyebrow text with slide-in -->
-                        <p class="text-sm font-medium text-amber-700 tracking-wider uppercase mb-4 animate-slide-in-up opacity-0"
-                            style="animation-delay: 0.2s;">
-                            Artisan Handicrafts
-                        </p>
-
-                        <!-- Large headline with staggered letter animation -->
-                        <h1
-                            class="hero-title text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-light text-gray-900 leading-tight mb-6">
-                            <span class="inline-block animate-slide-in-up opacity-0"
-                                style="animation-delay: 0.3s;">Handcrafted</span>
-                            <span class="inline-block animate-slide-in-up opacity-0"
-                                style="animation-delay: 0.4s;">in</span>
-                            <span class="inline-block animate-slide-in-up opacity-0"
-                                style="animation-delay: 0.5s;">the</span>
-                            <span class="block font-normal text-amber-800 mt-2">
-                                <span class="inline-block animate-slide-in-up opacity-0"
-                                    style="animation-delay: 0.6s;">Himalayas</span>
-                            </span>
-                        </h1>
-
-                        <!-- Description with fade-in -->
-                        <p class="hero-subtitle text-base sm:text-lg text-gray-600 mb-10 leading-relaxed max-w-md mx-auto lg:mx-0 animate-fade-in opacity-0"
-                            style="animation-delay: 0.7s;">
-                            Authentic Nepalese crafts made by skilled artisans using centuries-old traditions.
-                        </p>
-
-                        <!-- CTAs with staggered animation -->
-                        <div class="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start animate-fade-in opacity-0"
-                            style="animation-delay: 0.8s;">
-                            <a href="products.html"
-                                class="hero-button group relative inline-flex items-center justify-center bg-amber-800 text-white px-8 py-4 rounded-lg font-medium text-base overflow-hidden transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:-translate-y-1">
-                                <!-- Shine effect -->
-                                <div
-                                    class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-30 transform -skew-x-12 group-hover:translate-x-full transition-all duration-700">
-                                </div>
-                                <span class="relative">Explore Collection</span>
-                                <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform"
-                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                                </svg>
-                            </a>
-                            <a href="#featured-products"
-                                class="group inline-flex items-center justify-center bg-white text-gray-900 px-8 py-4 rounded-lg font-medium text-base border-2 border-gray-300 hover:border-amber-700 hover:text-amber-900 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1">
-                                Discover Masterpieces
-                                <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform"
-                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-                                </svg>
-                            </a>
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <!-- Scroll indicator -->
-        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-            <svg class="w-6 h-6 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3">
-                </path>
-            </svg>
-        </div>
-    </section>
-
-    <!-- Category Showcase [NEW] -->
-    <section class="py-24 bg-white overflow-hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6">
-
-
-            <div id="category-showcase" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Loaded via home.js -->
             </div>
         </div>
     </section>
 
-    <!-- Featured Products Section -->
-    <section id="featured-products" class="py-24 bg-gradient-to-br from-stone-50 to-amber-50">
+    <!-- Featured Products -->
+    <section id="featured-products" class="py-16 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6">
-            <div class="text-center mb-16 scroll-reveal">
-                <p class="text-sm tracking-widest uppercase text-amber-700 mb-3 font-light">Curator's Selection</p>
-                <h2 class="text-4xl md:text-5xl font-light text-gray-900 leading-tight">
-                    Featured <span class="italic font-normal text-amber-800">Masterpieces</span>
-                </h2>
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-light text-gray-900">Featured <span class="italic font-normal text-amber-800">Masterpieces</span></h2>
             </div>
-
+            
             <div id="featured-products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Products will be loaded here by home.js -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Himalayan Anti-Gravity Collection Slider [ARCHITECT SPEC] -->
-    <section class="himalayan-slider py-24 bg-stone-50 overflow-hidden relative"
-        data-agent-component="anti-gravity-slider">
-        <!-- Scoped Component Styles -->
-        <style>
-            .himalayan-slider {
-                --saffron-red: #DC2626;
-                --amber-800: #92400E;
-                --ease-spec: cubic-bezier(0.2, 0.8, 0.3, 1);
-            }
-
-            .himalayan-slider .slider-viewport {
-                position: relative;
-                width: 100%;
-                max-width: 1400px;
-                margin: 0 auto;
-                perspective: 1200px;
-            }
-
-            .himalayan-slider .slider-stage {
-                display: flex;
-                transition: transform 0.8s var(--ease-spec);
-            }
-
-            .himalayan-slider .agent-slide {
-                flex: 0 0 100%;
-                padding: 0 1.5rem;
-                opacity: 0;
-                transform: translateY(20px) scale(0.98);
-                transition: opacity 0.6s var(--ease-spec), transform 0.6s var(--ease-spec);
-                will-change: transform, opacity;
-            }
-
-            /* Entry Physics Matches Specification */
-            .himalayan-slider .agent-slide.active-physics {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-
-            .himalayan-slider .slide-inner {
-                position: relative;
-                border-radius: 3rem;
-                overflow: hidden;
-                aspect-ratio: 16/7;
-                display: flex;
-                background: #1a1a1a;
-                box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.25);
-            }
-
-            .himalayan-slider .slide-visual {
-                width: 50%;
-                position: relative;
-                overflow: hidden;
-            }
-
-            .himalayan-slider .slide-image {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                transition: transform 1.2s var(--ease-spec);
-            }
-
-            /* Integration with existing image-3d-tilt system */
-            .himalayan-slider .agent-slide:hover .slide-image {
-                transform: scale(1.08);
-            }
-
-            .himalayan-slider .slide-info {
-                width: 50%;
-                padding: 4rem;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                background: linear-gradient(135deg, #1C1C1C 0%, #111 100%);
-                position: relative;
-                z-index: 2;
-            }
-
-            /* Saffron Accent - Reusing site colors */
-            .himalayan-slider .accent-pill {
-                background-color: var(--saffron-red);
-                color: white;
-                padding: 0.5rem 1.25rem;
-                border-radius: 99px;
-                font-size: 0.75rem;
-                text-transform: uppercase;
-                letter-spacing: 0.1em;
-                width: fit-content;
-                margin-bottom: 2rem;
-            }
-
-            .himalayan-slider .slide-title {
-                font-size: clamp(2rem, 5vw, 4rem);
-                font-weight: 300;
-                color: white;
-                line-height: 1.1;
-                margin-bottom: 1.5rem;
-            }
-
-            .himalayan-slider .slide-desc {
-                color: #a1a1aa;
-                font-size: 1.125rem;
-                line-height: 1.6;
-                max-width: 400px;
-                margin-bottom: 2.5rem;
-            }
-
-            /* Re-using existing product-glow logic */
-            .himalayan-slider .btn-glow {
-                display: inline-flex;
-                align-items: center;
-                gap: 0.75rem;
-                background-color: transparent;
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                color: white;
-                padding: 1rem 2.5rem;
-                border-radius: 1rem;
-                transition: all 0.3s ease;
-            }
-
-            .himalayan-slider .btn-glow:hover {
-                background: white;
-                color: black;
-                box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-            }
-
-            /* Custom particles-overlay system re-use */
-            .particles-overlay {
-                position: absolute;
-                inset: 0;
-                pointer-events: none;
-                z-index: 1;
-            }
-
-            /* Dots Navigation */
-            .himalayan-slider .dots-container {
-                display: flex;
-                justify-content: center;
-                gap: 0.75rem;
-                margin-top: 3rem;
-            }
-
-            .himalayan-slider .dot {
-                width: 12px;
-                height: 12px;
-                border: 2px solid #e5e7eb;
-                border-radius: 50%;
-                cursor: pointer;
-                transition: all 0.4s ease;
-            }
-
-            .himalayan-slider .dot.active {
-                background: var(--amber-800);
-                border-color: var(--amber-800);
-                transform: scale(1.2);
-            }
-
-            /* Mobile Guardrails */
-            @media (max-width: 768px) {
-                .himalayan-slider .slide-inner {
-                    flex-direction: column;
-                    aspect-ratio: auto;
-                    min-height: 600px;
-                }
-
-                .himalayan-slider .slide-visual {
-                    width: 100%;
-                    height: 250px;
-                }
-
-                .himalayan-slider .slide-info {
-                    width: 100%;
-                    padding: 2rem;
-                }
-
-                .himalayan-slider .slide-title {
-                    font-size: 2.5rem;
-                }
-            }
-        </style>
-
-        <div class="slider-viewport scroll-reveal">
-            <!-- Reuse Particle System -->
-            <div class="particles-overlay">
-                <div class="particle-float" style="left: 10%; animation-delay: 0s; opacity: 0.3;"></div>
-                <div class="particle-float" style="left: 30%; animation-delay: 2s; opacity: 0.2;"></div>
-                <div class="particle-float" style="left: 50%; animation-delay: 4s; opacity: 0.3;"></div>
-                <div class="particle-float" style="left: 70%; animation-delay: 1s; opacity: 0.2;"></div>
-                <div class="particle-float" style="left: 90%; animation-delay: 3s; opacity: 0.3;"></div>
-            </div>
-
-            <div class="slider-stage" id="anti-gravity-track">
-                <!-- Dynamic slider content loaded by content-loader.js -->
-                <div class="agent-slide active-physics" data-agent-slide data-agent-index="0"
-                    data-agent-title="Loading..."
-                    data-agent-description="Content loading...">
-                    <div class="slide-inner">
-                        <div class="slide-visual">
-                            <div class="w-full h-full bg-gray-200 animate-pulse flex items-center justify-center">
-                                <span class="text-gray-500">Loading...</span>
-                            </div>
-                        </div>
-                        <div class="slide-info">
-                            <div class="accent-pill">Loading</div>
-                            <h3 class="slide-title">Content <span class="italic text-amber-500">Loading</span></h3>
-                            <p class="slide-desc">Please wait while we load the latest content...</p>
-                            <a href="products.html" class="btn-glow">Browse Products</a>
-                        </div>
-                    </div>
+                <!-- Products will be loaded here by app.js -->
+                <div class="text-center py-12">
+                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-amber-700"></div>
+                    <p class="mt-4 text-gray-600">Loading products...</p>
                 </div>
             </div>
-
-            <!-- Dots -->
-            <div class="dots-container" id="anti-gravity-dots">
-                <div class="dot active" onclick="gravSlide(0)"></div>
-            </div>
         </div>
-
-        <script>
-            /**
-             * Anti-Gravity Slider Integration
-             * Senior Architect v9.3 Certified
-             */
-            (function () {
-                let currentIdx = 0;
-                const slides = document.querySelectorAll('.agent-slide');
-                const dots = document.querySelectorAll('.dot');
-                const track = document.getElementById('anti-gravity-track');
-                const total = slides.length;
-
-                window.gravSlide = function (target) {
-                    currentIdx = target;
-                    // Physics and Animation
-                    track.style.transform = `translateX(-${currentIdx * 100}%)`;
-
-                    slides.forEach((s, i) => {
-                        s.classList.toggle('active-physics', i === currentIdx);
-                    });
-
-                    dots.forEach((d, i) => {
-                        d.classList.toggle('active', i === currentIdx);
-                    });
-                };
-
-                // Auto-rotation Logic
-                let timer = setInterval(() => {
-                    const next = (currentIdx + 1) % total;
-                    gravSlide(next);
-                }, 6000);
-
-                // Pause on Interaction
-                const widget = document.getElementById('anti-gravity-track');
-                widget.addEventListener('mouseenter', () => clearInterval(timer));
-                widget.addEventListener('mouseleave', () => {
-                    timer = setInterval(() => {
-                        const next = (currentIdx + 1) % total;
-                        gravSlide(next);
-                    }, 6000);
-                });
-
-                // Attach to site's existing scrollReveal pattern
-                document.addEventListener('scrollReveal:ready', () => {
-                    console.log('Slider initialized via ScrollReveal Hook');
-                    gravSlide(0);
-                });
-
-                // Dispatch hook if the core system is already loaded
-                if (document.readyState === 'complete' || document.readyState === 'interactive') {
-                    document.dispatchEvent(new CustomEvent('scrollReveal:ready'));
-                }
-            })();
-        </script>
     </section>
 
-
-    <!-- Why Choose Us [NEW] -->
-    <section class="py-24 bg-white">
+    <!-- Why Choose Us -->
+    <section class="py-16 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6">
-            <div class="text-center mb-16 scroll-reveal">
-                <p class="text-xs tracking-widest uppercase text-amber-700 mb-3 font-medium">Why Shop With Us</p>
-                <h2 id="why-choose-us-title" class="text-4xl md:text-5xl font-light text-gray-900 leading-tight">Why
-                    Collectors <span class="italic text-amber-800">Choose Us</span></h2>
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-light text-gray-900">Why Collectors <span class="italic text-amber-800">Choose Us</span></h2>
             </div>
-            <div id="why-choose-us-items" class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
-                <!-- Default Premium Content (Populated while loading) -->
-                <div
-                    class="group p-10 bg-white rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-2xl hover:border-amber-100 transition-all duration-500 hover:-translate-y-2 scroll-reveal">
-                    <div
-                        class="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center text-3xl mb-8 group-hover:scale-110 group-hover:bg-amber-100 transition-all">
-                        ✨</div>
-                    <h3 class="text-2xl font-light text-gray-900 mb-4">Authentic Heritage</h3>
-                    <p class="text-gray-600 font-light leading-relaxed">Every artifact is verified for its cultural
-                        authenticity and handcrafted origin by master artisans.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-2xl shadow-sm text-center">
+                    <div class="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center text-3xl mb-6 mx-auto">✨</div>
+                    <h3 class="text-xl font-light text-gray-900 mb-4">Authentic Heritage</h3>
+                    <p class="text-gray-600">Every artifact is verified for its cultural authenticity and handcrafted origin.</p>
                 </div>
-
-                <div class="group p-10 bg-white rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-2xl hover:border-amber-100 transition-all duration-500 hover:-translate-y-2 scroll-reveal"
-                    style="transition-delay: 100ms;">
-                    <div
-                        class="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center text-3xl mb-8 group-hover:scale-110 group-hover:bg-amber-100 transition-all">
-                        🤝</div>
-                    <h3 class="text-2xl font-light text-gray-900 mb-4">Fair Trade Ethics</h3>
-                    <p class="text-gray-600 font-light leading-relaxed">We bypass middlemen to ensure that artisans
-                        receive the majority of the profits for their devotion.</p>
+                
+                <div class="bg-white p-8 rounded-2xl shadow-sm text-center">
+                    <div class="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center text-3xl mb-6 mx-auto">🤝</div>
+                    <h3 class="text-xl font-light text-gray-900 mb-4">Fair Trade Ethics</h3>
+                    <p class="text-gray-600">Artisans receive the majority of the profits for their devotion.</p>
                 </div>
-
-                <div class="group p-10 bg-white rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-2xl hover:border-amber-100 transition-all duration-500 hover:-translate-y-2 scroll-reveal"
-                    style="transition-delay: 200ms;">
-                    <div
-                        class="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center text-3xl mb-8 group-hover:scale-110 group-hover:bg-amber-100 transition-all">
-                        🌎</div>
-                    <h3 class="text-2xl font-light text-gray-900 mb-4">Global Reach</h3>
-                    <p class="text-gray-600 font-light leading-relaxed">Museum-grade packaging and reliable worldwide
-                        delivery through our trusted logistics partners.</p>
+                
+                <div class="bg-white p-8 rounded-2xl shadow-sm text-center">
+                    <div class="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center text-3xl mb-6 mx-auto">🌎</div>
+                    <h3 class="text-xl font-light text-gray-900 mb-4">Global Reach</h3>
+                    <p class="text-gray-600">Museum-grade packaging and reliable worldwide delivery.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Impact Stats [NEW] -->
-    <section id="impact-stats" class="py-24 bg-amber-900 text-white relative overflow-hidden">
-        <div
-            class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1600&q=80')] bg-cover bg-center opacity-10 grayscale">
-        </div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-12 text-center">
-                <div class="space-y-4">
-                    <div class="text-4xl md:text-6xl font-medium stat-number" id="stat-happy-customers" data-target="20"
-                        data-suffix="+">20+</div>
-                    <p class="text-amber-200/60 uppercase tracking-[0.2em] text-[10px] font-medium">Happy Patrons</p>
-                </div>
-                <div class="space-y-4">
-                    <div class="text-4xl md:text-6xl font-medium stat-number" id="stat-products-sold" data-target="500"
-                        data-suffix="+">500+</div>
-                    <p class="text-amber-200/60 uppercase tracking-[0.2em] text-[10px] font-medium">Artifacts Exported
-                    </p>
-                </div>
-                <div class="space-y-4">
-                    <div class="text-4xl md:text-6xl font-medium stat-number" id="stat-years-business" data-target="15"
-                        data-suffix="+">15+</div>
-                    <p class="text-amber-200/60 uppercase tracking-[0.2em] text-[10px] font-medium">Years of Heritage
-                    </p>
-                </div>
-                <div class="space-y-4">
-                    <div class="text-4xl md:text-6xl font-medium stat-number" id="stat-avg-rating" data-target="4.8"
-                        data-suffix="+">4.8+</div>
-                    <p class="text-amber-200/60 uppercase tracking-[0.2em] text-[10px] font-medium">Average Rating</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonial Slider [NEW] -->
-    <section class="py-24 bg-stone-50 overflow-hidden">
-        <div class="max-w-5xl mx-auto px-4 sm:px-6">
-            <div class="text-center mb-16 scroll-reveal">
-                <p class="text-sm tracking-widest uppercase text-amber-700 mb-3 font-light">Patron Voices</p>
-                <h2 class="text-4xl font-light text-gray-900">What the <span
-                        class="italic font-normal text-amber-800">World</span> Says</h2>
-            </div>
-
-            <div id="testimonials-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8 scroll-reveal">
-                <!-- Static Fallback / Placeholder Cards -->
-                <div
-                    class="p-8 bg-white rounded-3xl border border-stone-100 shadow-sm hover:shadow-xl transition-all duration-500">
-                    <div class="flex text-amber-500 mb-4">★★★★★</div>
-                    <p class="text-gray-700 italic mb-6 leading-relaxed">"The attention to detail in the Thangka
-                        painting I received is breathtaking. A true masterpiece that radiates spiritual energy."</p>
-                    <div class="flex items-center gap-4">
-                        <div
-                            class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center text-amber-800 font-bold">
-                            RP</div>
-                        <div>
-                            <h4 class="text-gray-900 font-medium">Rythem Phuyal</h4>
-                            <p class="text-amber-800 text-xs tracking-widest uppercase">Verified Collector</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div
-                    class="p-8 bg-white rounded-3xl border border-stone-100 shadow-sm hover:shadow-xl transition-all duration-500">
-                    <div class="flex text-amber-500 mb-4">★★★★★</div>
-                    <p class="text-gray-700 italic mb-6 leading-relaxed">"Exceptional service and museum-grade
-                        packaging. The singing bowl's resonance is pure and healing. Truly high-quality artifacts."</p>
-                    <div class="flex items-center gap-4">
-                        <div
-                            class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center text-amber-800 font-bold">
-                            AS</div>
-                        <div>
-                            <h4 class="text-gray-900 font-medium">Aabishkhar Shrestha</h4>
-                            <p class="text-amber-800 text-xs tracking-widest uppercase">Artisanal Patron</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Latest Stories (Blog) [NEW] -->
-    <section class="py-24 bg-white border-t border-stone-100">
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6">
-            <div class="flex justify-between items-end mb-16 px-4">
-                <div>
-                    <p class="text-sm tracking-widest uppercase text-amber-700 mb-3 font-light">Craftsman Chronicles</p>
-                    <h2 class="text-4xl font-light text-gray-900">Latest <span
-                            class="italic font-normal text-amber-800">Stories</span></h2>
-                </div>
-                <a href="/blog" class="text-amber-800 font-medium hover:underline hidden sm:block">Explore All
-                    Stories</a>
-            </div>
-
-            <div id="blog-stories-grid" class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                <!-- Blog stories will be loaded dynamically from content management -->
-                <!-- Default fallback content -->
-                <article class="group">
-                    <div
-                        class="aspect-[4/5] overflow-hidden rounded-2xl mb-6 shadow-md group-hover:shadow-xl transition-all duration-500">
-                        <img src="https://images.unsplash.com/photo-1582719366955-bfb54a72b2fc?w=800&q=100"
-                            alt="Singing Bowls"
-                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-                    </div>
-                    <p class="text-xs tracking-widest uppercase text-gray-400 mb-2">Tradition</p>
-                    <h3
-                        class="text-2xl font-light text-gray-900 mb-3 group-hover:text-amber-800 transition-colors leading-tight">
-                        The Resonance of Seven Metals: Singing Bowl Secrets</h3>
-                    <p class="text-gray-600 font-light text-sm line-clamp-2">Discover the ancient metallurgical secrets
-                        behind the healing vibrations of Himalayan singing bowls.</p>
-                </article>
-
-                <article class="group">
-                    <div
-                        class="aspect-[4/5] overflow-hidden rounded-2xl mb-6 shadow-md group-hover:shadow-xl transition-all duration-500">
-                        <img src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&q=100"
-                            alt="Kathmandu Artisans"
-                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-                    </div>
-                    <p class="text-xs tracking-widest uppercase text-gray-400 mb-2">Artisans</p>
-                    <h3
-                        class="text-2xl font-light text-gray-900 mb-3 group-hover:text-amber-800 transition-colors leading-tight">
-                        Preserving Heritage: The Copper Smiths of Patan</h3>
-                    <p class="text-gray-600 font-light text-sm line-clamp-2">Meet the families who have perfected the
-                        art of copper sculpture over ten generations in Nepal.</p>
-                </article>
-
-                <article class="group">
-                    <div
-                        class="aspect-[4/5] overflow-hidden rounded-2xl mb-6 shadow-md group-hover:shadow-xl transition-all duration-500">
-                        <img src="https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=100"
-                            alt="Thangka Art"
-                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-                    </div>
-                    <p class="text-xs tracking-widest uppercase text-gray-400 mb-2">Symbolism</p>
-                    <h3
-                        class="text-2xl font-light text-gray-900 mb-3 group-hover:text-amber-800 transition-colors leading-tight">
-                        Mandala Meditation: Decoding Sacred Geometry</h3>
-                    <p class="text-gray-600 font-light text-sm line-clamp-2">A deep dive into the mathematical precision
-                        and spiritual significance of Thangka mandala paintings.</p>
-                </article>
-            </div>
-
-            <div class="mt-12 text-center sm:hidden">
-                <a href="/blog" class="text-amber-800 font-medium hover:underline">Explore All Stories</a>
-            </div>
-        </div>
-    </section>
-
-
-    <!-- Shopping Cart Modal -->
-    <div id="cart-modal" class="hidden fixed inset-0 z-50">
-        <!-- Backdrop -->
-        <div class="absolute inset-0 bg-black bg-opacity-50 transition-opacity" onclick="closeCart()"></div>
-
-        <!-- Cart Sidebar (slides from right) -->
-        <div id="cart-sidebar"
-            class="absolute right-0 top-0 h-full w-full sm:w-[480px] bg-white shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col">
-            <!-- Header -->
-            <div class="flex items-center justify-between p-6 border-b">
-                <h2 class="text-2xl font-bold text-gray-900">Shopping Cart</h2>
-                <button onclick="closeCart()" class="p-2 hover:bg-gray-100 rounded-full transition">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Cart Items (scrollable) -->
-            <div id="cart-items" class="flex-1 overflow-y-auto p-6 space-y-4">
-                <!-- Items will be inserted here by JavaScript -->
-            </div>
-
-            <!-- Footer with Subtotal -->
-            <div class="border-t p-6 space-y-4 bg-gray-50">
-                <div class="flex justify-between items-center text-lg">
-                    <span class="font-semibold text-gray-700">Subtotal:</span>
-                    <span id="cart-subtotal" class="text-2xl font-bold text-gray-900">$0.00</span>
-                </div>
-                <button onclick="proceedToCheckout()"
-                    class="w-full bg-gray-900 text-white py-4 rounded-lg font-bold text-lg hover:bg-gray-800 transition shadow-lg">
-                    Proceed to Checkout
-                </button>
-                <button onclick="closeCart()"
-                    class="w-full border-2 border-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:border-gray-400 transition">
-                    Continue Shopping
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Wishlist Modal -->
-    <div id="wishlist-modal" class="hidden fixed inset-0 z-50">
-        <!-- Backdrop -->
-        <div class="absolute inset-0 bg-black bg-opacity-50 transition-opacity" onclick="closeWishlist()"></div>
-
-        <!-- Wishlist Sidebar (slides from right) -->
-        <div id="wishlist-sidebar"
-            class="absolute right-0 top-0 h-full w-full sm:w-[480px] bg-white shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col">
-            <!-- Header -->
-            <div class="flex items-center justify-between p-6 border-b">
-                <h2 class="text-2xl font-bold text-gray-900">Your Wishlist</h2>
-                <button onclick="closeWishlist()" class="p-2 hover:bg-gray-100 rounded-full transition">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Wishlist Items (scrollable) -->
-            <div id="wishlist-items" class="flex-1 overflow-y-auto p-6 space-y-4">
-                <!-- Items will be inserted here by JavaScript -->
-            </div>
-
-            <!-- Footer -->
-            <div class="border-t p-6 bg-gray-50">
-                <button onclick="closeWishlist()"
-                    class="w-full border-2 border-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:border-gray-400 transition">
-                    Continue Shopping
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <footer class="bg-gray-900 text-white">
-        <!-- Main Footer -->
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-                <!-- Column 1: About -->
+                <!-- About -->
                 <div>
                     <h3 class="text-xl font-bold mb-4 text-amber-500">Import From Nepal</h3>
                     <p class="text-gray-400 text-sm leading-relaxed mb-6">
-                        Bringing authentic Himalayan handicrafts to the world. Each piece tells a story of tradition and
-                        craftsmanship.
+                        Bringing authentic Himalayan handicrafts to the world. Each piece tells a story of tradition and craftsmanship.
                     </p>
-                    <!-- Social Icons -->
-                    <div id="footer-social-links" class="flex gap-3">
-                        <a href="#" class="bg-gray-800 p-2.5 rounded-full hover:bg-amber-600 transition">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                            </svg>
-                        </a>
-                        <a href="#" class="bg-gray-800 p-2.5 rounded-full hover:bg-amber-600 transition">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073z" />
-                                <path
-                                    d="M12 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                            </svg>
-                        </a>
-                        <a href="#" class="bg-gray-800 p-2.5 rounded-full hover:bg-amber-600 transition">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
-                            </svg>
-                        </a>
-                    </div>
                 </div>
 
-                <!-- Column 2: Quick Links -->
-                <div class="lg:pl-12">
+                <!-- Quick Links -->
+                <div>
                     <h3 class="text-lg font-bold mb-6">Quick Links</h3>
                     <ul class="space-y-4 text-gray-400 text-sm">
                         <li><a href="index.html" class="hover:text-amber-500 transition">Home</a></li>
-                        <li><a href="products.html" class="hover:text-amber-500 transition">All Products</a></li>
-                        <li><a href="contact.html" class="hover:text-amber-500 transition">Contact Us</a></li>
-                        <li><a href="#" class="hover:text-amber-500 transition">Track Order</a></li>
+                        <li><a href="products.html" class="hover:text-amber-500 transition">Products</a></li>
+                        <li><a href="contact.html" class="hover:text-amber-500 transition">Contact</a></li>
                     </ul>
                 </div>
 
-                <!-- Column 3: Customer Service -->
-                <div class="lg:pl-12">
-                    <h3 class="text-lg font-bold mb-6">Customer Service</h3>
+                <!-- Contact -->
+                <div>
+                    <h3 class="text-lg font-bold mb-6">Contact</h3>
                     <ul class="space-y-4 text-gray-400 text-sm">
-                        <li><a href="#" class="hover:text-amber-500 transition">Shipping Policy</a></li>
-                        <li><a href="#" class="hover:text-amber-500 transition">Return & Refund</a></li>
-                        <li><a href="#" class="hover:text-amber-500 transition">Privacy Policy</a></li>
-                        <li><a href="#" class="hover:text-amber-500 transition">FAQ</a></li>
+                        <li>Email: info@importfromnepal.com</li>
+                        <li>Location: Thamel, Kathmandu, Nepal</li>
+                        <li>Hours: Mon-Fri 9AM-6PM (NPT)</li>
                     </ul>
                 </div>
             </div>
-        </div>
-
-        <!-- Bottom Bar -->
-        <div class="border-t border-gray-800">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6">
-                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                    <p id="footer-copyright-text" class="text-gray-400 text-sm">&copy; 2025 Import From Nepal. All
-                        rights reserved.</p>
-                </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center">
+                <p class="text-gray-400 text-sm">&copy; 2025 Import From Nepal. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
-    <div id="product-detail-modal"
-        class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
-        <div class="bg-white rounded-2xl w-full max-w-5xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto shadow-2xl">
+    <!-- Cart Modal -->
+    <div id="cart-modal" class="hidden fixed inset-0 z-50">
+        <div class="absolute inset-0 bg-black bg-opacity-50" onclick="closeCart()"></div>
+        <div id="cart-sidebar" class="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl flex flex-col">
             <!-- Header -->
-            <div class="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center z-10 rounded-t-2xl">
-                <h3 class="text-2xl font-light text-gray-900 pr-4" id="detail-product-name">Product Details</h3>
-                <button onclick="closeProductDetail()" class="text-gray-400 hover:text-gray-600 transition">
+            <div class="p-6 border-b flex justify-between items-center">
+                <h2 class="text-2xl font-light">Your Cart</h2>
+                <button onclick="closeCart()" class="text-gray-500 hover:text-black">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
                 </button>
             </div>
+            
+            <!-- Cart Items -->
+            <div id="cart-items" class="flex-grow overflow-y-auto p-6 space-y-6">
+                <!-- Dynamic content -->
+            </div>
+            
+            <!-- Footer -->
+            <div class="p-6 border-t bg-gray-50 space-y-4">
+                <div class="flex justify-between text-lg">
+                    <span>Subtotal:</span>
+                    <span id="cart-subtotal" class="font-semibold text-amber-700">$0.00</span>
+                </div>
+                <button onclick="checkout()" class="w-full bg-amber-700 text-white py-4 rounded-xl font-medium hover:bg-amber-800 transition">
+                    Proceed to Inquiry
+                </button>
+            </div>
+        </div>
+    </div>
 
+    <!-- Product Detail Modal -->
+    <div id="product-detail-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <!-- Header -->
+            <div class="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center">
+                <h3 class="text-2xl font-light text-gray-900" id="detail-product-name">Product Details</h3>
+                <button onclick="closeProductDetail()" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
             <!-- Content -->
-            <div class="p-6 sm:p-8">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-
-                    <!-- Left: Image -->
-                    <div class="space-y-4">
-                        <div class="aspect-square bg-stone-50 rounded-xl overflow-hidden">
-                            <img id="detail-product-image" src="" alt="" class="w-full h-full object-cover"
-                                onerror="this.src='https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&h=800&fit=crop&q=90'">
-                        </div>
-
-                        <!-- Small quality badge -->
-                        <div class="flex items-center gap-3 text-sm text-gray-600">
-                            <div class="flex items-center gap-2">
-                                <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                                <span>Authentically Handmade</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <span>🇳🇵</span>
-                                <span>Made in Nepal</span>
-                            </div>
-                        </div>
+            <div class="p-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Image -->
+                    <div class="aspect-square bg-gray-100 rounded-xl overflow-hidden">
+                        <img id="detail-product-image" src="" alt="" class="w-full h-full object-cover">
                     </div>
-
-                    <!-- Right: Details & Actions -->
+                    
+                    <!-- Details -->
                     <div class="space-y-6">
-
-                        <!-- Category -->
-                        <div>
-                            <span id="detail-product-category"
-                                class="inline-block bg-amber-50 text-amber-800 px-4 py-1.5 rounded-full text-xs uppercase tracking-wider font-medium">
-                                Category
-                            </span>
-                        </div>
-
-                        <!-- Product Name -->
-                        <div>
-                            <h3 class="text-3xl font-light text-gray-900 leading-tight mb-2"
-                                id="detail-product-name-text">
-                                Product Name
-                            </h3>
-                        </div>
-
-                        <!-- Description -->
-                        <div class="border-t border-b py-6">
-                            <h4 class="text-sm uppercase tracking-wider text-gray-500 mb-3 font-medium">About This Piece
-                            </h4>
-                            <p id="detail-product-description" class="text-gray-700 leading-relaxed">
-                                Product description will appear here...
-                            </p>
-                        </div>
-
-                        <!-- Pricing Info -->
                         <div id="detail-product-price-info" class="bg-amber-50 rounded-xl p-5">
-                            <!-- Dynamic content will be injected here -->
+                            <!-- Dynamic price -->
                         </div>
-
-                        <!-- Action Buttons -->
-                        <div class="space-y-3 pt-4">
-                            <!-- Primary: Add to Cart -->
+                        
+                        <div>
+                            <h4 class="text-sm uppercase tracking-wider text-gray-500 mb-3">Description</h4>
+                            <p id="detail-product-description" class="text-gray-700 leading-relaxed"></p>
+                        </div>
+                        
+                        <div class="space-y-3">
                             <button id="add-to-cart-btn" onclick="addToCartFromDetail()"
-                                class="hidden w-full bg-amber-700 text-white px-8 py-4 rounded-xl font-medium text-base hover:bg-amber-800 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                                </svg>
+                                class="hidden w-full bg-amber-700 text-white px-8 py-4 rounded-xl font-medium hover:bg-amber-800 transition">
                                 Add to Cart
                             </button>
-
-                            <!-- Primary: Request Quote -->
-                            <button id="request-quote-btn" onclick="requestQuoteFromDetail()"
-                                class="hidden w-full bg-amber-700 text-white px-8 py-4 rounded-xl font-medium text-base hover:bg-amber-800 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
-                                    </path>
-                                </svg>
-                                Request Quote
-                            </button>
-
-                            <!-- Secondary: Add to Inquiry List -->
-                            <button onclick="addToCartFromDetail()"
-                                class="w-full bg-white border-2 border-amber-200 text-amber-900 px-8 py-4 rounded-xl font-medium text-base hover:bg-amber-50 hover:border-amber-400 transition-all duration-300 flex items-center justify-center gap-2">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                                </svg>
-                                Add to Inquiry List
-                            </button>
-
-                            <!-- Tertiary: Continue Browsing -->
+                            
                             <button onclick="closeProductDetail()"
-                                class="w-full text-gray-600 hover:text-gray-900 px-8 py-3 rounded-xl font-normal text-sm transition-colors">
-                                Continue Browsing
+                                class="w-full border-2 border-gray-300 text-gray-700 py-3 rounded-xl font-medium hover:border-gray-400 transition">
+                                Continue Shopping
                             </button>
                         </div>
-
-                        <!-- Trust Badges -->
-                        <div class="grid grid-cols-3 gap-4 pt-6 border-t">
-                            <div class="text-center">
-                                <div class="text-2xl mb-1">🚚</div>
-                                <p class="text-xs text-gray-600">Worldwide Shipping</p>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-2xl mb-1">✨</div>
-                                <p class="text-xs text-gray-600">Authentic Craft</p>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-2xl mb-1">🤝</div>
-                                <p class="text-xs text-gray-600">Fair Trade</p>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div id="inquiry-modal"
-        class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
-        <div class="bg-white rounded-lg w-full max-w-md max-h-[95vh] overflow-y-auto mx-2 sm:mx-4">
-            <div
-                class="sticky top-0 bg-white border-b px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center z-10">
-                <h3 class="text-lg sm:text-xl md:text-2xl font-bold">Product Inquiry</h3>
-                <button onclick="closeInquiryModal()"
-                    class="text-gray-500 hover:text-gray-700 text-2xl sm:text-3xl leading-none">&times;</button>
-            </div>
-            <form id="inquiry-form" class="p-4 sm:p-6 space-y-3 sm:space-y-4">
-                <input type="hidden" id="inquiry-product-name" name="product_name">
-                <div>
-                    <label class="block text-xs sm:text-sm font-medium mb-1 sm:mb-2">Product</label>
-                    <input type="text" id="inquiry-product-display" readonly
-                        class="w-full px-3 sm:px-4 py-2 border rounded-lg bg-gray-50 text-sm sm:text-base">
-                </div>
-                <div>
-                    <label class="block text-xs sm:text-sm font-medium mb-1 sm:mb-2">Your Name *</label>
-                    <input type="text" name="customer_name" required
-                        class="w-full px-3 sm:px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 text-sm sm:text-base">
-                </div>
-                <div>
-                    <label class="block text-xs sm:text-sm font-medium mb-1 sm:mb-2">Email *</label>
-                    <input type="email" name="customer_email" required
-                        class="w-full px-3 sm:px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 text-sm sm:text-base">
-                </div>
-                <div>
-                    <label class="block text-xs sm:text-sm font-medium mb-1 sm:mb-2">Phone</label>
-                    <div class="flex gap-2">
-                        <select name="country_code"
-                            class="w-32 sm:w-36 px-2 sm:px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm">
-                            <option value="+977" selected>🇳🇵 +977</option>
-                        </select>
-
-                        <input type="tel" name="customer_phone" placeholder="9812345678"
-                            class="flex-1 px-3 sm:px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 text-sm sm:text-base">
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-xs sm:text-sm font-medium mb-1 sm:mb-2">Message *</label>
-                    <textarea name="message" required rows="3"
-                        class="w-full px-3 sm:px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"></textarea>
-                </div>
-                <div class="flex gap-2 sm:gap-4 pt-2">
-                    <button type="button" onclick="closeInquiryModal()"
-                        class="flex-1 px-4 sm:px-6 py-2 sm:py-3 border rounded-lg hover:bg-gray-50 text-sm sm:text-base font-medium">Cancel</button>
-                    <button type="submit"
-                        class="flex-1 px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm sm:text-base font-medium">Submit</button>
-                </div>
-            </form>
-            <div id="form-message" class="hidden mx-4 sm:mx-6 mb-4 p-3 rounded-lg text-sm"></div>
-        </div>
-    </div>
-    <script src="js/ui.js"></script>
-
-    <script type="module" src="js/app.js"></script>
-    <script type="module" src="js/home.js"></script>
-    <script type="module">
-        // Import and initialize content loader (loads saved content from admin panel)
-        import { loadSiteContent } from './js/content-loader.js';
-
-        // Load content immediately
-        loadSiteContent().then(() => {
-            console.log('✅ Site content loaded successfully');
-        }).catch(err => {
-            console.error('❌ Failed to load site content:', err);
-        });
-    </script>
-    <script>
-        // Handle force refresh from content editor
-        if (window.location.href.includes('forceRefresh=')) {
-            console.log('Force refresh triggered, reloading page...');
-            setTimeout(() => {
-                // Remove forceRefresh parameter and reload
-                const url = window.location.href.split('?')[0];
-                console.log('Reloading to:', url);
-                window.location.href = url;
-            }, 500);
-        }
-    </script>
 </body>
-
 </html>

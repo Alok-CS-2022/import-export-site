@@ -42,10 +42,16 @@ export default async function handler(req, res) {
   try {
     switch (req.method) {
       case 'GET':
-        // Fetch all products
+        // Fetch all products with category information
         const { data: products, error: getError } = await supabase
           .from('products')
-          .select('*')
+          .select(`
+            *,
+            categories:category_id (
+              name,
+              slug
+            )
+          `)
           .order('created_at', { ascending: false });
 
         if (getError) throw getError;

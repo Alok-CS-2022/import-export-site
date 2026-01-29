@@ -701,32 +701,26 @@
         let editingProductId = null
 
         async function loadCategories() {
-            const defaultCategories = [
-                { id: 'singing-bowls', name: 'Singing Bowls' },
-                { id: 'thangkas', name: 'Thangka Art' },
-                { id: 'statues', name: 'Buddha Statues' },
-                { id: 'jewelry', name: 'Artisan Jewelry' }
-            ];
-
             try {
-                const { data: dbCategories, error } = await supabase
-                    .from('categories')
-                    .select('*')
-                    .order('display_order', { ascending: true })
-
-                if (error) throw error
-
-                const select = document.getElementById('product-category')
-                select.innerHTML = '<option value="">Select a category...</option>'
-
-                const categories = (dbCategories && dbCategories.length > 0) ? dbCategories : defaultCategories;
+                // Load categories from API
+                const response = await fetch('/api/admin/categories');
+                
+                if (!response.ok) {
+                    throw new Error('Failed to load categories');
+                }
+                
+                const categories = await response.json();
+                const select = document.getElementById('product-category');
+                select.innerHTML = '<option value="">Select a category...</option>';
 
                 categories.forEach(cat => {
-                    const option = document.createElement('option')
-                    option.value = cat.id
-                    option.textContent = cat.name
-                    select.appendChild(option)
-                })
+                    const option = document.createElement('option');
+                    option.value = cat.id;
+                    option.textContent = cat.name;
+                    select.appendChild(option);
+                });
+
+                console.log(`Loaded ${categories.length} categories for dropdown`);
             } catch (error) {
                 console.warn('Supabase categories fetch failed, using fallbacks:', error)
                 const select = document.getElementById('product-category')
@@ -812,7 +806,7 @@
                              onerror="this.src='https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800'">
                         <div class="absolute top-4 left-4">
                             <span class="bg-white/95 backdrop-blur-sm text-amber-800 text-xs font-medium px-3 py-1.5 rounded-full shadow-lg">
-                                ${product.category}
+                                ${product.categories?.name || product.category || 'Uncategorized'}
                             </span>
                         </div>
                     </div>
@@ -847,26 +841,31 @@
 
         window.editProduct = async function (productId) {
             try {
-                const { data, error } = await supabase
-                    .from('products')
-                    .select('*')
-                    .eq('id', productId)
-                    .single()
+                // Get all products and find the one we need
+                const response = await fetch('/api/admin/products');
+                
+                if (!response.ok) {
+                    throw new Error('Failed to load products');
+                }
+                
+                const products = await response.json();
+                const product = products.find(p => p.id === productId);
+                
+                if (!product) {
+                    throw new Error('Product not found');
+                }
 
-                if (error) throw error
-
-                editingProductId = data.id
+                editingProductId = product.id
                 document.getElementById('modal-title').textContent = 'Edit Masterpiece'
-                document.getElementById('product-id').value = data.id
-                document.getElementById('product-name').value = data.name
-                document.getElementById('product-description').value = data.description
-                document.getElementById('product-image').value = data.image_url
-                document.getElementById('product-category').value = data.category_id || data.category
-                document.getElementById('product-price').value = data.price
-                document.getElementById('is-featured').checked = data.is_featured || false
+                document.getElementById('product-name').value = product.name
+                document.getElementById('product-description').value = product.description
+                document.getElementById('product-image').value = product.image_url
+                document.getElementById('product-category').value = product.category_id
+                document.getElementById('product-price').value = product.price
+                document.getElementById('is-featured').checked = product.is_featured || false
 
                 // Show preview
-                previewImage(data.image_url)
+                previewImage(product.image_url)
 
                 document.getElementById('product-modal').classList.remove('hidden')
             } catch (error) {

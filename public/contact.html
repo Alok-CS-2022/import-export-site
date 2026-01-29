@@ -1,32 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us | Import From Nepal</title>
+    <title>Contact - Import From Nepal</title>
     
+    <!-- Meta Tags -->
+    <meta name="description" content="Contact Import From Nepal for inquiries about authentic Nepalese handicrafts.">
+    <meta name="keywords" content="contact Nepal handicrafts, Nepal handicraft inquiry">
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/custom.css">
 
-    <!-- Load Supabase First -->
-    <script type="module" src="js/supabase-client.js"></script>
-    <!-- Then Load App -->
-    <script type="module" src="js/app.js"></script>
+    <!-- Load App ONLY -->
+    <script type="module" src="js/app.js?v=4"></script>
 </head>
 
-<body class="bg-gray-50 flex flex-col min-h-screen">
+<body class="bg-gray-50">
     <!-- Navigation -->
     <nav class="bg-white shadow-lg fixed w-full z-50 top-0">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center">
-                    <a href="index.html" class="text-xl font-bold text-amber-700">Import From Nepal</a>
+                    <span class="text-xl font-bold text-amber-700">Import From Nepal</span>
                 </div>
 
+                <!-- Desktop Navigation -->
                 <div class="hidden md:flex items-center space-x-8">
                     <a href="index.html" class="text-gray-700 hover:text-amber-700 transition">Home</a>
                     <a href="products.html" class="text-gray-700 hover:text-amber-700 transition">Products</a>
@@ -67,133 +69,133 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <main class="flex-grow pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-            <!-- Left: Contact Info -->
-            <div class="space-y-12">
-                <div>
-                    <h1 class="text-4xl md:text-5xl font-light text-gray-900 mb-6">Get in Touch</h1>
-                    <p class="text-gray-600 font-light text-lg leading-relaxed max-w-md">
-                        Whether you are looking for a bulk export or a single artisan piece, our team in Kathmandu is ready to assist you.
-                    </p>
-                </div>
+    <!-- Page Header -->
+    <section class="pt-24 pb-12 px-4 bg-gradient-to-br from-amber-50 to-orange-50">
+        <div class="max-w-7xl mx-auto text-center">
+            <h1 class="text-4xl sm:text-5xl font-light text-gray-900 mb-4">
+                Get in <span class="font-normal text-amber-800">Touch</span>
+            </h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Have questions about our products? We're here to help
+            </p>
+        </div>
+    </section>
 
-                <div class="space-y-8">
-                    <!-- Email -->
-                    <div class="flex items-start gap-4">
-                        <div class="w-12 h-12 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-700 shrink-0">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
-                                </path>
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-1">Email Us</p>
-                            <a href="mailto:info@importfromnepal.com" class="text-gray-600 hover:text-amber-700 transition">
-                                info@importfromnepal.com
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Address -->
-                    <div class="flex items-start gap-4">
-                        <div class="w-12 h-12 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-700 shrink-0">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
-                                </path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-1">Visit Our Office</p>
-                            <p class="text-gray-600">Thamel, Kathmandu, Nepal</p>
-                        </div>
-                    </div>
-
-                    <!-- Hours -->
-                    <div class="flex items-start gap-4">
-                        <div class="w-12 h-12 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-700 shrink-0">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-1">Business Hours</p>
-                            <p class="text-gray-600">Mon - Fri: 9:00 AM - 6:00 PM (NPT)</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Map Placeholder -->
-                <div class="rounded-3xl overflow-hidden bg-gray-200 aspect-video relative">
-                    <img src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&q=80" alt="Kathmandu Map"
-                        class="w-full h-full object-cover">
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <div class="bg-white/90 backdrop-blur px-6 py-3 rounded-full shadow-lg text-sm font-medium">
-                            Located in the heart of Kathmandu
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right: Contact Form -->
-            <div class="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-gray-100">
-                <h3 class="text-2xl font-light text-gray-900 mb-8">Send a Message</h3>
+    <!-- Contact Form -->
+    <section class="py-16">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6">
+            <div class="bg-white rounded-2xl shadow-lg p-8">
                 <form id="contact-page-form" class="space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
-                            <input type="text" name="customer_name" required
-                                class="w-full px-5 py-4 bg-gray-50 border rounded-2xl focus:ring-2 focus:ring-amber-500 outline-none transition"
-                                placeholder="John Doe">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-                            <input type="email" name="customer_email" required
-                                class="w-full px-5 py-4 bg-gray-50 border rounded-2xl focus:ring-2 focus:ring-amber-500 outline-none transition"
-                                placeholder="john@example.com">
-                        </div>
-                    </div>
+                    <!-- Name -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Phone (Optional)</label>
-                        <input type="tel" name="customer_phone"
-                            class="w-full px-5 py-4 bg-gray-50 border rounded-2xl focus:ring-2 focus:ring-amber-500 outline-none transition"
-                            placeholder="+1 234 567 8900">
+                        <label for="customer_name" class="block text-sm font-medium text-gray-700 mb-2">
+                            Your Name *
+                        </label>
+                        <input type="text" 
+                               id="customer_name" 
+                               name="customer_name" 
+                               required
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition"
+                               placeholder="John Doe">
                     </div>
+
+                    <!-- Email -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Message</label>
-                        <textarea name="message" required rows="5"
-                            class="w-full px-5 py-4 bg-gray-50 border rounded-2xl focus:ring-2 focus:ring-amber-500 outline-none transition resize-none"
-                            placeholder="Tell us about the artifacts or export services you're interested in..."></textarea>
+                        <label for="customer_email" class="block text-sm font-medium text-gray-700 mb-2">
+                            Email Address *
+                        </label>
+                        <input type="email" 
+                               id="customer_email" 
+                               name="customer_email" 
+                               required
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition"
+                               placeholder="john@example.com">
                     </div>
-                    <button type="submit"
-                        class="w-full bg-amber-700 text-white py-5 rounded-2xl font-medium shadow-xl hover:bg-amber-800 transition flex items-center justify-center gap-3">
-                        Send Inquiry
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                        </svg>
-                    </button>
-                    <div id="contact-form-message" class="hidden p-4 rounded-xl text-sm"></div>
+
+                    <!-- Phone -->
+                    <div>
+                        <label for="customer_phone" class="block text-sm font-medium text-gray-700 mb-2">
+                            Phone Number (Optional)
+                        </label>
+                        <input type="tel" 
+                               id="customer_phone" 
+                               name="customer_phone"
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition"
+                               placeholder="+1 (555) 123-4567">
+                    </div>
+
+                    <!-- Message -->
+                    <div>
+                        <label for="message" class="block text-sm font-medium text-gray-700 mb-2">
+                            Message *
+                        </label>
+                        <textarea id="message" 
+                                  name="message" 
+                                  required
+                                  rows="6"
+                                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition resize-none"
+                                  placeholder="Tell us about your inquiry..."></textarea>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div>
+                        <button type="submit"
+                                class="w-full bg-amber-700 text-white py-4 rounded-xl font-medium text-lg hover:bg-amber-800 transition shadow-lg">
+                            Send Message
+                        </button>
+                    </div>
                 </form>
             </div>
+
+            <!-- Contact Info -->
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-6 h-6 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-medium text-gray-900 mb-2">Email</h3>
+                    <p class="text-gray-600 text-sm">info@importfromnepal.com</p>
+                </div>
+
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-6 h-6 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-medium text-gray-900 mb-2">Location</h3>
+                    <p class="text-gray-600 text-sm">Thamel, Kathmandu, Nepal</p>
+                </div>
+
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-6 h-6 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-medium text-gray-900 mb-2">Hours</h3>
+                    <p class="text-gray-600 text-sm">Mon-Fri: 9AM-6PM (NPT)</p>
+                </div>
+            </div>
         </div>
-    </main>
+    </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white mt-auto py-12">
+    <footer class="bg-gray-900 text-white py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
                 <!-- About -->
                 <div>
                     <h3 class="text-xl font-bold mb-4 text-amber-500">Import From Nepal</h3>
                     <p class="text-gray-400 text-sm leading-relaxed mb-6">
-                        Bringing authentic Himalayan handicrafts to the world.
+                        Bringing authentic Himalayan handicrafts to the world. Each piece tells a story of tradition and craftsmanship.
                     </p>
                 </div>
 
@@ -212,14 +214,14 @@
                     <h3 class="text-lg font-bold mb-6">Contact</h3>
                     <ul class="space-y-4 text-gray-400 text-sm">
                         <li>Email: info@importfromnepal.com</li>
-                        <li>Location: Thamel, Kathmandu</li>
-                        <li>Hours: Mon-Fri 9AM-6PM</li>
+                        <li>Location: Thamel, Kathmandu, Nepal</li>
+                        <li>Hours: Mon-Fri 9AM-6PM (NPT)</li>
                     </ul>
                 </div>
             </div>
             
             <div class="border-t border-gray-800 mt-8 pt-8 text-center">
-                <p class="text-gray-400 text-sm">&copy; 2025 Import From Nepal.</p>
+                <p class="text-gray-400 text-sm">&copy; 2025 Import From Nepal. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -249,7 +251,8 @@
                     <span>Subtotal:</span>
                     <span id="cart-subtotal" class="font-semibold text-amber-700">$0.00</span>
                 </div>
-                <button onclick="checkout()" class="w-full bg-amber-700 text-white py-4 rounded-xl font-medium hover:bg-amber-800 transition">
+                <button onclick="alert('Your cart items are saved! Please fill out the contact form above to complete your inquiry.')" 
+                        class="w-full bg-amber-700 text-white py-4 rounded-xl font-medium hover:bg-amber-800 transition">
                     Proceed to Inquiry
                 </button>
             </div>

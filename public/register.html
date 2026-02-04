@@ -27,6 +27,21 @@
         <!-- Form -->
         <div class="p-8">
             <form id="register-form" class="space-y-6" onsubmit="handleRegister(event)">
+                <!-- Username -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                    <input type="text" id="username" required minlength="2"
+                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition"
+                        placeholder="Your full name">
+                </div>
+
+                <!-- Phone -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                    <input type="tel" id="phone" required
+                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition"
+                        placeholder="+977-980-1234567">
+                </div>
 
                 <!-- Email -->
                 <div>
@@ -39,18 +54,34 @@
                 <!-- Password -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
-                    <input type="password" id="password" required minlength="6"
-                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition"
-                        placeholder="••••••••">
+                    <div class="relative">
+                        <input type="password" id="password" required minlength="6"
+                            class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition pr-12"
+                            placeholder="••••••••">
+                        <button type="button" id="toggle-password" tabindex="-1" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-700 focus:outline-none" aria-label="Show password">
+                            <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </button>
+                    </div>
                     <p class="mt-1 text-xs text-gray-500">Must be at least 6 characters</p>
                 </div>
 
                 <!-- Confirm Password -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
-                    <input type="password" id="confirm-password" required minlength="6"
-                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition"
-                        placeholder="••••••••">
+                    <div class="relative">
+                        <input type="password" id="confirm-password" required minlength="6"
+                            class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition pr-12"
+                            placeholder="••••••••">
+                        <button type="button" id="toggle-confirm-password" tabindex="-1" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-700 focus:outline-none" aria-label="Show password">
+                            <svg id="eye-confirm-icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Error Message -->
@@ -78,9 +109,37 @@
     <script type="module">
         import { supabase } from './lib/supabase.js';
 
+
+        // Password eye icon toggles
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('toggle-password').addEventListener('click', function () {
+                const pwd = document.getElementById('password');
+                const eye = document.getElementById('eye-icon');
+                if (pwd.type === 'password') {
+                    pwd.type = 'text';
+                    eye.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.956 9.956 0 012.042-3.292m1.414-1.414A9.956 9.956 0 0112 5c4.477 0 8.268 2.943 9.542 7a9.956 9.956 0 01-4.132 5.132M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18" />';
+                } else {
+                    pwd.type = 'password';
+                    eye.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />';
+                }
+            });
+            document.getElementById('toggle-confirm-password').addEventListener('click', function () {
+                const pwd = document.getElementById('confirm-password');
+                const eye = document.getElementById('eye-confirm-icon');
+                if (pwd.type === 'password') {
+                    pwd.type = 'text';
+                    eye.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.956 9.956 0 012.042-3.292m1.414-1.414A9.956 9.956 0 0112 5c4.477 0 8.268 2.943 9.542 7a9.956 9.956 0 01-4.132 5.132M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18" />';
+                } else {
+                    pwd.type = 'password';
+                    eye.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268-2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />';
+                }
+            });
+        });
+
         window.handleRegister = async function(e) {
             e.preventDefault();
-            
+            const username = document.getElementById('username').value.trim();
+            const phone = document.getElementById('phone').value.trim();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirm-password').value;
@@ -90,8 +149,16 @@
             // Reset UI
             errorDiv.classList.add('hidden');
             errorDiv.innerText = '';
-            
+
             // Validation
+            if (!username || username.length < 2) {
+                showError("Please enter a valid full name.");
+                return;
+            }
+            if (!phone || phone.length < 10) {
+                showError("Please enter a valid phone number.");
+                return;
+            }
             if (password !== confirmPassword) {
                 showError("Passwords do not match");
                 return;
@@ -102,23 +169,48 @@
             submitBtn.innerHTML = '<span class="animate-pulse">Creating Account...</span>';
 
             try {
-                const { data, error } = await supabase.auth.signUp({
-                    email: email,
-                    password: password,
+                console.log('Sending signup request...');
+                
+                // Use backend API for signup
+                const response = await fetch('/api/auth', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        type: 'signup',
+                        email,
+                        password,
+                        phone,
+                        user_metadata: { full_name: username }
+                    })
                 });
-
-                if (error) throw error;
-
-                // Success
-                // Check if session exists (auto-login usually happens unless email confirmation is on)
-                if (data.user) {
-                    // Redirect to home or login logic
-                    alert('Account created! Welcome to Import From Nepal.');
-                    window.location.href = 'index.html';
+                
+                const result = await response.json();
+                console.log('Signup response:', result);
+                
+                if (!response.ok || result.error) {
+                    throw new Error(result.error || 'Signup failed');
                 }
-
+                
+                // Success! Check if user needs email confirmation
+                if (result.user && result.session) {
+                    // User is auto-logged in (email confirmation disabled)
+                    localStorage.setItem('user_token', result.session.access_token);
+                    localStorage.setItem('user_name', username);
+                    alert('Account created successfully! Redirecting...');
+                    window.location.href = 'index.html';
+                } else if (result.user && !result.session) {
+                    // User created but needs email confirmation
+                    alert('Account created! Please check your email to confirm your account before logging in.');
+                    window.location.href = 'login.html';
+                } else {
+                    // Unexpected response
+                    alert('Account created! Please login to continue.');
+                    window.location.href = 'login.html';
+                }
+                
             } catch (err) {
-                showError(err.message);
+                console.error('Signup error:', err);
+                showError(err.message || 'An error occurred during signup. Please try again.');
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerText = 'Create Account';

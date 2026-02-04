@@ -27,15 +27,19 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: 'Method Not Allowed' });
     }
 
+    // Lazy import mailer to avoid circular deps
+    let sendOrderEmail;
+    try {
+        sendOrderEmail = (await import('./lib/mailer.js')).sendOrderEmail;
+    } catch (e) {}
+
     try {
         // 1. AUTHENTICATE USER (OPTIONAL - allow guest inquiries)
         let user = null;
         const authHeader = req.headers.authorization;
-        
         if (authHeader) {
             const token = authHeader.replace('Bearer ', '');
             const { data: { user: authUser }, error: authError } = await supabase.auth.getUser(token);
-            
             if (!authError && authUser) {
                 user = authUser;
             }
@@ -43,7 +47,6 @@ export default async function handler(req, res) {
 
         // 2. VALIDATE INPUT
         const validationResult = inquirySchema.safeParse(req.body);
-
         if (!validationResult.success) {
             const errorMessage = validationResult.error.errors.map(e => e.message).join(', ');
             return res.status(400).json({ error: errorMessage });
@@ -53,18 +56,28 @@ export default async function handler(req, res) {
         const inquiry = {
             ...validationResult.data
         };
-        
-        // Only add user_id if user is authenticated
         if (user) {
             inquiry.user_id = user.id;
         }
 
         // 4. INSERT INTO DB
         const { error } = await supabase.from('orders').insert([inquiry]);
-
         if (error) {
             console.error('Supabase insert error:', error);
             return res.status(500).json({ error: error.message });
+        }
+
+        // 5. Send email to admins
+        if (sendOrderEmail) {
+            const inquiryJson = JSON.stringify(inquiry, null, 2);
+            await sendOrderEmail({
+                to: ['alok.kharel.nepal@gmail.com', 'sujanadhikari1111@gmail.com'],
+                subject: 'New Inquiry Received',
+                text: 'A new inquiry has been submitted. See attached for details.',
+                html: '<p>A new inquiry has been submitted. See attached for details.</p>',
+                attachmentName: `inquiry-${inquiry.customer_email}.json`,
+                attachmentContent: inquiryJson
+            });
         }
 
         res.status(200).json({ message: 'Inquiry submitted successfully' });

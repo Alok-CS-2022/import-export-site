@@ -10,9 +10,21 @@ const require = createRequire(import.meta.url);
 const app = express();
 const port = process.env.PORT || 3006;
 
-// Middleware
+// Middleware - must be applied before routes
 app.use(express.json());
 app.use(express.static(join(__dirname, 'public')));
+
+// Auth API route (for login/signup) - must be after app is initialized
+app.post('/api/auth', async (req, res) => {
+    try {
+        console.log('API AUTH route hit:', req.method, req.url);
+        const { default: authHandler } = await import('./api/auth.js');
+        await authHandler(req, res);
+    } catch (error) {
+        console.error('Auth API Error:', error.message);
+        res.status(500).json({ error: error.message });
+    }
+});
 
 // API routes
 app.get('/api/products', async (req, res) => {
@@ -75,17 +87,13 @@ app.post('/api/inquiry', async (req, res) => {
     }
 });
 
-app.get('/api/admin/orders', async (req, res) => {
+// Add admin orders API route
+app.all('/api/admin/orders', async (req, res) => {
     try {
         const { default: ordersHandler } = await import('./api/admin/orders.js');
-        const mockReq = { method: 'GET', headers: {} };
-        const mockRes = {
-            json: (data) => res.json(data),
-            status: (code) => ({ json: (data) => res.status(code).json(data) }),
-            setHeader: () => {}
-        };
-        await ordersHandler(mockReq, mockRes);
+        await ordersHandler(req, res);
     } catch (error) {
+        console.error('Orders API Error:', error.message);
         res.status(500).json({ error: error.message });
     }
 });

@@ -10,6 +10,8 @@ const productSchema = z.object({
   image_url: z.string().url("Invalid image URL"),
   id: z.string().optional(), // For updates
   is_featured: z.boolean().optional(),
+  is_top_seller: z.boolean().optional(),
+  is_active: z.boolean().optional(),
   display_order: z.number().optional()
 });
 
@@ -42,16 +44,10 @@ export default async function handler(req, res) {
   try {
     switch (req.method) {
       case 'GET':
-        // Fetch all products with category information
+        // Fetch all products
         const { data: products, error: getError } = await supabase
           .from('products')
-          .select(`
-            *,
-            categories:category_id (
-              name,
-              slug
-            )
-          `)
+          .select('*')
           .order('created_at', { ascending: false });
 
         if (getError) throw getError;
@@ -64,15 +60,20 @@ export default async function handler(req, res) {
           return res.status(400).json({ error: resultPost.error.errors[0].message });
         }
 
-        // Create new product
+        // Create new product with auto-generated slug
+        const slug = (resultPost.data.name || 'product').toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+        const productData = {
+          ...resultPost.data,
+          slug: slug
+        };
+
         const { data: newProduct, error: postError } = await supabase
           .from('products')
-          .insert([resultPost.data])
-          .select()
-          .single();
+          .insert([productData])
+          .select();
 
         if (postError) throw postError;
-        return res.status(201).json(newProduct);
+        return res.status(201).json(newProduct[0] || newProduct);
 
       case 'PUT':
         // VALIDATE INPUT

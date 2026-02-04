@@ -93,6 +93,12 @@ async function loadProductsFromSupabase() {
             const featured = products.filter(p => p.is_featured).slice(0, 6);
             displayProductsInGrid(featured.length > 0 ? featured : products.slice(0, 6), featuredGrid);
         }
+
+        // Load top sellers
+        const topSellersGrid = document.getElementById('top-sellers-grid');
+        if (topSellersGrid) {
+            await loadTopSellers(topSellersGrid);
+        }
         
     } catch (error) {
         console.error('❌ Failed to load products:', error);
@@ -140,14 +146,36 @@ function displayProductsInGrid(products, container) {
                             class="flex-1 bg-amber-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-amber-700 transition">
                         Add to Cart
                     </button>
-                    <button onclick="viewProductDetail('${product.id}')" 
-                            class="px-3 py-2 border border-gray-300 rounded-lg text-sm hover:border-amber-500 transition">
-                        Details
+                    <button onclick="buyNow('${product.id}', '${escapeHtml(product.name)}', ${product.price || 0}, '${product.image_url}')" 
+                            class="px-3 py-2 bg-amber-700 text-white rounded-lg text-sm hover:bg-amber-800 transition font-medium">
+                        Buy Now
                     </button>
                 </div>
             </div>
         </div>
     `).join('');
+}
+
+// Load top sellers - shows products marked as top_sellers, or most expensive products
+async function loadTopSellers(container) {
+    try {
+        // First, try to get products marked as top sellers
+        const topSellers = products.filter(p => p.is_top_seller).slice(0, 4);
+        
+        if (topSellers.length > 0) {
+            // If we have top sellers marked, display them
+            displayProductsInGrid(topSellers, container);
+        } else {
+            // Otherwise, show the most expensive products
+            const mostExpensive = [...products]
+                .sort((a, b) => (b.price || 0) - (a.price || 0))
+                .slice(0, 4);
+            displayProductsInGrid(mostExpensive.length > 0 ? mostExpensive : products.slice(0, 4), container);
+        }
+    } catch (error) {
+        console.error('❌ Failed to load top sellers:', error);
+        container.innerHTML = '<div class="col-span-full text-center py-12 text-gray-500">Unable to load top sellers</div>';
+    }
 }
 
 // ==================== CART FUNCTIONS ====================
@@ -431,6 +459,30 @@ function setupEventListeners() {
     setupContactForm();
 }
 
+// ==================== BUY NOW FUNCTION ====================
+function buyNow(productId, productName, price, imageUrl) {
+    // Add to cart first
+    const existingItem = cart.find(item => item.id === productId);
+    
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({
+            id: productId,
+            name: productName,
+            price: price,
+            image: imageUrl,
+            quantity: 1
+        });
+    }
+    
+    // Save to localStorage
+    localStorage.setItem('cart', JSON.stringify(cart));
+    
+    // Redirect to order page
+    window.location.href = 'order.html';
+}
+
 // ==================== GLOBAL EXPORTS ====================
 window.addToCart = addToCart;
 window.openCart = openCart;
@@ -440,5 +492,6 @@ window.closeProductDetail = closeProductDetail;
 window.updateCartQuantity = updateCartQuantity;
 window.removeFromCart = removeFromCart;
 window.showToast = showToast;
+window.buyNow = buyNow;
 
 console.log('✓ App.js loaded successfully');

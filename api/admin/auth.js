@@ -22,16 +22,16 @@ export default async function handler(req, res) {
   if (req.method === 'POST') {
     try {
       const { email, password } = req.body;
-
-      // Simple admin authentication (replace with proper auth in production)
-      const adminEmail = 'admin@importfromnepal.com';
-      const adminPassword = 'admin123'; // Change this in production!
-
-      if (email === adminEmail && password === adminPassword) {
+      const allowedAdmins = [
+        'alok.kharel.nepal@gmail.com',
+        'sujanadhikari1111@gmail.com'
+      ];
+      const adminPassword = 'admin123@';
+      if (allowedAdmins.includes(email) && password === adminPassword) {
         return res.status(200).json({
           success: true,
           token: 'admin-token-' + Date.now(),
-          user: { email: adminEmail, role: 'admin' }
+          user: { email, role: 'admin' }
         });
       } else {
         return res.status(401).json({

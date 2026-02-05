@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabase.js';
+import { supabase, testSupabaseConnection } from '../lib/supabase.js';
 
 export default async function handler(req, res) {
   // Enable CORS
@@ -28,6 +28,16 @@ export default async function handler(req, res) {
     ];
     
     try {
+      // Test Supabase connection first
+      const connectionOk = await testSupabaseConnection();
+      if (!connectionOk) {
+        console.log('Supabase connection test failed');
+        return res.status(503).json({ 
+          error: 'Service temporarily unavailable. Please try again later.',
+          message: 'Database connection issue detected'
+        });
+      }
+
       if (type === 'signup') {
         // Check if admin email
         if (adminEmails.includes(email)) {
@@ -37,23 +47,40 @@ export default async function handler(req, res) {
         
         console.log('Processing signup for:', email);
         
-        // Create user in Supabase Auth
-        const signupOptions = user_metadata ? { data: user_metadata } : undefined;
-        const { data, error } = await supabase.auth.signUp({ 
-          email, 
-          password, 
-          options: signupOptions 
-        });
+        // Create user in Supabase Auth with retry logic
+        let signupResult;
+        let retryCount = 0;
+        const maxRetries = 3;
         
-        if (error) {
-          console.log('Signup error:', error.message);
-          throw error;
+        while (retryCount < maxRetries) {
+          try {
+            const signupOptions = user_metadata ? { data: user_metadata } : undefined;
+            signupResult = await supabase.auth.signUp({ 
+              email, 
+              password, 
+              options: signupOptions 
+            });
+            break;
+          } catch (signupError) {
+            retryCount++;
+            console.log(`Signup attempt ${retryCount} failed:`, signupError.message);
+            if (retryCount >= maxRetries) {
+              throw signupError;
+            }
+            // Wait before retrying
+            await new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
+          }
         }
         
-        console.log('Signup success:', data);
+        if (signupResult.error) {
+          console.log('Signup error:', signupResult.error.message);
+          throw signupResult.error;
+        }
+        
+        console.log('Signup success:', signupResult.data);
         
         // If user was created successfully, store additional data in user_profile table
-        if (data.user) {
+        if (signupResult.data.user) {
           try {
             // Wait a moment for the user to be fully created in auth.users table
             await new Promise(resolve => setTimeout(resolve, 1000));
@@ -62,7 +89,7 @@ export default async function handler(req, res) {
               .from('user_profiles')
               .insert([
                 {
-                  id: data.user.id,
+                  id: signupResult.data.user.id,
                   email: email,
                   password: password,
                   phone: phone || null,
@@ -84,8 +111,8 @@ export default async function handler(req, res) {
         
         return res.status(200).json({ 
           success: true, 
-          user: data.user, 
-          session: data.session 
+          user: signupResult.data.user, 
+          session: signupResult.data.session 
         });
         
       } else if (type === 'login') {
@@ -97,31 +124,54 @@ export default async function handler(req, res) {
         
         console.log('Processing login for:', email);
         
-        const { data, error } = await supabase.auth.signInWithPassword({ 
-          email, 
-          password 
-        });
+        // Login with retry logic
+        let loginResult;
+        let retryCount = 0;
+        const maxRetries = 3;
         
-        if (error) {
-          console.log('Login error:', error.message);
+        while (retryCount < maxRetries) {
+          try {
+            loginResult = await supabase.auth.signInWithPassword({ 
+              email, 
+              password 
+            });
+            break;
+          } catch (loginError) {
+            retryCount++;
+            console.log(`Login attempt ${retryCount} failed:`, loginError.message);
+            if (retryCount >= maxRetries) {
+              throw loginError;
+            }
+            // Wait before retrying
+            await new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
+          }
+        }
+        
+        if (loginResult.error) {
+          console.log('Login error:', loginResult.error.message);
           
-          // Handle email not confirmed error
-          const errorMessage = error?.message || '';
+          // Handle specific error types
+          const errorMessage = loginResult.error?.message || '';
           if (errorMessage.includes('Email not confirmed') || errorMessage.includes('email not confirmed')) {
             return res.status(400).json({ 
               error: 'Email not confirmed. Please check your email for confirmation link.',
               message: 'Note: In production, users must confirm their email before logging in.'
             });
+          } else if (errorMessage.includes('Invalid login credentials') || errorMessage.includes('invalid login credentials')) {
+            return res.status(401).json({ 
+              error: 'Invalid email or password. Please check your credentials and try again.',
+              message: 'If you recently registered, please check your email for confirmation.'
+            });
           }
           
-          throw error;
+          throw loginResult.error;
         }
         
         console.log('Login success');
         return res.status(200).json({ 
           success: true, 
-          user: data.user, 
-          session: data.session 
+          user: loginResult.data.user, 
+          session: loginResult.data.session 
         });
         
       } else {
@@ -131,6 +181,15 @@ export default async function handler(req, res) {
       
     } catch (err) {
       console.log('Catch error:', err.message);
+      
+      // Provide more specific error messages
+      if (err.message.includes('fetch failed') || err.message.includes('timeout')) {
+        return res.status(503).json({ 
+          error: 'Service temporarily unavailable. Please check your internet connection and try again.',
+          message: 'Network connection issue detected'
+        });
+      }
+      
       return res.status(400).json({ error: err.message });
     }
   }

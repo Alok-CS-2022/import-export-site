@@ -87,6 +87,17 @@ app.post('/api/inquiry', async (req, res) => {
     }
 });
 
+// Add orders API route
+app.all('/api/orders', async (req, res) => {
+    try {
+        const { default: ordersHandler } = await import('./api/orders.js');
+        await ordersHandler(req, res);
+    } catch (error) {
+        console.error('Orders API Error:', error.message);
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // Add admin orders API route
 app.all('/api/admin/orders', async (req, res) => {
     try {
